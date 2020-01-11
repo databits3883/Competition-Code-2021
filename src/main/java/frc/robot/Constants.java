@@ -16,4 +16,10 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    //CAN
+    public static final int frontLeftChannel = 3;
+    public static final int rearLeftChannel = 2;
+    public static final int frontRightChannel = 1;
+    public static final int rearRightChannel = 4;
+
 }
