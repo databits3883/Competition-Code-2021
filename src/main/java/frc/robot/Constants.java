@@ -24,4 +24,8 @@ public final class Constants {
     public static final int intakeChannel = 0;
     public static final int intakeExtenderChannel = 0;
 
+    //DIO
+    public static final int extendedLimitSwitchChannel = -1;
+    public static final int retractedLimitSwitchChannel = -1;
+
 }
