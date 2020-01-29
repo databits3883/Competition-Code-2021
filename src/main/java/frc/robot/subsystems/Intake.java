@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.intakeChannel, MotorType.kBrushless);
+  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.intakeChannel, MotorType.kBrushed);
   private final CANSparkMax extenderMotor = new CANSparkMax(Constants.intakeExtenderChannel, MotorType.kBrushless);
 
   private final DigitalInput extendedLimitSwitch = new DigitalInput(Constants.extendedLimitSwitchChannel);

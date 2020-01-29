@@ -21,9 +21,9 @@ public final class Constants {
     public static final int rearLeftChannel = 2;
     public static final int frontRightChannel = 1;
     public static final int rearRightChannel = 4;
-    public static final int intakeChannel = 0;
+    public static final int intakeChannel = 11;
     public static final int intakeExtenderChannel = 0;
-    public static final int bottomStagingBeltChannel = 0;
+    public static final int bottomStagingBeltChannel = 12;
 
     //DIO
     public static final int extendedLimitSwitchChannel = -1;
