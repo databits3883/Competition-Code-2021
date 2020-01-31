@@ -10,7 +10,10 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.StagingToTop;
+import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
@@ -18,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -30,16 +34,27 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
+  private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
   private final JoystickButton gbutton1 = new JoystickButton(gunnerJoystick, 1);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
+
+  private final Trigger lowerIntakeTrigger = new Trigger(){
+    @Override
+    public boolean get(){
+      return m_bottomStagingBelt.getSensorBottom();
+    }
+  };
+
+
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   private final Command manualArcadeDrive = new RunCommand(()->m_drivetrain.ArcadeDrive(driverJoystick.getX(), driverJoystick.getY()),m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
-  
+  private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
+  private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
   
 
 
@@ -67,6 +82,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     gbutton1.whenPressed(m_runIntake);
     gbutton1.whenReleased(m_stopIntake);
+    gbutton2.whenPressed(m_stagingToTop,false);
+    lowerIntakeTrigger.whileActiveContinuous(m_advanceStaging);
   }
 
 

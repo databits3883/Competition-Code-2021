@@ -7,38 +7,29 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class BottomStagingBelt extends SubsystemBase {
-  private final CANSparkMax beltMotor = new CANSparkMax(Constants.bottomStagingBeltChannel, MotorType.kBrushless);
-
-  private final DigitalInput testingLowerSwitch = new DigitalInput(8);
-  private final DigitalInput testingUpperSwitch = new DigitalInput(9);
+public class TurretRotator extends SubsystemBase {
   /**
-   * Creates a new BottomStagingBelt.
+   * Creates a new TurretRotator.
    */
-  public BottomStagingBelt() {
-    beltMotor.setIdleMode(IdleMode.kBrake);
+  public TurretRotator() {
+    
+  }
+  private final CANSparkMax turretRotator = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless );
+  private final CANPIDController rotateion = new CANPIDController(turretRotator);
+  private double setpoint = 30;
 
+  public void SetSetPoint(setpoint){
+    setpoint
+    
   }
-  public boolean getSensorBottom(){
-    return testingLowerSwitch.get();
-  }
-  public boolean getSensorTop(){
-    return testingUpperSwitch.get();
-  }
-  public void runBelt(){
-    beltMotor.set(.25);
-  }
-  public void stopBelt(){
-    beltMotor.set(0);
-  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

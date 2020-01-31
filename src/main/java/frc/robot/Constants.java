@@ -24,10 +24,12 @@ public final class Constants {
     public static final int intakeChannel = 11;
     public static final int intakeExtenderChannel = 0;
     public static final int bottomStagingBeltChannel = 12;
+    public static final int turretRotationChannel = 5;
+    
 
     //DIO
-    public static final int extendedLimitSwitchChannel = -1;
-    public static final int retractedLimitSwitchChannel = -1;
+    public static final int extendedLimitSwitchChannel = 3;
+    public static final int retractedLimitSwitchChannel = 4;
 
 
 
