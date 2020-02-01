@@ -17,6 +17,7 @@ import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.TurretRotator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -35,6 +36,7 @@ public class RobotContainer {
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
+  private final TurretRotator m_turretRotator = new TurretRotator();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
