@@ -7,31 +7,84 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitch;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class TurretRotator extends SubsystemBase {
+  private final CANSparkMax rotatorMotor = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushed);
+  private final CANEncoder encoder = new CANEncoder(rotatorMotor);
+  private final CANDigitalInput zeroLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
+  private final CANDigitalInput upperLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
+  private double p,i,d,ff;
+  private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry;
+  //private final CANPIDController controller = new CANPIDController(rotatorMotor);
+  private double setpoint = 30;
+
   /**
    * Creates a new TurretRotator.
    */
   public TurretRotator() {
+    //encoder.setPositionConversionFactor(0.0234375);
     
-  }
-  private final CANSparkMax turretRotator = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless );
-  private final CANPIDController rotateion = new CANPIDController(turretRotator);
-  private double setpoint = 30;
+    pEntry = Shuffleboard.getTab("turretRotatorTuning").add("portional",p).getEntry();
+    iEntry = Shuffleboard.getTab("turretRotatorTuning").add("integral",i).getEntry();
+    dEntry = Shuffleboard.getTab("turretRotatorTuning").add("derivative",d).getEntry();
+    ffEntry = Shuffleboard.getTab("turretRotatorTuning").add("feedForward",ff).getEntry();
 
-  public void SetSetPoint(setpoint){
-    setpoint
+    Shuffleboard.getTab("turretRotatorTuning").addNumber("Process Variable", () -> encoder.getPosition());
+    Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> upperLimit.get());
+    Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> zeroLimit.get());
+
+    //encoder.setInverted(true);
+    encoder.setPosition(0);
+    encoder.setPositionConversionFactor(1.0);
+
+    zeroLimit.enableLimitSwitch(true);
+    upperLimit.enableLimitSwitch(true);
+
+  }
+  
+  private void updateGains(){
+    if(p != pEntry.getDouble(0)){
+      p = pEntry.getDouble(0);
+      controller.setP(p);
+    }
+    if(i != iEntry.getDouble(0)){
+      i = iEntry.getDouble(0);
+      controller.setI(i);
+    }
+    if(d != dEntry.getDouble(0)){
+      d = dEntry.getDouble(0);
+      controller.setD(d);
+    }
+    if(ff != ffEntry.getDouble(0)){
+      ff = ffEntry.getDouble(0); 
+      controller.setFF(ff);
+    }
+  }
+  private void testLimits(){
+    if(zeroLimit.get()) encoder.setPosition(0);
+    if(upperLimit.get()) encoder.setPosition(250);
+  }
     
-  }
-
+  
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+     // This method will be called once per scheduler run
+    updateGains();
+    testLimits();
+    
+    System.out.println(rotatorMotor.get());
+   
   }
 }
