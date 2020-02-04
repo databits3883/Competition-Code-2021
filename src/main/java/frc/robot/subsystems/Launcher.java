@@ -19,8 +19,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
-  private final CANSparkMax leader = new CANSparkMax(Constants.LauncherLeaderChannel,MotorType.kBrushless);
-  private final CANSparkMax follower = new CANSparkMax(Constants.LauncherFollowerChannel,MotorType.kBrushless);
+  private final CANSparkMax leader = new CANSparkMax(Constants.launcherLeaderChannel, MotorType.kBrushless);
+  private final CANSparkMax follower = new CANSparkMax(Constants.launcherFollowerChannel, MotorType.kBrushless);
 
   private final CANEncoder encoder = new CANEncoder(leader);
   private final CANPIDController controller = new CANPIDController(leader);
