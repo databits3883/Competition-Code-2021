@@ -17,22 +17,19 @@ package frc.robot;
  */
 public final class Constants {
     //CAN
-    public static final int frontLeftChannel = 0;
-    //3
-    public static final int rearLeftChannel = 0;
-    //2
-    public static final int frontRightChannel = 0;
-    //1
-    public static final int rearRightChannel = 0;
-    //4
+    public static final int frontLeftChannel = 3;
+    public static final int rearLeftChannel = 2;
+    public static final int frontRightChannel = 1;
+    public static final int rearRightChannel = 4;
     public static final int intakeChannel = 11;
-    public static final int intakeExtenderChannel = 0;
+    public static final int intakeExtenderChannel = 10;
     public static final int bottomStagingBeltChannel = 12;
+    public static final int topStagingBeltChannel = 13;
     public static final int turretRotationChannel = 5;
-    public static final int LauncherLeaderChannel = 1;
-    //6
-    public static final int LauncherFollowerChannel = 3;
-    //7
+    public static final int launcherLeaderChannel = 6;
+    public static final int launcherFollowerChannel = 7;
+    public static final int hookLift = 14;
+    public static final int liftWinch= 15;
     //DIO
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
