@@ -11,6 +11,7 @@ import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANDigitalInput.LimitSwitch;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -18,6 +19,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 
 public class TurretRotator extends SubsystemBase {
@@ -27,8 +29,7 @@ public class TurretRotator extends SubsystemBase {
   private final CANDigitalInput upperLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
   private double p,i,d,ff;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry;
-  //private final CANPIDController controller = new CANPIDController(rotatorMotor);
-  private double setpoint = 30;
+  private final CANPIDController controller = new CANPIDController(rotatorMotor);
 
   /**
    * Creates a new TurretRotator.
@@ -53,6 +54,10 @@ public class TurretRotator extends SubsystemBase {
     upperLimit.enableLimitSwitch(true);
 
   }
+  public void setAngle(double setpoint){
+    MathUtil.clamp(setpoint, 0, Constants.maxTurretAngle);
+    controller.setReference(setpoint, ControlType.kSmartMotion);
+  }
   
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
@@ -74,7 +79,7 @@ public class TurretRotator extends SubsystemBase {
   }
   private void testLimits(){
     if(zeroLimit.get()) encoder.setPosition(0);
-    if(upperLimit.get()) encoder.setPosition(250);
+    if(upperLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
   }
     
   
@@ -83,8 +88,6 @@ public class TurretRotator extends SubsystemBase {
      // This method will be called once per scheduler run
     updateGains();
     testLimits();
-    
-    System.out.println(rotatorMotor.get());
    
   }
 }

@@ -17,6 +17,7 @@ import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.TurretRotator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -37,12 +38,12 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
   private final TurretRotator m_turretRotator = new TurretRotator();
+  private final Launcher m_launcher = new Launcher();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
   private final JoystickButton gbutton1 = new JoystickButton(gunnerJoystick, 1);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
-
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
