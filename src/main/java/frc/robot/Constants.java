@@ -28,8 +28,8 @@ public final class Constants {
     public static final int turretRotationChannel = 5;
     public static final int launcherLeaderChannel = 6;
     public static final int launcherFollowerChannel = 7;
-    public static final int hookLift = 14;
-    public static final int liftWinch= 15;
+    public static final int hookChannel = 14;
+    public static final int winchChannel= 15;
     //DIO
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
