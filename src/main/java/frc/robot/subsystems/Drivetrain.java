@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +32,7 @@ public class Drivetrain extends SubsystemBase {
     rearLeft.follow(frontLeft);
   }
 
-  public void ArcadeDrive(double zRotation, double xSpeed) throws Exception{
+  public void ArcadeDrive(double zRotation, double xSpeed){
 
     double leftMotorOutput;
     double rightMotorOutput;
@@ -57,11 +58,11 @@ public class Drivetrain extends SubsystemBase {
       }
     }
     TankDrive(leftMotorOutput, rightMotorOutput);
-    throw new Exception("Drivetrain is not implemented");
   }
 
   public void TankDrive(double leftValue, double rightValue){
-
+    rightController.setReference(rightValue*Constants.maxDriveSpeed, ControlType.kSmartVelocity);
+    leftController.setReference(leftValue*Constants.maxDriveSpeed, ControlType.kSmartVelocity);
   }
 
   @Override

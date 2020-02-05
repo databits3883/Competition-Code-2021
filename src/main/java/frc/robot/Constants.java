@@ -37,7 +37,7 @@ public final class Constants {
 
     //physical
     public static final double maxTurretAngle = 250;
- 
+    public static final double maxDriveSpeed = 20;
 
 
 }
