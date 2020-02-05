@@ -7,11 +7,15 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,6 +27,14 @@ public class Drivetrain extends SubsystemBase {
 
   private final CANPIDController rightController = new CANPIDController(frontRight);
   private final CANPIDController leftController = new CANPIDController(frontLeft);
+
+  private final CANEncoder leftEncoder = new CANEncoder(frontRight);
+  private final CANEncoder rightEncoder = new CANEncoder(frontLeft);
+
+
+  private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
+  private boolean lockToLeft = false;
+  private NetworkTableEntry lPEntry, lIEntry,lDEntry , lFEntry, rPEntry, rIEntry, rDEntry, rFEntry, lSPEntry, rSPEntry, lockEntry;
   
   /**
    * Creates a new Drivetrain.
@@ -30,6 +42,29 @@ public class Drivetrain extends SubsystemBase {
   public Drivetrain() {
     rearRight.follow(frontRight);
     rearLeft.follow(frontLeft);
+
+    lPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", lP).getEntry();
+    lIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", lI).getEntry();
+    lDEntry = Shuffleboard.getTab("velocity drive tuning").add("left D", lD).getEntry();
+    lFEntry = Shuffleboard.getTab("velocity drive tuning").add("left FF", lF).getEntry();
+    lSPEntry = Shuffleboard.getTab("velocity drive tuning").add("left Setpoint", lSP).getEntry();
+
+    rPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", rP).getEntry();
+    rIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", rI).getEntry();
+    rDEntry = Shuffleboard.getTab("velocity drive tuning").add("left D", rD).getEntry();
+    rFEntry = Shuffleboard.getTab("velocity drive tuning").add("left FF", rF).getEntry();
+    rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("left Setpoint", rSP).getEntry();
+
+    double velocityConversion = Constants.wheelDiameter*Math.PI*Constants.driveTrainGearingRatio/60d;
+
+    leftEncoder.setVelocityConversionFactor(velocityConversion);
+    rightEncoder.setVelocityConversionFactor(velocityConversion);
+
+
+    Shuffleboard.getTab("velocity drive tuning").addNumber("left pv", leftEncoder::getVelocity);
+    Shuffleboard.getTab("velocity drive tuning").addNumber("right pv", rightEncoder::getVelocity);
+
+    lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
@@ -67,7 +102,69 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    updateGains();
     // This method will be called once per scheduler run
+  }
+
+  private void updateGains(){
+    if (lockEntry.getBoolean(true) != lockToLeft){
+      lockToLeft = lockEntry.getBoolean(true);
+    }
+    if (lockToLeft){
+      lockGains();
+    }
+    updateUnlocked();
+  }
+
+  private void lockGains(){
+    rPEntry.setDouble(lPEntry.getDouble(0));
+    rIEntry.setDouble(lIEntry.getDouble(0));
+    rDEntry.setDouble(lDEntry.getDouble(0));
+    rFEntry.setDouble(lFEntry.getDouble(0));
+    rSPEntry.setDouble(lSPEntry.getDouble(0));
+  }
+  private void updateUnlocked(){
+    if(lP!=lPEntry.getDouble(0)){
+      lP=lPEntry.getDouble(0);
+      leftController.setP(lP);
+    }
+    if(lI!=lIEntry.getDouble(0)){
+      lI=lIEntry.getDouble(0);
+      leftController.setI(lI);
+    }
+    if(lD!=lDEntry.getDouble(0)){
+      lD=lDEntry.getDouble(0);
+      leftController.setD(lD);
+    }
+    if(lF!=lFEntry.getDouble(0)){
+      lF=lFEntry.getDouble(0);
+      leftController.setFF(lF);
+    }
+    if(lSP!=lSPEntry.getDouble(0)){
+      lSP=lSPEntry.getDouble(0);
+      leftController.setReference(lSP, ControlType.kSmartVelocity);
+    }
+
+    if(rP!=rPEntry.getDouble(0)){
+      rP=rPEntry.getDouble(0);
+      rightController.setP(rP);
+    }
+    if(rI!=rIEntry.getDouble(0)){
+      rI=rIEntry.getDouble(0);
+      rightController.setI(rI);
+    }
+    if(rD!=rDEntry.getDouble(0)){
+      rD=rDEntry.getDouble(0);
+      rightController.setD(rD);
+    }
+    if(rF!=rFEntry.getDouble(0)){
+      rF=rFEntry.getDouble(0);
+      rightController.setFF(rF);
+    }
+    if(rSP!=rSPEntry.getDouble(0)){
+      rSP=rSPEntry.getDouble(0);
+      rightController.setReference(rSP, ControlType.kSmartVelocity);
+    }
   }
 
 }
