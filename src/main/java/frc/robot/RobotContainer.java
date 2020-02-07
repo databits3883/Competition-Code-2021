@@ -53,7 +53,23 @@ public class RobotContainer {
 
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final Command manualArcadeDrive = new RunCommand(()->m_drivetrain.ArcadeDrive(driverJoystick.getX(), driverJoystick.getY()),m_drivetrain );
+  private final Command manualArcadeDrive = new RunCommand(()->{
+    double x = driverJoystick.getX();
+    double y = -driverJoystick.getY();
+    if( Math.abs(x)<.07){
+      x=0;
+      }
+      else {
+        x-=Math.copySign(.07, x);
+      }
+    if( Math.abs(y)<.07){
+       y=0;
+      }
+      else{
+       y-=Math.copySign(.07, y);
+      }
+  m_drivetrain.ArcadeDrive(x, y);
+  },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);

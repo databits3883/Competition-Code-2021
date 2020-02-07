@@ -17,10 +17,10 @@ package frc.robot;
  */
 public final class Constants {
     //CAN
-    public static final int frontLeftChannel = 3;
-    public static final int rearLeftChannel = 2;
-    public static final int frontRightChannel = 1;
-    public static final int rearRightChannel = 4;
+    public static final int frontLeftChannel = 1;
+    public static final int rearLeftChannel = 4;
+    public static final int frontRightChannel = 3;
+    public static final int rearRightChannel = 2;
     public static final int intakeChannel = 11;
     public static final int intakeExtenderChannel = 10;
     public static final int bottomStagingBeltChannel = 12;
@@ -39,7 +39,7 @@ public final class Constants {
     //distances in feet, time in seconds
     public static final double maxTurretAngle = 250;
     public static final double maxDriveSpeed = 20;
-    public static final double wheelDiameter = 7d/12d;
-    public static final double driveTrainGearingRatio = 8.75;
+    public static final double wheelDiameter = 7.0/12.0;
+    public static final double driveTrainGearingRatio = 8.45;
     
     }

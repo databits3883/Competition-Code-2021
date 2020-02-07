@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
+import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -40,6 +41,9 @@ public class Drivetrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
   public Drivetrain() {
+    frontLeft.setInverted(false);
+    frontRight.setInverted(true);
+
     rearRight.follow(frontRight);
     rearLeft.follow(frontLeft);
 
@@ -49,30 +53,34 @@ public class Drivetrain extends SubsystemBase {
     lFEntry = Shuffleboard.getTab("velocity drive tuning").add("left FF", lF).getEntry();
     lSPEntry = Shuffleboard.getTab("velocity drive tuning").add("left Setpoint", lSP).getEntry();
 
-    rPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", rP).getEntry();
-    rIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", rI).getEntry();
-    rDEntry = Shuffleboard.getTab("velocity drive tuning").add("left D", rD).getEntry();
-    rFEntry = Shuffleboard.getTab("velocity drive tuning").add("left FF", rF).getEntry();
-    rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("left Setpoint", rSP).getEntry();
+    rPEntry = Shuffleboard.getTab("velocity drive tuning").add("right P", rP).getEntry();
+    rIEntry = Shuffleboard.getTab("velocity drive tuning").add("right I", rI).getEntry();
+    rDEntry = Shuffleboard.getTab("velocity drive tuning").add("right D", rD).getEntry();
+    rFEntry = Shuffleboard.getTab("velocity drive tuning").add("right FF", rF).getEntry();
+    rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
 
-    double velocityConversion = Constants.wheelDiameter*Math.PI*Constants.driveTrainGearingRatio/60d;
+    double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
 
-    leftEncoder.setVelocityConversionFactor(velocityConversion);
-    rightEncoder.setVelocityConversionFactor(velocityConversion);
+   leftEncoder.setVelocityConversionFactor(velocityConversion);
+   rightEncoder.setVelocityConversionFactor(velocityConversion);
+   leftEncoder.setPositionConversionFactor(1);
+   leftEncoder.setPosition(0.0);
 
 
     Shuffleboard.getTab("velocity drive tuning").addNumber("left pv", leftEncoder::getVelocity);
     Shuffleboard.getTab("velocity drive tuning").addNumber("right pv", rightEncoder::getVelocity);
 
     lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
+    Shuffleboard.getTab("velocity drive tuning").addNumber("left output", frontLeft::get);
+    Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", frontLeft::getVoltageCompensationNominalVoltage);
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
 
+    //frontLeft.setInverted(true);
     double leftMotorOutput;
     double rightMotorOutput;
-
-    double maxInput = Math.copySign(Math.max(Math.abs(xSpeed), Math.abs(zRotation)), xSpeed);
+    double maxInput = Math.copySign(Math.max(Math.abs(zRotation), Math.abs(xSpeed)), xSpeed);
     if (xSpeed >= 0.0) {
       // First quadrant, else second quadrant
       if (zRotation >= 0.0) {
@@ -91,18 +99,19 @@ public class Drivetrain extends SubsystemBase {
         leftMotorOutput = maxInput;
         rightMotorOutput = xSpeed - zRotation;
       }
-    }
+    } 
     TankDrive(leftMotorOutput, rightMotorOutput);
   }
 
   public void TankDrive(double leftValue, double rightValue){
-    rightController.setReference(rightValue*Constants.maxDriveSpeed, ControlType.kSmartVelocity);
-    leftController.setReference(leftValue*Constants.maxDriveSpeed, ControlType.kSmartVelocity);
+    rightController.setReference(rightValue*Constants.maxDriveSpeed, ControlType.kVelocity);
+    leftController.setReference(leftValue*Constants.maxDriveSpeed, ControlType.kVelocity);
   }
 
   @Override
   public void periodic() {
     updateGains();
+    //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }
 
@@ -126,7 +135,7 @@ public class Drivetrain extends SubsystemBase {
   private void updateUnlocked(){
     if(lP!=lPEntry.getDouble(0)){
       lP=lPEntry.getDouble(0);
-      leftController.setP(lP);
+      leftController.setP(lP); 
     }
     if(lI!=lIEntry.getDouble(0)){
       lI=lIEntry.getDouble(0);
@@ -141,8 +150,12 @@ public class Drivetrain extends SubsystemBase {
       leftController.setFF(lF);
     }
     if(lSP!=lSPEntry.getDouble(0)){
+      System.out.println(leftController.setIAccum(0));
+      rightController.setIAccum(0);
       lSP=lSPEntry.getDouble(0);
-      leftController.setReference(lSP, ControlType.kSmartVelocity);
+      leftController.setReference(lSP, ControlType.kVelocity);
+      leftController.setIAccum(0);
+      rightController.setIAccum(0);
     }
 
     if(rP!=rPEntry.getDouble(0)){
@@ -162,8 +175,10 @@ public class Drivetrain extends SubsystemBase {
       rightController.setFF(rF);
     }
     if(rSP!=rSPEntry.getDouble(0)){
+      leftController.setIAccum(0);
+      rightController.setIAccum(0);
       rSP=rSPEntry.getDouble(0);
-      rightController.setReference(rSP, ControlType.kSmartVelocity);
+      rightController.setReference(rSP, ControlType.kVelocity);
     }
   }
 
