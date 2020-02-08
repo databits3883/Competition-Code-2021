@@ -38,6 +38,8 @@ public final class Constants {
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
 
+    public static final int controlPanelPressedChannel = 5;
+
     //I2C
     public static final I2C.Port colorSensorPort = Port.kOnboard;
 

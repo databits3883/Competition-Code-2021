@@ -11,12 +11,14 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ControlPanelSpinner extends SubsystemBase {
   private final CANSparkMax motor = new CANSparkMax(Constants.controlWheelChannel, MotorType.kBrushless);
+  private final DigitalInput pressedBackSwitch = new DigitalInput(Constants.controlPanelPressedChannel);
   ColorSensorV3 sensor = new ColorSensorV3(Constants.colorSensorPort);
   /**
    * Creates a new ControlPanelSpinner.
@@ -32,6 +34,10 @@ public class ControlPanelSpinner extends SubsystemBase {
   }
   public void stopSpin(){
     motor.stopMotor();
+  }
+
+  public boolean getEngaged(){
+    return pressedBackSwitch.get();
   }
 
   public WheelColor getColor(){
