@@ -29,6 +29,10 @@ public class UpperStagingBelt extends SubsystemBase {
   public void stopBelt(){
     beltMotor.stopMotor();
   }
+
+  public boolean isBallPresent(){
+    return ballSensor.get();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
