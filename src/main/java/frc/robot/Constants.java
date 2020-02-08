@@ -50,5 +50,10 @@ public final class Constants {
     public static final double minimumHoodAngle = 0;
     public static final double maximumHoodAngle = 0;
 
+    //Color
+    public static final double redThreshold = 0.3;
+    public static final double greenThreshold = 0.4;
+    public static final double blueThreshold = 0.3;
+
     
     }
