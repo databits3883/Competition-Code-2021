@@ -53,7 +53,7 @@ public class Hood extends SubsystemBase {
   @Override
   public void periodic() {
     updateGains();
-    
+    checkEndpoints();
     // This method will be called once per scheduler run
   }
   private void updateGains(){
@@ -74,6 +74,14 @@ public class Hood extends SubsystemBase {
       controller.setFF(ff);
     }
    
+  }
+  private void checkEndpoints(){
+    if(lowerLimit.get()){
+      encoder.setPosition(Constants.minimumHoodAngle);
+    }
+    if(lowerLimit.get()){
+      encoder.setPosition(Constants.maximumHoodAngle);
+    }
   }
   public void setAngle(double angle){
     angle = MathUtil.clamp(angle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
