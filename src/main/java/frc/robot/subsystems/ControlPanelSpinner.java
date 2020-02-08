@@ -24,6 +24,15 @@ public class ControlPanelSpinner extends SubsystemBase {
   public ControlPanelSpinner() {
 
   }
+  public void spinCounterclockwise(){
+    motor.set(1);
+  }
+  public void spinClockwise(){
+    motor.set(-1);
+  }
+  public void stopSpin(){
+    motor.stopMotor();
+  }
 
   public WheelColor getColor(){
     Color measured = sensor.getColor();
