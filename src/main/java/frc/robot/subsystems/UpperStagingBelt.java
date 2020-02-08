@@ -22,7 +22,13 @@ public class UpperStagingBelt extends SubsystemBase {
    * Creates a new UpperStagingBelt.
    */
   public UpperStagingBelt() {}
-
+  
+  public void runBelt(){
+    beltMotor.set(Constants.stagingSpeed);
+  }
+  public void stopBelt(){
+    beltMotor.stopMotor();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
