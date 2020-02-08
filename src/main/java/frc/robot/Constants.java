@@ -37,6 +37,7 @@ public final class Constants {
     //DIO
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
+    public static final int upperStagingSensor = 7;
 
     public static final int controlPanelPressedChannel = 5;
 
@@ -51,6 +52,7 @@ public final class Constants {
     public static final double driveTrainGearingRatio = 8.45;
     public static final double minimumHoodAngle = 0;
     public static final double maximumHoodAngle = 0;
+    public static final double stagingSpeed = 0.5;
 
     //Color
     public static final double redThreshold = 0.3;
