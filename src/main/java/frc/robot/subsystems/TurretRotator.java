@@ -35,7 +35,7 @@ public class TurretRotator extends SubsystemBase {
    * Creates a new TurretRotator.
    */
   public TurretRotator() {
-    //encoder.setPositionConversionFactor(0.0234375);
+    encoder.setPositionConversionFactor(360.0/15.0);
     
     pEntry = Shuffleboard.getTab("turretRotatorTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("turretRotatorTuning").add("integral",i).getEntry();
