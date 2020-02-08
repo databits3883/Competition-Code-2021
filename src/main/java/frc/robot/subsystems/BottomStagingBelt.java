@@ -18,8 +18,8 @@ import frc.robot.Constants;
 public class BottomStagingBelt extends SubsystemBase {
   private final CANSparkMax beltMotor = new CANSparkMax(Constants.bottomStagingBeltChannel, MotorType.kBrushless);
 
-  private final DigitalInput testingLowerSwitch = new DigitalInput(8);
-  private final DigitalInput testingUpperSwitch = new DigitalInput(9);
+  private final DigitalInput lowerSwitch = new DigitalInput(Constants.lowerStagingStartSensor);
+  private final DigitalInput upperSwitch = new DigitalInput(Constants.lowerStagingEndSensor);
   /**
    * Creates a new BottomStagingBelt.
    */
@@ -28,10 +28,10 @@ public class BottomStagingBelt extends SubsystemBase {
 
   }
   public boolean getSensorBottom(){
-    return testingLowerSwitch.get();
+    return lowerSwitch.get();
   }
   public boolean getSensorTop(){
-    return testingUpperSwitch.get();
+    return upperSwitch.get();
   }
   public void runBelt(){
     beltMotor.set(.25);

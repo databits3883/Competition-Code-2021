@@ -38,6 +38,8 @@ public final class Constants {
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
     public static final int upperStagingSensor = 7;
+    public static final int lowerStagingStartSensor = 8;
+    public static final int lowerStagingEndSensor = 9;
 
     public static final int controlPanelPressedChannel = 5;
 
