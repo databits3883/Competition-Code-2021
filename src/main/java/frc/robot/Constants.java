@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -30,10 +33,13 @@ public final class Constants {
     public static final int launcherFollowerChannel = 7;
     public static final int hookChannel = 14;
     public static final int winchChannel= 15;
+    public static final int controlWheelChannel = 9;
     //DIO
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
 
+    //I2C
+    public static final I2C.Port colorSensorPort = Port.kOnboard;
 
     //physical
     //distances in feet, time in seconds
