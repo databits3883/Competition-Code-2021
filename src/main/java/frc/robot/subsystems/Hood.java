@@ -7,9 +7,12 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitch;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -22,12 +25,16 @@ public class Hood extends SubsystemBase {
   * Creates a new Hood.
   */  
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.hookChannel, MotorType.kBrushless);
+  private final CANPIDController canPIDController = new CANPIDController(hoodMotor);
+  private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
   private final CANPIDController controller = new CANPIDController(hoodMotor);
   private final CANEncoder encoder = new CANEncoder(hoodMotor);
   private double p,i,d,ff,position;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,positionEntry;
+ 
   public Hood() {
-    encoder.setVelocityConversionFactor(1);
+
+    encoder.setPositionConversionFactor(16.0*360.0/264);
 
     pEntry = Shuffleboard.getTab("hoodTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("hoodTuning").add("integral",i).getEntry();
