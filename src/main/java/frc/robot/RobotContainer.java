@@ -74,6 +74,7 @@ public class RobotContainer {
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
+  private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerJoystick.getX()), m_turretRotator);
   
 
 
