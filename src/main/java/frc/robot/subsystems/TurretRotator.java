@@ -31,6 +31,8 @@ public class TurretRotator extends SubsystemBase {
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry;
   private final CANPIDController controller = new CANPIDController(rotatorMotor);
 
+  private double setpoint;
+
   /**
    * Creates a new TurretRotator.
    */
@@ -54,9 +56,12 @@ public class TurretRotator extends SubsystemBase {
     upperLimit.enableLimitSwitch(true);
 
   }
-  public void setAngle(double setpoint){
-    setpoint = MathUtil.clamp(setpoint, 0, Constants.maxTurretAngle);
+  public void setAngle(double newSetpoint){
+    setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
     controller.setReference(setpoint, ControlType.kSmartMotion);
+  }
+  public void changeAngle(double angleDelta){
+    setAngle(setpoint + angleDelta);
   }
   
   private void updateGains(){
