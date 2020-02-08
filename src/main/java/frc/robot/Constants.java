@@ -41,5 +41,8 @@ public final class Constants {
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
+    public static final double minimumHoodAngle = 0;
+    public static final double maximumHoodAngle = 0;
+
     
     }
