@@ -57,7 +57,6 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateGains();
-    System.out.println(controller.getP());
   }
   
   private void updateGains(){

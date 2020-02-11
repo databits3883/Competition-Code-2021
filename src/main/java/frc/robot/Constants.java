@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -17,10 +20,10 @@ package frc.robot;
  */
 public final class Constants {
     //CAN
-    public static final int frontLeftChannel = 3;
-    public static final int rearLeftChannel = 2;
-    public static final int frontRightChannel = 1;
-    public static final int rearRightChannel = 4;
+    public static final int frontLeftChannel = 1;
+    public static final int rearLeftChannel = 4;
+    public static final int frontRightChannel = 3;
+    public static final int rearRightChannel = 2;
     public static final int intakeChannel = 11;
     public static final int intakeExtenderChannel = 10;
     public static final int bottomStagingBeltChannel = 12;
@@ -30,14 +33,33 @@ public final class Constants {
     public static final int launcherFollowerChannel = 7;
     public static final int hookChannel = 14;
     public static final int winchChannel= 15;
+    public static final int controlWheelChannel = 9;
     //DIO
     public static final int extendedLimitSwitchChannel = 3;
     public static final int retractedLimitSwitchChannel = 4;
+    public static final int upperStagingSensor = 7;
+    public static final int lowerStagingStartSensor = 8;
+    public static final int lowerStagingEndSensor = 9;
 
+    public static final int controlPanelPressedChannel = 5;
+
+    //I2C
+    public static final I2C.Port colorSensorPort = Port.kOnboard;
 
     //physical
+    //distances in feet, time in seconds
     public static final double maxTurretAngle = 250;
+    public static final double maxDriveSpeed = 20;
+    public static final double wheelDiameter = 7.0/12.0;
+    public static final double driveTrainGearingRatio = 8.45;
+    public static final double minimumHoodAngle = 0;
+    public static final double maximumHoodAngle = 0;
+    public static final double stagingSpeed = 0.5;
 
+    //Color
+    public static final double redThreshold = 0.3;
+    public static final double greenThreshold = 0.4;
+    public static final double blueThreshold = 0.3;
 
-
-}
+    
+    }

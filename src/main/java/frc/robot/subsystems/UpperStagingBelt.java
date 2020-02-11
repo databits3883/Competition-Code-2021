@@ -8,36 +8,30 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class BottomStagingBelt extends SubsystemBase {
-  private final CANSparkMax beltMotor = new CANSparkMax(Constants.bottomStagingBeltChannel, MotorType.kBrushless);
-
-  private final DigitalInput lowerSwitch = new DigitalInput(Constants.lowerStagingStartSensor);
-  private final DigitalInput upperSwitch = new DigitalInput(Constants.lowerStagingEndSensor);
+public class UpperStagingBelt extends SubsystemBase {
+  private final CANSparkMax beltMotor = new CANSparkMax(Constants.topStagingBeltChannel, MotorType.kBrushless);
+  
+  private final DigitalInput ballSensor = new DigitalInput(Constants.upperStagingSensor);
   /**
-   * Creates a new BottomStagingBelt.
+   * Creates a new UpperStagingBelt.
    */
-  public BottomStagingBelt() {
-    beltMotor.setIdleMode(IdleMode.kBrake);
-
-  }
-  public boolean getSensorBottom(){
-    return lowerSwitch.get();
-  }
-  public boolean getSensorTop(){
-    return upperSwitch.get();
-  }
+  public UpperStagingBelt() {}
+  
   public void runBelt(){
-    beltMotor.set(.25);
+    beltMotor.set(Constants.stagingSpeed);
   }
   public void stopBelt(){
-    beltMotor.set(0);
+    beltMotor.stopMotor();
+  }
+
+  public boolean isBallPresent(){
+    return ballSensor.get();
   }
   @Override
   public void periodic() {

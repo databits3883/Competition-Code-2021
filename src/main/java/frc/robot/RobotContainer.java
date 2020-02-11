@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Rotation;
 import frc.robot.commands.StagingToTop;
 import frc.robot.subsystems.BottomStagingBelt;
+import frc.robot.subsystems.ControlPanelSpinner;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
@@ -39,11 +41,15 @@ public class RobotContainer {
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
   private final TurretRotator m_turretRotator = new TurretRotator();
   private final Launcher m_launcher = new Launcher();
+  private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
+  private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
   private final JoystickButton gbutton1 = new JoystickButton(gunnerJoystick, 1);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
+  private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
+
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
@@ -53,11 +59,28 @@ public class RobotContainer {
 
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
-  private final Command manualArcadeDrive = new RunCommand(()->m_drivetrain.ArcadeDrive(driverJoystick.getX(), driverJoystick.getY()),m_drivetrain );
+  private final Command manualArcadeDrive = new RunCommand(()->{
+    double x = driverJoystick.getX();
+    double y = -driverJoystick.getY();
+    if( Math.abs(x)<.07){
+      x=0;
+      }
+      else {
+        x-=Math.copySign(.07, x);
+      }
+    if( Math.abs(y)<.07){
+       y=0;
+      }
+      else{
+       y-=Math.copySign(.07, y);
+      }
+  m_drivetrain.ArcadeDrive(x, y);
+  },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
+  private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerJoystick.getX()), m_turretRotator);
   
 
 
@@ -87,6 +110,8 @@ public class RobotContainer {
     gbutton1.whenReleased(m_stopIntake);
     gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whileActiveContinuous(m_advanceStaging);
+    gbutton3.whenPressed(m_rotation);
+
   }
 
 
