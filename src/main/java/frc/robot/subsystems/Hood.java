@@ -32,7 +32,7 @@ public class Hood extends SubsystemBase {
   private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
   private final CANPIDController controller = new CANPIDController(hoodMotor);
   private final CANEncoder encoder = new CANEncoder(hoodMotor);
-  private double p,i,d,ff,position;
+  private double p,i,d,ff,angle;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,positionEntry;
  
   public Hood() {
@@ -46,7 +46,7 @@ public class Hood extends SubsystemBase {
 
 
 
-    positionEntry = Shuffleboard.getTab("hoodTuning").add("position",position).getEntry();
+    positionEntry = Shuffleboard.getTab("hoodTuning").add("position",angle).getEntry();
     
   }
 
@@ -83,8 +83,11 @@ public class Hood extends SubsystemBase {
       encoder.setPosition(Constants.maximumHoodAngle);
     }
   }
-  public void setAngle(double angle){
-    angle = MathUtil.clamp(angle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
-    controller.setReference(angle, ControlType.kPosition);
+  public void setAngle(double newAngle){
+    angle = MathUtil.clamp(newAngle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
+    controller.setReference(newAngle, ControlType.kPosition);
+  }
+  public void changeAngle(double angleDelta){
+    setAngle(angle + angleDelta);
   }
 }

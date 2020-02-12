@@ -10,6 +10,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Rotation;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.ControlPanelSpinner;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.TurretRotator;
@@ -43,13 +45,14 @@ public class RobotContainer {
   private final Launcher m_launcher = new Launcher();
   private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
+  private final Hood m_hood = new Hood();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
   private final JoystickButton gbutton1 = new JoystickButton(gunnerJoystick, 1);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
   private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
-
+  private final XboxController gunnerController = new XboxController(0);
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
@@ -81,6 +84,9 @@ public class RobotContainer {
   private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
   private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerJoystick.getX()), m_turretRotator);
+  private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
+  private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
+  
   
 
 
@@ -111,7 +117,7 @@ public class RobotContainer {
     gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whileActiveContinuous(m_advanceStaging);
     gbutton3.whenPressed(m_rotation);
-
+    
   }
 
 
