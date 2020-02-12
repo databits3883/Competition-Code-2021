@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 
 public class Launcher extends SubsystemBase {
@@ -27,6 +28,7 @@ public class Launcher extends SubsystemBase {
 
   private double p,i,d,ff,speed;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,speedEntry;
+
   
   /**
    * Creates a new Launcher.
@@ -49,9 +51,13 @@ public class Launcher extends SubsystemBase {
    * Sets the speed of the Launcher wheel
    * @param speed the target speed of the wheel in inches per second
    */
-  public void setSpeed(double speed){
-    controller.setReference(speed, ControlType.kVelocity);
+  public void setSpeed(double newSpeed){
+    controller.setReference(newSpeed, ControlType.kVelocity);
   }
+  public void changeSpeed(double angleDelta){
+    setSpeed(speed + angleDelta);
+  }
+  
 
   @Override
   public void periodic() {
