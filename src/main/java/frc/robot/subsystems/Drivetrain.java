@@ -12,6 +12,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -29,8 +30,8 @@ public class Drivetrain extends SubsystemBase {
   private final CANPIDController rightController = new CANPIDController(frontRight);
   private final CANPIDController leftController = new CANPIDController(frontLeft);
 
-  private final CANEncoder leftEncoder = new CANEncoder(frontRight);
-  private final CANEncoder rightEncoder = new CANEncoder(frontLeft);
+  private final CANEncoder leftEncoder = new CANEncoder(frontLeft);
+  private final CANEncoder rightEncoder = new CANEncoder(frontRight);
 
 
   private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
@@ -58,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
     rDEntry = Shuffleboard.getTab("velocity drive tuning").add("right D", rD).getEntry();
     rFEntry = Shuffleboard.getTab("velocity drive tuning").add("right FF", rF).getEntry();
     rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
-
+    setIdleMode();
     double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
 
    leftEncoder.setVelocityConversionFactor(velocityConversion);
@@ -73,6 +74,12 @@ public class Drivetrain extends SubsystemBase {
     lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
     Shuffleboard.getTab("velocity drive tuning").addNumber("left output", frontLeft::get);
     Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", frontLeft::getVoltageCompensationNominalVoltage);
+  }
+  void setIdleMode(){
+    frontLeft.setIdleMode(IdleMode.kBrake);
+    frontRight.setIdleMode(IdleMode.kBrake);
+    rearLeft.setIdleMode(IdleMode.kBrake);
+    rearRight.setIdleMode(IdleMode.kBrake);
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
