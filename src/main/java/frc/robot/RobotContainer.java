@@ -64,6 +64,7 @@ public class RobotContainer {
   private final SupplierButton startButton = new SupplierButton( ()->gunnerController.getStartButton());
   private final SupplierButton lBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
+  
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){

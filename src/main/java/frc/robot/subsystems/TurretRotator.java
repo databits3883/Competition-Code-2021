@@ -56,6 +56,9 @@ public class TurretRotator extends SubsystemBase {
     upperLimit.enableLimitSwitch(true);
 
   }
+  public double getAngle(){
+    return encoder.getPosition();
+  }
   public void setAngle(double newSetpoint){
     setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
     controller.setReference(setpoint, ControlType.kSmartMotion);

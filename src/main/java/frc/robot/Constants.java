@@ -55,6 +55,7 @@ public final class Constants {
     public static final double minimumHoodAngle = 0;
     public static final double maximumHoodAngle = 0;
     public static final double stagingSpeed = 0.5;
+    public static final double robotToTargetZDelta = 0;
 
     //Color
     public static final double redThreshold = 0.3;
