@@ -32,7 +32,7 @@ public class UpperStagingBelt extends SubsystemBase {
   }
 
   public boolean isBallPresent(){
-    return ballSensor.get();
+    return !ballSensor.get();
   }
   @Override
   public void periodic() {

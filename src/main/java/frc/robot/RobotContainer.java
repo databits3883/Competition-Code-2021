@@ -28,6 +28,7 @@ import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.TurretRotator;
+import frc.robot.subsystems.UpperStagingBelt;
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -48,11 +49,12 @@ public class RobotContainer {
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
-  private final TurretRotator m_turretRotator = new TurretRotator();
-  private final Launcher m_launcher = new Launcher();
-  private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
-  private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
-  private final Hood m_hood = new Hood();
+  //private final UpperStagingBelt m_upperStagingBelt = new UpperStagingBelt();
+  //private final TurretRotator m_turretRotator = new TurretRotator();
+  //private final Launcher m_launcher = new Launcher();
+  //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
+  //private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
+  //private final Hood m_hood = new Hood();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -99,15 +101,21 @@ public class RobotContainer {
   },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
-  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake);
-  private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
+  private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
+  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt));
+  private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt);
+  private final Command m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt)
+      .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.5))
+      
+      .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
-  private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)), m_turretRotator);
-  private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
-  private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
+  //private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)), m_turretRotator);
+  //private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
+  //private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
+  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -133,11 +141,11 @@ public class RobotContainer {
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whenPressed(m_runOutake);
-    driverButton8.whenReleased(m_stopIntake);
-    gbutton2.whenPressed(m_stagingToTop,false);
-    lowerIntakeTrigger.whileActiveContinuous(m_advanceStaging);
-    gbutton3.whenPressed(m_rotation);
-    xButton.whenActive(debugCommand);
+    driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
+    //gbutton2.whenPressed(m_stagingToTop,false);
+    lowerIntakeTrigger.whenActive(m_advanceStaging);
+    //gbutton3.whenPressed(m_rotation);
+    xButton.whenActive(m_stagingToTop);
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
     

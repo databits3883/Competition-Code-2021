@@ -42,9 +42,9 @@ public final class Constants {
     public static final int liftWinchChannel = 4;
 
     //DIO
-    public static final int upperStagingSensor = 7;
-    public static final int lowerStagingStartSensor = 8;
-    public static final int lowerStagingEndSensor = 9;
+    public static final int upperStagingSensor = 9+10;
+    public static final int lowerStagingStartSensor = 8+10;
+    public static final int lowerStagingEndSensor = 7+10;
 
     public static final int controlPanelPressedChannel = 5;
 

@@ -28,13 +28,16 @@ public class BottomStagingBelt extends SubsystemBase {
 
   }
   public boolean getSensorBottom(){
-    return lowerSwitch.get();
+    return !lowerSwitch.get();
   }
   public boolean getSensorTop(){
-    return upperSwitch.get();
+    return !upperSwitch.get();
   }
   public void runBelt(){
-    beltMotor.set(.25);
+    beltMotor.set(-0.25);
+  }
+  public void outTake(){
+    beltMotor.set(0.25);
   }
   public void stopBelt(){
     beltMotor.set(0);
