@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendIntake;
+import frc.robot.commands.ManualLaunch;
 import frc.robot.commands.RetractIntake;
 import frc.robot.commands.Rotation;
 import frc.robot.commands.StagingToTop;
@@ -49,8 +50,8 @@ public class RobotContainer {
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
-  //private final UpperStagingBelt m_upperStagingBelt = new UpperStagingBelt();
-  //private final TurretRotator m_turretRotator = new TurretRotator();
+  private final UpperStagingBelt m_upperStagingBelt = new UpperStagingBelt();
+  private final TurretRotator m_turretRotator = new TurretRotator();
   //private final Launcher m_launcher = new Launcher();
   //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   //private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
@@ -71,8 +72,10 @@ public class RobotContainer {
   private final SupplierButton aButton = new SupplierButton( ()->gunnerController.getAButton()); 
   private final SupplierButton backButton = new SupplierButton( ()->gunnerController.getBackButton());
   private final SupplierButton startButton = new SupplierButton( ()->gunnerController.getStartButton());
-  private final SupplierButton lBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
-  private final SupplierButton rBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
+  private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
+  private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
+  private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
+
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
@@ -110,11 +113,12 @@ public class RobotContainer {
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
   //private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)), m_turretRotator);
-  //private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
+  ////private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
   //private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
+  private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt);
   
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -148,6 +152,7 @@ public class RobotContainer {
     xButton.whenActive(m_stagingToTop);
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
+    rightTriggButton.whenPressed(m_manualLaunch);
     
   }
 

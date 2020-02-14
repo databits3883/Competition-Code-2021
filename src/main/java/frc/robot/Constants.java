@@ -53,12 +53,12 @@ public final class Constants {
 
     //physical
     //distances in feet, time in seconds
-    public static final double maxTurretAngle = 250;
+    public static final double maxTurretAngle = 270;
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
     public static final double minimumHoodAngle = 0;
-    public static final double maximumHoodAngle = 0;
+    public static final double maximumHoodAngle = 30;
     public static final double stagingSpeed = 0.5;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;
