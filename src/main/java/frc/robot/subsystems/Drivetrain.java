@@ -60,12 +60,13 @@ public class Drivetrain extends SubsystemBase {
     rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
 
     double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
-
+    double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
    leftEncoder.setVelocityConversionFactor(velocityConversion);
    rightEncoder.setVelocityConversionFactor(velocityConversion);
-   leftEncoder.setPositionConversionFactor(1);
+   leftEncoder.setPositionConversionFactor(positionalConversion);
+   rightEncoder.setPositionConversionFactor(positionalConversion);
    leftEncoder.setPosition(0.0);
-
+   rightEncoder.setPosition(0.0);
 
     Shuffleboard.getTab("velocity drive tuning").addNumber("left pv", leftEncoder::getVelocity);
     Shuffleboard.getTab("velocity drive tuning").addNumber("right pv", rightEncoder::getVelocity);
@@ -113,6 +114,9 @@ public class Drivetrain extends SubsystemBase {
     updateGains();
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
+  }
+  public double getLeftEncoder() {
+    return leftEncoder.getPosition();
   }
 
   private void updateGains(){
