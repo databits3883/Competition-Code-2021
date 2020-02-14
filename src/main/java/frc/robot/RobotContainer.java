@@ -88,7 +88,7 @@ public class RobotContainer {
       else{
        y-=Math.copySign(.07, y);
       }
-  m_drivetrain.ArcadeDrive(x, y);
+  m_drivetrain.ArcadeDrive(Math.pow(x, 3), Math.pow(x, 3));
   },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
