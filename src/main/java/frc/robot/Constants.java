@@ -24,19 +24,24 @@ public final class Constants {
     public static final int leftFollowerChannel = 4;
     public static final int rightLeaderChannel = 3;
     public static final int rightFollowerChannel = 2;
-    public static final int intakeChannel = 11;
+    
     public static final int intakeExtenderChannel = 10;
-    public static final int bottomStagingBeltChannel = 12;
-    public static final int topStagingBeltChannel = 13;
+ 
     public static final int turretRotationChannel = 5;
+    public static final int turretHoodChannel =8;
     public static final int launcherLeaderChannel = 6;
     public static final int launcherFollowerChannel = 7;
-    public static final int hookChannel = 14;
-    public static final int winchChannel= 15;
+  
     public static final int controlWheelChannel = 9;
+
+    //pwm
+    public static final int intakeRetrieveChannel = 0;
+    public static final int lowerIntakeChannel = 1;
+    public static final int upperIntakeChannel = 2;
+    public static final int hookLiftChannel = 3;
+    public static final int liftWinchChannel = 4;
+
     //DIO
-    public static final int extendedLimitSwitchChannel = 3;
-    public static final int retractedLimitSwitchChannel = 4;
     public static final int upperStagingSensor = 7;
     public static final int lowerStagingStartSensor = 8;
     public static final int lowerStagingEndSensor = 9;

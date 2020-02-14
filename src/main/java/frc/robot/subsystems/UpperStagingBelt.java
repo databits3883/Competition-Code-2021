@@ -11,11 +11,12 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class UpperStagingBelt extends SubsystemBase {
-  private final CANSparkMax beltMotor = new CANSparkMax(Constants.topStagingBeltChannel, MotorType.kBrushless);
+  private final VictorSP beltMotor = new VictorSP(Constants.upperIntakeChannel);
   
   private final DigitalInput ballSensor = new DigitalInput(Constants.upperStagingSensor);
   /**

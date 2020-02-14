@@ -26,7 +26,7 @@ public class Hood extends SubsystemBase {
   /**
   * Creates a new Hood.
   */  
-  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.hookChannel, MotorType.kBrushless);
+  private final CANSparkMax hoodMotor = new CANSparkMax(Constants.turretHoodChannel, MotorType.kBrushless);
   private final CANPIDController canPIDController = new CANPIDController(hoodMotor);
   private final CANDigitalInput lowerLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
   private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);

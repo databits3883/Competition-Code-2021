@@ -12,11 +12,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class BottomStagingBelt extends SubsystemBase {
-  private final CANSparkMax beltMotor = new CANSparkMax(Constants.bottomStagingBeltChannel, MotorType.kBrushless);
+  private final VictorSP beltMotor = new VictorSP(Constants.lowerIntakeChannel);
 
   private final DigitalInput lowerSwitch = new DigitalInput(Constants.lowerStagingStartSensor);
   private final DigitalInput upperSwitch = new DigitalInput(Constants.lowerStagingEndSensor);
@@ -24,7 +25,6 @@ public class BottomStagingBelt extends SubsystemBase {
    * Creates a new BottomStagingBelt.
    */
   public BottomStagingBelt() {
-    beltMotor.setIdleMode(IdleMode.kBrake);
 
   }
   public boolean getSensorBottom(){

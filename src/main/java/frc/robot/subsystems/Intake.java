@@ -7,19 +7,24 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANDigitalInput.LimitSwitch;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase {
-  private final CANSparkMax intakeMotor = new CANSparkMax(Constants.intakeChannel, MotorType.kBrushed);
+  private final VictorSP intakeMotor = new VictorSP(Constants.intakeRetrieveChannel);
   private final CANSparkMax extenderMotor = new CANSparkMax(Constants.intakeExtenderChannel, MotorType.kBrushless);
 
-  private final DigitalInput extendedLimitSwitch = new DigitalInput(Constants.extendedLimitSwitchChannel);
-  private final DigitalInput retractedLimitSwitch = new DigitalInput(Constants.retractedLimitSwitchChannel);
+  private final CANDigitalInput extendedLimitSwitch = new CANDigitalInput(extenderMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
+  private final CANDigitalInput retractedLimitSwitch = new CANDigitalInput(extenderMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
   /**
    * Creates a new Intake.
    */
