@@ -21,16 +21,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Drivetrain extends SubsystemBase {
-  private final CANSparkMax frontRight = new CANSparkMax(Constants.frontRightChannel, MotorType.kBrushless);
-  private final CANSparkMax rearRight = new CANSparkMax(Constants.rearRightChannel, MotorType.kBrushless);
-  private final CANSparkMax frontLeft = new CANSparkMax(Constants.frontLeftChannel, MotorType.kBrushless);
-  private final CANSparkMax rearLeft= new CANSparkMax(Constants.rearLeftChannel, MotorType.kBrushless);
+  private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
+  private final CANSparkMax rightFollower = new CANSparkMax(Constants.rightFollowerChannel, MotorType.kBrushless);
+  private final CANSparkMax leftLeader = new CANSparkMax(Constants.leftLeaderChannel, MotorType.kBrushless);
+  private final CANSparkMax leftFollower= new CANSparkMax(Constants.leftFollowerChannel, MotorType.kBrushless);
 
-  private final CANPIDController rightController = new CANPIDController(frontRight);
-  private final CANPIDController leftController = new CANPIDController(frontLeft);
+  private final CANPIDController rightController = new CANPIDController(rightLeader);
+  private final CANPIDController leftController = new CANPIDController(leftLeader);
 
-  private final CANEncoder leftEncoder = new CANEncoder(frontRight);
-  private final CANEncoder rightEncoder = new CANEncoder(frontLeft);
+  private final CANEncoder leftEncoder = new CANEncoder(rightLeader);
+  private final CANEncoder rightEncoder = new CANEncoder(leftLeader);
 
 
   private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
@@ -41,11 +41,11 @@ public class Drivetrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
   public Drivetrain() {
-    frontLeft.setInverted(false);
-    frontRight.setInverted(true);
+    leftLeader.setInverted(false);
+    rightLeader.setInverted(true);
 
-    rearRight.follow(frontRight);
-    rearLeft.follow(frontLeft);
+    rightFollower.follow(rightLeader);
+    leftFollower.follow(leftLeader);
 
     lPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", lP).getEntry();
     lIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", lI).getEntry();
@@ -72,8 +72,8 @@ public class Drivetrain extends SubsystemBase {
     Shuffleboard.getTab("velocity drive tuning").addNumber("right pv", rightEncoder::getVelocity);
 
     lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
-    Shuffleboard.getTab("velocity drive tuning").addNumber("left output", frontLeft::get);
-    Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", frontLeft::getVoltageCompensationNominalVoltage);
+    Shuffleboard.getTab("velocity drive tuning").addNumber("left output", leftLeader::get);
+    Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", leftLeader::getVoltageCompensationNominalVoltage);
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){

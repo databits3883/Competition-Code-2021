@@ -20,10 +20,10 @@ import edu.wpi.first.wpilibj.I2C.Port;
  */
 public final class Constants {
     //CAN
-    public static final int frontLeftChannel = 1;
-    public static final int rearLeftChannel = 4;
-    public static final int frontRightChannel = 3;
-    public static final int rearRightChannel = 2;
+    public static final int leftLeaderChannel = 1;
+    public static final int leftFollowerChannel = 4;
+    public static final int rightLeaderChannel = 3;
+    public static final int rightFollowerChannel = 2;
     public static final int intakeChannel = 11;
     public static final int intakeExtenderChannel = 10;
     public static final int bottomStagingBeltChannel = 12;
