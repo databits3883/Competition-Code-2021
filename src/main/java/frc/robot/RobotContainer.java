@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import java.util.Set;
 import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID;
@@ -15,6 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.ExtendIntake;
+import frc.robot.commands.RetractIntake;
 import frc.robot.commands.Rotation;
 import frc.robot.commands.StagingToTop;
 import frc.robot.subsystems.BottomStagingBelt;
@@ -29,6 +32,7 @@ import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -52,9 +56,12 @@ public class RobotContainer {
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
-  private final JoystickButton gbutton1 = new JoystickButton(gunnerJoystick, 1);
+  private final JoystickButton driverTrigger = new JoystickButton(driverJoystick, 1);
+  private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
   private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
+  private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
   private final XboxController gunnerController = new XboxController(3);
   private final SupplierButton xButton = new SupplierButton( ()->gunnerController.getXButton());
   private final SupplierButton yButton = new SupplierButton( ()->gunnerController.getYButton());
@@ -88,20 +95,19 @@ public class RobotContainer {
       else{
        y-=Math.copySign(.07, y);
       }
-  m_drivetrain.ArcadeDrive(Math.pow(x, 3), Math.pow(x, 3));
+  m_drivetrain.ArcadeDrive(Math.pow(x, 3), Math.pow(y, 3));
   },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
+  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake);
   private final AdvanceStaging m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt);
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
   private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)), m_turretRotator);
   private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
   private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
-  
-  
-
-
+  private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
+  private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -124,13 +130,16 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
-    gbutton1.whenPressed(m_runIntake);
-    gbutton1.whenReleased(m_stopIntake);
+    driverTrigger.whenPressed(m_runIntake);
+    driverTrigger.whenReleased(m_stopIntake);
+    driverButton8.whenPressed(m_runOutake);
+    driverButton8.whenReleased(m_stopIntake);
     gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whileActiveContinuous(m_advanceStaging);
     gbutton3.whenPressed(m_rotation);
     xButton.whenActive(debugCommand);
-
+    dbutton6.whenPressed(m_extendIntake);
+    dbutton7.whenPressed(m_retractedIntake);
     
   }
 
