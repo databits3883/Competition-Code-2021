@@ -128,7 +128,8 @@ public class RobotContainer {
 
 
   private final SequentialCommandGroup m_initCommand = new SequentialCommandGroup(
-    new InstantCommand(m_turretRotator::setCurrentPosition),
+    new InstantCommand(m_turretRotator::setCurrentPosition, m_turretRotator),
+    new InstantCommand(m_hood::setCurrentPosition,m_hood),
     new PrintCommand("init teleop")
   );
   
