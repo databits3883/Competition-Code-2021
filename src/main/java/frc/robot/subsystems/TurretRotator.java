@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.util.SetpointVelocityLimiter;
 
 public class TurretRotator extends SubsystemBase {
   private final CANSparkMax rotatorMotor = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless);
@@ -30,6 +31,7 @@ public class TurretRotator extends SubsystemBase {
   private double p,i,d,ff;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
   private final CANPIDController controller = new CANPIDController(rotatorMotor);
+  private final SetpointVelocityLimiter velocityLimiter;
 
   private double setpoint;
 
@@ -45,6 +47,7 @@ public class TurretRotator extends SubsystemBase {
     controller.setReference(setpoint, ControlType.kPosition);
 
     encoder.setPositionConversionFactor(conversionFactor);
+    velocityLimiter = new SetpointVelocityLimiter(Constants.maxTurretVelocity);
    
     
     pEntry = Shuffleboard.getTab("turretRotatorTuning").add("portional",p).getEntry();
@@ -58,12 +61,12 @@ public class TurretRotator extends SubsystemBase {
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> upperLimit.get());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> zeroLimit.get());
 
-    //System.out.println(encoder.setInverted(true));
+    
 
   }
   public void setAngle(double newSetpoint){
     setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
-    controller.setReference(setpoint, ControlType.kPosition);
+    velocityLimiter.setTarget(setpoint);
   }
   public void changeAngle(double angleDelta){
     setAngle(setpoint + angleDelta);
@@ -72,7 +75,7 @@ public class TurretRotator extends SubsystemBase {
   public void setCurrentPosition(){
 
     setpoint=encoder.getPosition();
-    setAngle(setpoint);
+    velocityLimiter.setWithoutRamp(setpoint);
     spEntry.setDouble(setpoint);
   }
   
@@ -109,5 +112,6 @@ public class TurretRotator extends SubsystemBase {
      // This method will be called once per scheduler run
     updateGains();
     testLimits();
+    controller.setReference(velocityLimiter.get(), ControlType.kPosition);
   }
 }

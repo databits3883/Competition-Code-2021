@@ -37,4 +37,8 @@ public class SetpointVelocityLimiter {
         else currentSetpoint += targetChange; 
         return currentSetpoint;
     }
+    public void setWithoutRamp(double setpoint){
+        currentSetpoint = setpoint;
+        targetSetpoint = setpoint;
+    }
 }
