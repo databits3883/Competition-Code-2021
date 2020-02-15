@@ -8,18 +8,21 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.UpperStagingBelt;
 
 public class ManualLaunch extends CommandBase {
   UpperStagingBelt m_upperStagingBelt;
+  BottomStagingBelt m_bottomStagingBelt;
   boolean ballEntered;
   /**
    * Creates a new ManualLaunch.
    */
-  public ManualLaunch(UpperStagingBelt upperStagingBelt) {
+  public ManualLaunch(UpperStagingBelt upperStagingBelt, BottomStagingBelt bottomStagingBelt) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_upperStagingBelt = upperStagingBelt;
-    addRequirements(upperStagingBelt);
+    m_bottomStagingBelt = bottomStagingBelt;
+    addRequirements(upperStagingBelt, bottomStagingBelt);
   }
 
   // Called when the command is initially scheduled.
@@ -34,12 +37,14 @@ public class ManualLaunch extends CommandBase {
     
     if(!ballEntered) ballEntered = m_upperStagingBelt.isBallPresent();
     m_upperStagingBelt.runBelt();
+    m_bottomStagingBelt.runBelt();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     m_upperStagingBelt.stopBelt();
+    m_bottomStagingBelt.stopBelt();
   }
 
   // Returns true when the command should end.

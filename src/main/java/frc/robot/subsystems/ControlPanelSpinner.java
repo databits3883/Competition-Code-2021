@@ -59,7 +59,7 @@ public class ControlPanelSpinner extends SubsystemBase {
 
   @Override
   public void periodic() {
-    System.out.println(getColor());
+    //System.out.println(getColor());
     // This method will be called once per scheduler run
   }
 

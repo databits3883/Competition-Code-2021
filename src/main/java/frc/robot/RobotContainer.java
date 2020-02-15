@@ -122,7 +122,7 @@ public class RobotContainer {
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
-  private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt);
+  private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt);
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0), m_limelightServo);
   
 
