@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
-import frc.robot.util.AccelerationLimiter;
+import frc.robot.util.SetpointVelocityLimiter;
 
 public class Launcher extends SubsystemBase {
   private final CANSparkMax leader = new CANSparkMax(Constants.launcherLeaderChannel, MotorType.kBrushless);
@@ -31,7 +31,7 @@ public class Launcher extends SubsystemBase {
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,speedEntry;
   NetworkTableEntry limitedentry;
 
-  public AccelerationLimiter m_accelerationLimiter = new AccelerationLimiter(50);
+  public SetpointVelocityLimiter m_setpointLimiter = new SetpointVelocityLimiter(50);
   /**
    * Creates a new Launcher.
    */
@@ -48,7 +48,7 @@ public class Launcher extends SubsystemBase {
     Shuffleboard.getTab("LaunchingTuning").addNumber("pv", encoder::getVelocity);
     speedEntry = Shuffleboard.getTab("LaunchingTuning").add("speed",speed).getEntry();
 
-    m_accelerationLimiter.setTarget(0);
+    m_setpointLimiter.setTarget(0);
   }
 
   /**
@@ -56,7 +56,7 @@ public class Launcher extends SubsystemBase {
    * @param speed the target speed of the wheel in inches per second
    */
   public void setSpeed(double newSpeed){
-    m_accelerationLimiter.setTarget(newSpeed);
+    m_setpointLimiter.setTarget(newSpeed);
   }
   public void changeSpeed(double angleDelta){
     setSpeed(speed + angleDelta);
@@ -68,7 +68,7 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateGains();
-    controller.setReference(m_accelerationLimiter.get(), ControlType.kVelocity);
+    controller.setReference(m_setpointLimiter.get(), ControlType.kVelocity);
   }
   
   private void updateGains(){

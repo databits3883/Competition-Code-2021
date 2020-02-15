@@ -12,13 +12,13 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * Add your docs here.
  */
-public class AccelerationLimiter {
-    double maxAcceleration;
+public class SetpointVelocityLimiter {
+    double maxVelocity;
     double targetSetpoint;
     double currentSetpoint;
     Timer timer;
-    public AccelerationLimiter(double maxAcceleration){
-        this.maxAcceleration = maxAcceleration;
+    public SetpointVelocityLimiter(double maxVelocity){
+        this.maxVelocity = maxVelocity;
         currentSetpoint = 0;
     }
     public void setTarget(double newTarget){
@@ -30,8 +30,8 @@ public class AccelerationLimiter {
         double timeDelta = timer.get();
         timer.reset();
         double targetChange = targetSetpoint - currentSetpoint;
-        if(Math.abs(targetChange)/timeDelta > maxAcceleration){
-            currentSetpoint+= Math.copySign(maxAcceleration*timeDelta, targetChange);
+        if(Math.abs(targetChange)/timeDelta > maxVelocity){
+            currentSetpoint+= Math.copySign(maxVelocity*timeDelta, targetChange);
             System.out.println(currentSetpoint+" "+timeDelta);
         }
         else currentSetpoint += targetChange; 
