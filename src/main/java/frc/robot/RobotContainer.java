@@ -29,6 +29,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
 import frc.robot.subsystems.UpperStagingBelt;
 import frc.robot.util.SupplierButton;
@@ -57,7 +58,7 @@ public class RobotContainer {
   private final TurretRotator m_turretRotator = new TurretRotator();
   private final Launcher m_launcher = new Launcher();
   private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
-  //private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
+  private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
 
   private final Joystick driverJoystick = new Joystick(0);
@@ -122,6 +123,7 @@ public class RobotContainer {
   private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
   private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt);
+  private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0), m_limelightServo);
   
 
 
@@ -142,6 +144,7 @@ public class RobotContainer {
 
   private void setDefaultCommands(){
     m_drivetrain.setDefaultCommand(manualArcadeDrive);
+    m_limelightServo.setDefaultCommand(m_turnServo);
 
   }
 
