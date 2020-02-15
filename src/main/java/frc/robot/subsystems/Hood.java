@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
+import frc.robot.util.SetpointVelocityLimiter;
 
 public class Hood extends SubsystemBase {
   /**
   * Creates a new Hood.
   */  
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.turretHoodChannel, MotorType.kBrushless);
-  private final CANPIDController canPIDController = new CANPIDController(hoodMotor);
   private final CANDigitalInput lowerLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
   private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
   private final CANPIDController controller = new CANPIDController(hoodMotor);
@@ -35,6 +35,8 @@ public class Hood extends SubsystemBase {
   private double p,i,d,ff;
   private double angle;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
+
+  private SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(Constants.maxHoodVelocity);
  
   public Hood() {
 
@@ -55,6 +57,7 @@ public class Hood extends SubsystemBase {
   public void periodic() {
     updateGains();
     checkEndpoints();
+    controller.setReference(velocityLimiter.get(), ControlType.kPosition);
     // This method will be called once per scheduler run
   }
   private void updateGains(){
@@ -91,7 +94,7 @@ public class Hood extends SubsystemBase {
   }
   public void setAngle(double newAngle){
     angle = MathUtil.clamp(newAngle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
-    controller.setReference(newAngle, ControlType.kPosition);
+    velocityLimiter.setTarget(angle);
   }
   public void changeAngle(double angleDelta){
     setAngle(angle + angleDelta);

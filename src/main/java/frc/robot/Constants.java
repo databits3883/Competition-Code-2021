@@ -66,6 +66,8 @@ public final class Constants {
     public static final double intakeSpeed = 1;
 
     public static final double maxTurretVelocity = 30; //degrees per second
+    public static final double maxHoodVelocity = 30; //degrees per second
+    
     //Color
     public static final double redThreshold = 0.3;
     public static final double greenThreshold = 0.55;
