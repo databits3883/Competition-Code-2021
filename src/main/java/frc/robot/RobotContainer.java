@@ -116,9 +116,9 @@ public class RobotContainer {
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
-  //private final Command manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)), m_turretRotator);
-  ////private final Command manualLauncherWheelspin = new RunCommand(()-> m_launcher.changeSpeed(gunnerController.getTriggerAxis(Hand.kRight)), m_launcher);
-  //private final Command manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)), m_hood);
+  private final Command m_manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)*0.9), m_turretRotator);
+  private final Command m_manualLauncherWheelSpin = new RunCommand(()-> m_launcher.setSpeed(gunnerController.getTriggerAxis(Hand.kLeft)*150), m_launcher);
+  private final Command m_manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)*0.48), m_hood);
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
@@ -146,7 +146,9 @@ public class RobotContainer {
   private void setDefaultCommands(){
     m_drivetrain.setDefaultCommand(manualArcadeDrive);
     m_limelightServo.setDefaultCommand(m_turnServo);
-
+    m_hood.setDefaultCommand(m_manualHoodMovement);
+    m_turretRotator.setDefaultCommand(m_manualTurretPanning);
+    m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
   }
 
   /**
