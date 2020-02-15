@@ -27,8 +27,6 @@ public class PositionControl extends CommandBase {
     m_controlPanelSpinner = controlPanelSpinner;
     addRequirements(controlPanelSpinner);
   }
-
-    // Use addRequirements() here to declare subsystem dependencies.
   
 
   // Called when the command is initially scheduled.

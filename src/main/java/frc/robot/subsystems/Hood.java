@@ -32,22 +32,23 @@ public class Hood extends SubsystemBase {
   private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
   private final CANPIDController controller = new CANPIDController(hoodMotor);
   private final CANEncoder encoder = new CANEncoder(hoodMotor);
-  private double p,i,d,ff,angle;
-  private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,positionEntry;
+  private double p,i,d,ff;
+  private double angle;
+  private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
  
   public Hood() {
 
-    encoder.setPositionConversionFactor(16.0*360.0/264);
+    encoder.setPositionConversionFactor(16.0*360.0/264.0/50.0);
 
     pEntry = Shuffleboard.getTab("hoodTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("hoodTuning").add("integral",i).getEntry();
     dEntry = Shuffleboard.getTab("hoodTuning").add("derivative",d).getEntry();
     ffEntry = Shuffleboard.getTab("hoodTuning").add("feedForward",ff).getEntry();
+    spEntry = Shuffleboard.getTab("hoodTuning").add("setpoint",angle).getEntry();
 
-
-
-    positionEntry = Shuffleboard.getTab("hoodTuning").add("position",angle).getEntry();
-    
+    Shuffleboard.getTab("hoodTuning").addBoolean("lowerSwitch", ()->lowerLimit.get());
+    Shuffleboard.getTab("hoodTuning").addBoolean("upperSwitch", ()->upperLimit.get());
+    Shuffleboard.getTab("hoodTuning").addNumber("current angle", ()->encoder.getPosition());
   }
 
   @Override
@@ -73,13 +74,18 @@ public class Hood extends SubsystemBase {
       ff = ffEntry.getDouble(0); 
       controller.setFF(ff);
     }
+    if(angle!=spEntry.getDouble(angle)){
+      angle = spEntry.getDouble(angle);
+      setAngle(angle);
+
+    }
    
   }
   private void checkEndpoints(){
     if(lowerLimit.get()){
       encoder.setPosition(Constants.minimumHoodAngle);
     }
-    if(lowerLimit.get()){
+    if(upperLimit.get()){
       encoder.setPosition(Constants.maximumHoodAngle);
     }
   }

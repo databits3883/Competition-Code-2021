@@ -24,7 +24,7 @@ public class ControlPanelSpinner extends SubsystemBase {
    * Creates a new ControlPanelSpinner.
    */
   public ControlPanelSpinner() {
-
+    
   }
   public void spinCounterclockwise(){
     motor.set(1);
@@ -59,6 +59,7 @@ public class ControlPanelSpinner extends SubsystemBase {
 
   @Override
   public void periodic() {
+    System.out.println(getColor());
     // This method will be called once per scheduler run
   }
 

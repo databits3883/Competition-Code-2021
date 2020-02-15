@@ -40,21 +40,25 @@ public class TurretRotator extends SubsystemBase {
     double gearRatio = (1.0/15.0);
     double degreeRatio = (360.0);
     double conversionFactor = gearRatio*degreeRatio;
-    System.out.println(conversionFactor);
+    
+    setpoint=encoder.getPosition();
+    controller.setReference(setpoint, ControlType.kPosition);
+
     encoder.setPositionConversionFactor(conversionFactor);
+   
     
     pEntry = Shuffleboard.getTab("turretRotatorTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("turretRotatorTuning").add("integral",i).getEntry();
     dEntry = Shuffleboard.getTab("turretRotatorTuning").add("derivative",d).getEntry();
     ffEntry = Shuffleboard.getTab("turretRotatorTuning").add("feedForward",ff).getEntry();
     spEntry = Shuffleboard.getTab("turretRotatorTuning").add("setpoint",setpoint).getEntry();
+    spEntry.setDouble(setpoint);
 
     Shuffleboard.getTab("turretRotatorTuning").addNumber("Process Variable", () -> encoder.getPosition());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> upperLimit.get());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> zeroLimit.get());
 
     //System.out.println(encoder.setInverted(true));
-    encoder.setPosition(0);
 
   }
   public void setAngle(double newSetpoint){
@@ -63,6 +67,13 @@ public class TurretRotator extends SubsystemBase {
   }
   public void changeAngle(double angleDelta){
     setAngle(setpoint + angleDelta);
+  }
+
+  public void setCurrentPosition(){
+
+    setpoint=encoder.getPosition();
+    setAngle(setpoint);
+    spEntry.setDouble(setpoint);
   }
   
   private void updateGains(){
@@ -98,6 +109,5 @@ public class TurretRotator extends SubsystemBase {
      // This method will be called once per scheduler run
     updateGains();
     testLimits();
-    System.out.println(encoder.getInverted());
   }
 }

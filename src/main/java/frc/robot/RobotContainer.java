@@ -18,6 +18,7 @@ import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.ManualLaunch;
+import frc.robot.commands.PositionControl;
 import frc.robot.commands.RetractIntake;
 import frc.robot.commands.Rotation;
 import frc.robot.commands.StagingToTop;
@@ -33,7 +34,9 @@ import frc.robot.subsystems.UpperStagingBelt;
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -52,10 +55,10 @@ public class RobotContainer {
   private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
   private final UpperStagingBelt m_upperStagingBelt = new UpperStagingBelt();
   private final TurretRotator m_turretRotator = new TurretRotator();
-  //private final Launcher m_launcher = new Launcher();
-  //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
+  private final Launcher m_launcher = new Launcher();
+  private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   //private final Rotation m_rotation = new Rotation(m_controlPanelSpinner);
-  //private final Hood m_hood = new Hood();
+  private final Hood m_hood = new Hood();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -120,6 +123,13 @@ public class RobotContainer {
   private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
   private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt);
   
+
+
+  private final SequentialCommandGroup m_initCommand = new SequentialCommandGroup(
+    new InstantCommand(m_turretRotator::setCurrentPosition),
+    new PrintCommand("init teleop")
+  );
+  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -165,5 +175,9 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
     return m_autoCommand;
+  }
+
+  public Command getInitCommand(){
+    return m_initCommand;
   }
 }

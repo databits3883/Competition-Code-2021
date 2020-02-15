@@ -40,6 +40,7 @@ public final class Constants {
     public static final int upperIntakeChannel = 2;
     public static final int hookLiftChannel = 3;
     public static final int liftWinchChannel = 4;
+    public static final int camerServo = 5;
 
     //DIO
     public static final int upperStagingSensor = 9+10;
@@ -59,14 +60,14 @@ public final class Constants {
     public static final double driveTrainGearingRatio = 8.45;
     public static final double minimumHoodAngle = 0;
     public static final double maximumHoodAngle = 30;
-    public static final double stagingSpeed = 0.5;
+    public static final double stagingSpeed = 0.75;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;
     public static final double intakeSpeed = 1;
     //Color
     public static final double redThreshold = 0.3;
-    public static final double greenThreshold = 0.4;
-    public static final double blueThreshold = 0.3;
+    public static final double greenThreshold = 0.55;
+    public static final double blueThreshold = 0.255;
 
     
     }

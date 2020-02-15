@@ -35,7 +35,7 @@ public class Launcher extends SubsystemBase {
    */
   public Launcher() {
     follower.follow(leader,true);
-    encoder.setVelocityConversionFactor(1);
+    encoder.setVelocityConversionFactor(((4.0*Math.PI)/12.0)/60.0);
 
     pEntry = Shuffleboard.getTab("LaunchingTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("LaunchingTuning").add("integral",i).getEntry();
@@ -43,7 +43,7 @@ public class Launcher extends SubsystemBase {
     ffEntry = Shuffleboard.getTab("LaunchingTuning").add("feedForward",ff).getEntry();
 
 
-
+    Shuffleboard.getTab("LaunchingTuning").addNumber("pv", encoder::getVelocity);
     speedEntry = Shuffleboard.getTab("LaunchingTuning").add("speed",speed).getEntry();
   }
 

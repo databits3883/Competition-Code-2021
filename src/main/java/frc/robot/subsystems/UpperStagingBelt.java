@@ -25,7 +25,7 @@ public class UpperStagingBelt extends SubsystemBase {
   public UpperStagingBelt() {}
   
   public void runBelt(){
-    beltMotor.set(Constants.stagingSpeed);
+    beltMotor.set(-1);
   }
   public void stopBelt(){
     beltMotor.stopMotor();
