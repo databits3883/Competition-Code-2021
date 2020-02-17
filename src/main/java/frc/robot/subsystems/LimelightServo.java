@@ -17,7 +17,7 @@ public class LimelightServo extends SubsystemBase {
    * Creates a new LimelightServo.
    */
   public LimelightServo() {
-
+    m_servo.setPosition(1);
   }
   public void setPosition(double position){
     m_servo.setPosition(position);

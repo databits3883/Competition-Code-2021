@@ -11,6 +11,7 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
+import frc.robot.Variables;
 
 public class Launcher extends SubsystemBase {
   private final CANSparkMax leader = new CANSparkMax(Constants.launcherLeaderChannel, MotorType.kBrushless);
@@ -31,13 +33,15 @@ public class Launcher extends SubsystemBase {
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,speedEntry;
   NetworkTableEntry limitedentry;
 
-  public SetpointVelocityLimiter m_setpointLimiter = new SetpointVelocityLimiter(50);
+  public SetpointVelocityLimiter m_setpointLimiter = new SetpointVelocityLimiter(25);
   /**
    * Creates a new Launcher.
    */
   public Launcher() {
     follower.follow(leader,true);
-    encoder.setVelocityConversionFactor(((4.0*Math.PI)/12.0)/60.0);
+    leader.setIdleMode(IdleMode.kCoast);
+    follower.setIdleMode(IdleMode.kCoast);
+    encoder.setVelocityConversionFactor((4.0/12.0*Math.PI)*(1.0/60.0));
 
     pEntry = Shuffleboard.getTab("LaunchingTuning").add("portional",p).getEntry();
     iEntry = Shuffleboard.getTab("LaunchingTuning").add("integral",i).getEntry();
@@ -49,6 +53,14 @@ public class Launcher extends SubsystemBase {
     speedEntry = Shuffleboard.getTab("LaunchingTuning").add("speed",speed).getEntry();
 
     m_setpointLimiter.setTarget(0);
+
+    initGains();
+  }
+
+  void initGains(){
+    pEntry.setDouble(0.00);
+    ffEntry.setDouble(0.00);
+    updateGains();
   }
 
   /**
@@ -68,9 +80,11 @@ public class Launcher extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     updateGains();
-    controller.setReference(m_setpointLimiter.get(), ControlType.kVelocity);
+    double newSp = m_setpointLimiter.get();
+    controller.setReference(newSp, ControlType.kVelocity);
+    Variables.getInstance().setShooterEnabled((encoder.getVelocity() <=-Constants.minimumShootSpeed));
+
   }
-  
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
       p = pEntry.getDouble(0);
@@ -83,6 +97,7 @@ public class Launcher extends SubsystemBase {
     if(d != dEntry.getDouble(0)){
       d = dEntry.getDouble(0);
       controller.setD(d);
+      System.out.println(controller.getD());
     }
     if(ff != ffEntry.getDouble(0)){
       ff = ffEntry.getDouble(0); 
@@ -90,6 +105,7 @@ public class Launcher extends SubsystemBase {
     }
     if(speed != speedEntry.getDouble(0)){
       speed = speedEntry.getDouble(0); 
+      System.out.println(speed);
       setSpeed(speed);
     }
   }

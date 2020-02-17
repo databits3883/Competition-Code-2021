@@ -12,6 +12,7 @@ import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.SetpointAccelerationLimiter;
 
 public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
@@ -36,6 +38,9 @@ public class Drivetrain extends SubsystemBase {
   private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
   private boolean lockToLeft = false;
   private NetworkTableEntry lPEntry, lIEntry,lDEntry , lFEntry, rPEntry, rIEntry, rDEntry, rFEntry, lSPEntry, rSPEntry, lockEntry;
+
+  private SetpointAccelerationLimiter m_setpointLimiter;
+  NetworkTableEntry limitedEntry;
   
   /**
    * Creates a new Drivetrain.
@@ -46,6 +51,11 @@ public class Drivetrain extends SubsystemBase {
 
     rightFollower.follow(rightLeader);
     leftFollower.follow(leftLeader);
+
+    rightFollower.setIdleMode(IdleMode.kBrake);
+    leftFollower.setIdleMode(IdleMode.kBrake);
+    rightLeader.setIdleMode(IdleMode.kBrake);
+    leftLeader.setIdleMode(IdleMode.kBrake);
 
     lPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", lP).getEntry();
     lIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", lI).getEntry();
@@ -58,6 +68,7 @@ public class Drivetrain extends SubsystemBase {
     rDEntry = Shuffleboard.getTab("velocity drive tuning").add("right D", rD).getEntry();
     rFEntry = Shuffleboard.getTab("velocity drive tuning").add("right FF", rF).getEntry();
     rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
+
 
     double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
     double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
@@ -74,6 +85,18 @@ public class Drivetrain extends SubsystemBase {
     lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
     Shuffleboard.getTab("velocity drive tuning").addNumber("left output", leftLeader::get);
     Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", leftLeader::getVoltageCompensationNominalVoltage);
+    initGains();
+
+    m_setpointLimiter = new SetpointAccelerationLimiter(20, 40);
+    m_setpointLimiter.setSetpoint(20);
+    limitedEntry = Shuffleboard.getTab("velocity drive tuning").add("limited",0).getEntry();
+  }
+
+  void initGains(){
+    lockEntry.setBoolean(true);
+    lPEntry.setDouble(0.08);
+    lFEntry.setDouble(0.053);
+    updateGains();
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
@@ -112,6 +135,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     updateGains();
+    limitedEntry.setDouble(m_setpointLimiter.get());
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }

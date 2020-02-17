@@ -58,15 +58,17 @@ public final class Constants {
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
-    public static final double minimumHoodAngle = 0;
-    public static final double maximumHoodAngle = 30;
+    public static final double minimumHoodAngle = -30;
+    public static final double maximumHoodAngle = 0;
     public static final double stagingSpeed = 0.75;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;
     public static final double intakeSpeed = 1;
 
-    public static final double maxTurretVelocity = 30; //degrees per second
-    public static final double maxHoodVelocity = 30; //degrees per second
+    public static final double maxTurretVelocity = 40; //degrees per second
+    public static final double maxHoodVelocity = 3000; //degrees per second
+
+    public static final double minimumShootSpeed = 25;
     
     //Color
     public static final double redThreshold = 0.3;

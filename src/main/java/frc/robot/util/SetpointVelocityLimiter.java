@@ -20,11 +20,13 @@ public class SetpointVelocityLimiter {
     public SetpointVelocityLimiter(double maxVelocity){
         this.maxVelocity = maxVelocity;
         currentSetpoint = 0;
-    }
-    public void setTarget(double newTarget){
-        targetSetpoint = newTarget;
         timer = new Timer();
         timer.start();
+    }
+    public void setTarget(double newTarget){
+
+        targetSetpoint = newTarget;
+        timer.reset();
     }
     public double get(){
         double timeDelta = timer.get();
@@ -32,7 +34,6 @@ public class SetpointVelocityLimiter {
         double targetChange = targetSetpoint - currentSetpoint;
         if(Math.abs(targetChange)/timeDelta > maxVelocity){
             currentSetpoint+= Math.copySign(maxVelocity*timeDelta, targetChange);
-            System.out.println(currentSetpoint+" "+timeDelta);
         }
         else currentSetpoint += targetChange; 
         return currentSetpoint;

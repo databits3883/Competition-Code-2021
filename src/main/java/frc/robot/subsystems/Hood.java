@@ -51,6 +51,12 @@ public class Hood extends SubsystemBase {
     Shuffleboard.getTab("hoodTuning").addBoolean("lowerSwitch", ()->lowerLimit.get());
     Shuffleboard.getTab("hoodTuning").addBoolean("upperSwitch", ()->upperLimit.get());
     Shuffleboard.getTab("hoodTuning").addNumber("current angle", ()->encoder.getPosition());
+    initGains();
+  }
+
+  void initGains(){
+    pEntry.setDouble(0.02);
+    updateGains();
   }
 
   @Override
@@ -94,6 +100,7 @@ public class Hood extends SubsystemBase {
   }
   public void setAngle(double newAngle){
     angle = MathUtil.clamp(newAngle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
+    spEntry.setDouble(angle);
     velocityLimiter.setTarget(angle);
   }
   public void changeAngle(double angleDelta){

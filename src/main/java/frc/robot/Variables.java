@@ -16,14 +16,24 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class Variables {
     private static Variables instance;
+    private static boolean created = false;
     public static Variables getInstance(){
-        if(instance == null){
+        if(!created){
             instance = new Variables();
+            created = true;
         }
         return instance;
     }
-    AHRS navx = new AHRS(Port.kMXP);
+    /*AHRS navx = new AHRS(Port.kMXP);
     public double getGyroAngle(){
         return navx.getAngle();
+    }*/
+
+    boolean m_isShooterEnabled;
+    public boolean getShooterEnabled(){
+        return m_isShooterEnabled;
+    }
+    public void setShooterEnabled(boolean set){
+        m_isShooterEnabled = set;
     }
 }

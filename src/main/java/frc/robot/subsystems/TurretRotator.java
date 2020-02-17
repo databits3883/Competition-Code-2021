@@ -61,19 +61,33 @@ public class TurretRotator extends SubsystemBase {
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> upperLimit.get());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> zeroLimit.get());
 
+    setCurrentPosition();
     
-
+    initGains();
+  }
+  void initGains(){
+    pEntry.setDouble(0.1);
+    updateGains();
   }
   public void setAngle(double newSetpoint){
+    
     setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
+    spEntry.setDouble(setpoint);
     velocityLimiter.setTarget(setpoint);
   }
+  public void setAngleStep(double newSetpoint){
+    System.out.println("reset i accum for turret: "+controller.setIAccum(0));
+    System.out.println(controller.getIAccum());
+    setAngle(newSetpoint);
+  }
   public void changeAngle(double angleDelta){
+    //System.out.println(angleDelta);
     setAngle(setpoint + angleDelta);
   }
 
   public void setCurrentPosition(){
-
+    System.out.println("reset i accum for turret: "+controller.setIAccum(0));
+    
     setpoint=encoder.getPosition();
     velocityLimiter.setWithoutRamp(setpoint);
     spEntry.setDouble(setpoint);
@@ -98,7 +112,7 @@ public class TurretRotator extends SubsystemBase {
     }
     if(setpoint!=spEntry.getDouble(setpoint)){
       setpoint=spEntry.getDouble(setpoint);
-      setAngle(setpoint);
+      setAngleStep(setpoint);
     }
   }
   private void testLimits(){

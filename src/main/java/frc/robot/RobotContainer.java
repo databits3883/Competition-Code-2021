@@ -12,6 +12,7 @@ import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.AdvanceStaging;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.TurretRotator;
 import frc.robot.subsystems.UpperStagingBelt;
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -89,40 +91,66 @@ public class RobotContainer {
 
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
+  
+  private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.32);
+  
+  private final double joystickDeadband=(Math.pow(.07,3));
   private final Command manualArcadeDrive = new RunCommand(()->{
-    double x = driverJoystick.getX();
-    double y = -driverJoystick.getY();
-    if( Math.abs(x)<.07){
+    double x = Math.pow(driverJoystick.getX(),3);
+    double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    if( Math.abs(x)<joystickDeadband){
       x=0;
       }
       else {
-        x-=Math.copySign(.07, x);
+        x-=Math.copySign(joystickDeadband, x);
       }
-    if( Math.abs(y)<.07){
+    if( Math.abs(y)<joystickDeadband){
        y=0;
       }
       else{
-       y-=Math.copySign(.07, y);
+       y-=Math.copySign(joystickDeadband, y);
       }
-  m_drivetrain.ArcadeDrive(Math.pow(x, 3), Math.pow(y, 3));
+  m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
-  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt));
-  private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt);
+  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
+  private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt).alongWith(new InstantCommand(m_upperStagingBelt::stopBelt, m_upperStagingBelt));
   private final Command m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt)
       .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.5))
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
-  private final Command m_manualTurretPanning = new RunCommand(()-> m_turretRotator.changeAngle(gunnerController.getX(Hand.kLeft)*0.9), m_turretRotator);
-  private final Command m_manualLauncherWheelSpin = new RunCommand(()-> m_launcher.setSpeed(gunnerController.getTriggerAxis(Hand.kLeft)*150), m_launcher);
-  private final Command m_manualHoodMovement = new RunCommand(()-> m_hood.changeAngle(gunnerController.getY(Hand.kRight)*0.48), m_hood);
+
+  private final double turretJoystickDeadband = 0.08;
+  private final Command m_manualTurretPanning = new RunCommand(()->{
+    double stickValue = gunnerController.getX(Hand.kLeft);
+    //System.out.println(stickValue);
+    if( Math.abs(stickValue)<turretJoystickDeadband){
+      stickValue=0;
+      }
+      else {
+        stickValue-=Math.copySign(turretJoystickDeadband, stickValue);
+      }
+     m_turretRotator.changeAngle(stickValue*(Constants.maxTurretVelocity/50.0));
+  }, m_turretRotator);
+  private final Command m_manualLauncherWheelSpin = new RunCommand(()-> m_launcher.setSpeed(gunnerController.getTriggerAxis(Hand.kLeft)*-150), m_launcher);
+  private final Command m_manualHoodMovement = new RunCommand(()-> {
+    double stickValue = gunnerController.getY(Hand.kRight);
+    if( Math.abs(stickValue)<turretJoystickDeadband){
+      stickValue=0;
+      }
+      else {
+        stickValue-=Math.copySign(turretJoystickDeadband, stickValue);
+      }
+    m_hood.changeAngle(-1.0*stickValue*(1.0/12.0));
+  }, m_hood);
+
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
-  private final ExtendIntake m_extendIntake = new ExtendIntake(m_intake);
-  private final RetractIntake m_retractedIntake = new RetractIntake(m_intake);
-  private final ManualLaunch m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt);
+  private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
+  private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
+  private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0), m_limelightServo);
   
 
@@ -148,7 +176,7 @@ public class RobotContainer {
     m_limelightServo.setDefaultCommand(m_turnServo);
     m_hood.setDefaultCommand(m_manualHoodMovement);
     m_turretRotator.setDefaultCommand(m_manualTurretPanning);
-    m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
+    //m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
   }
 
   /**
@@ -160,15 +188,15 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
-    driverButton8.whenPressed(m_runOutake);
+    driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);
     //gbutton3.whenPressed(m_rotation);
-    xButton.whenActive(m_stagingToTop);
+    xButton.toggleWhenActive(m_stagingToTop);
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
-    rightTriggButton.whenPressed(m_manualLaunch);
+    rightTriggButton.whileHeld(m_manualLaunch);
     
   }
 

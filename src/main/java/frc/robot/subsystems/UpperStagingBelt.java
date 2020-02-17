@@ -30,6 +30,9 @@ public class UpperStagingBelt extends SubsystemBase {
   public void stopBelt(){
     beltMotor.stopMotor();
   }
+  public void outTake(){
+    beltMotor.set(0.4);
+  }
 
   public boolean isBallPresent(){
     return !ballSensor.get();

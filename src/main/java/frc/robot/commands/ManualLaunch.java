@@ -8,6 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Variables;
 import frc.robot.subsystems.BottomStagingBelt;
 import frc.robot.subsystems.UpperStagingBelt;
 
@@ -34,10 +35,10 @@ public class ManualLaunch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    if(!ballEntered) ballEntered = m_upperStagingBelt.isBallPresent();
-    m_upperStagingBelt.runBelt();
-    m_bottomStagingBelt.runBelt();
+    if(Variables.getInstance().getShooterEnabled()){
+      m_upperStagingBelt.runBelt();
+      m_bottomStagingBelt.runBelt();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -50,6 +51,7 @@ public class ManualLaunch extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ballEntered && !m_upperStagingBelt.isBallPresent();
+    //return ballEntered && !m_upperStagingBelt.isBallPresent();
+    return false;
   }
 }
