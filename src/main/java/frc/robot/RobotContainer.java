@@ -151,7 +151,7 @@ public class RobotContainer {
   private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
   private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
   private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
-  private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0), m_limelightServo);
+  private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
   
 
 

@@ -25,7 +25,7 @@ public class LimelightServo extends SubsystemBase {
     velocityLimiter.setTarget(position);
   }
   public void deltaPosition(double delta){
-    m_servo.set(m_servo.getPosition()+delta);
+    setPosition(getAngle()+delta);
     
   }
   public double getAngle(){
