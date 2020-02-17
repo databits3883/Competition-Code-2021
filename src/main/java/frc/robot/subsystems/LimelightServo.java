@@ -10,9 +10,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.util.SetpointVelocityLimiter;
 
 public class LimelightServo extends SubsystemBase {
   Servo m_servo = new Servo(Constants.camerServo);
+  SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(90);
   /**
    * Creates a new LimelightServo.
    */
@@ -20,16 +22,19 @@ public class LimelightServo extends SubsystemBase {
     m_servo.setPosition(1);
   }
   public void setPosition(double position){
-    m_servo.setPosition(position);
-    System.out.println(position);
+    velocityLimiter.setTarget(position);
   }
   public void deltaPosition(double delta){
     m_servo.set(m_servo.getPosition()+delta);
     
   }
+  public double getAngle(){
+    return velocityLimiter.getCurrentSetpoint();
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    m_servo.setAngle(velocityLimiter.get());
   }
 }

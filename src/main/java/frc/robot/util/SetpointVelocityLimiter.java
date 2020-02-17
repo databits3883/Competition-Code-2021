@@ -28,6 +28,9 @@ public class SetpointVelocityLimiter {
         targetSetpoint = newTarget;
         timer.reset();
     }
+    public double getCurrentSetpoint(){
+        return currentSetpoint;
+    }
     public double get(){
         double timeDelta = timer.get();
         timer.reset();
