@@ -58,8 +58,9 @@ public class Launcher extends SubsystemBase {
   }
 
   void initGains(){
-    pEntry.setDouble(0.00);
-    ffEntry.setDouble(0.00);
+    pEntry.setDouble(0.025);
+    ffEntry.setDouble(0.005);
+    dEntry.setDouble(0.2);
     updateGains();
   }
 

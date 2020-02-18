@@ -9,12 +9,13 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
 public class LimelightServo extends SubsystemBase {
   Servo m_servo = new Servo(Constants.camerServo);
-  SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(90);
+  SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(45);
   /**
    * Creates a new LimelightServo.
    */
@@ -22,6 +23,7 @@ public class LimelightServo extends SubsystemBase {
     m_servo.setPosition(1);
   }
   public void setPosition(double position){
+    position = MathUtil.clamp(position, 0, 180);
     velocityLimiter.setTarget(position);
   }
   public void deltaPosition(double delta){
@@ -30,6 +32,9 @@ public class LimelightServo extends SubsystemBase {
   }
   public double getAngle(){
     return velocityLimiter.getCurrentSetpoint();
+  }
+  public double getAngleToTarget(){
+    return getAngle()*-1.0+90.0;
   }
 
   @Override

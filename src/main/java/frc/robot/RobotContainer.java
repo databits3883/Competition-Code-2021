@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.commands.AcquireTarget;
 import frc.robot.commands.AdvanceStaging;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendIntake;
@@ -152,6 +153,8 @@ public class RobotContainer {
   private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
   private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
+
+  private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator);
   
 
 
@@ -197,6 +200,7 @@ public class RobotContainer {
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
+    startButton.toggleWhenActive(m_acquireTarget);
     
   }
 

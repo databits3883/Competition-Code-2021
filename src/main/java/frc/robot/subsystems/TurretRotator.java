@@ -17,6 +17,7 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -26,8 +27,8 @@ import frc.robot.util.SetpointVelocityLimiter;
 public class TurretRotator extends SubsystemBase {
   private final CANSparkMax rotatorMotor = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless);
   private final CANEncoder encoder = new CANEncoder(rotatorMotor);
-  private final CANDigitalInput zeroLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
-  private final CANDigitalInput upperLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyOpen);
+  private final CANDigitalInput forwardLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
+  private final CANDigitalInput reverseLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyOpen);
   private double p,i,d,ff;
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
   private final CANPIDController controller = new CANPIDController(rotatorMotor);
@@ -58,8 +59,8 @@ public class TurretRotator extends SubsystemBase {
     spEntry.setDouble(setpoint);
 
     Shuffleboard.getTab("turretRotatorTuning").addNumber("Process Variable", () -> encoder.getPosition());
-    Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> upperLimit.get());
-    Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> zeroLimit.get());
+    Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> reverseLimit.get());
+    Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> forwardLimit.get());
 
     setCurrentPosition();
     
@@ -92,6 +93,12 @@ public class TurretRotator extends SubsystemBase {
     velocityLimiter.setWithoutRamp(setpoint);
     spEntry.setDouble(setpoint);
   }
+  public double getCurrentAngle(){
+    return encoder.getPosition();
+  }
+  public double getCurrentError(){
+    return velocityLimiter.getCurrentTarget() - getCurrentAngle();
+  }
   
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
@@ -116,8 +123,8 @@ public class TurretRotator extends SubsystemBase {
     }
   }
   private void testLimits(){
-    if(zeroLimit.get()) encoder.setPosition(0);
-    if(upperLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
+    if(forwardLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
+    if(reverseLimit.get()) encoder.setPosition(0);
   }
     
   
@@ -127,5 +134,10 @@ public class TurretRotator extends SubsystemBase {
     updateGains();
     testLimits();
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
+    if(encoder.getVelocity()>100){
+      System.out.println(encoder.getVelocity());
+      System.exit(1);
+
+    }
   }
 }
