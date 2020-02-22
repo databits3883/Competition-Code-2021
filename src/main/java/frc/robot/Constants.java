@@ -22,8 +22,8 @@ public final class Constants {
     //CAN
     public static final int leftLeaderChannel = 1;
     public static final int leftFollowerChannel = 4;
-    public static final int rightLeaderChannel = 3;
-    public static final int rightFollowerChannel = 2;
+    public static final int rightLeaderChannel = 2;
+    public static final int rightFollowerChannel = 3;
     
     public static final int intakeExtenderChannel = 10;
  

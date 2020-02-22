@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.commands.AcquireTarget;
 import frc.robot.commands.AdvanceStaging;
+import frc.robot.commands.BallFollowing;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.ExtendIntake;
 import frc.robot.commands.ManualLaunch;
@@ -72,6 +73,7 @@ public class RobotContainer {
   private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
   private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
+  private final JoystickButton dbutton9 = new JoystickButton(driverJoystick, 9);
   private final XboxController gunnerController = new XboxController(3);
   private final SupplierButton xButton = new SupplierButton( ()->gunnerController.getXButton());
   private final SupplierButton yButton = new SupplierButton( ()->gunnerController.getYButton());
@@ -123,6 +125,8 @@ public class RobotContainer {
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
+
+  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator);
 
   private final double turretJoystickDeadband = 0.08;
   private final Command m_manualTurretPanning = new RunCommand(()->{
@@ -201,6 +205,7 @@ public class RobotContainer {
     dbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
     startButton.toggleWhenActive(m_acquireTarget);
+    dbutton9.whileHeld(m_ballfollowing);
     
   }
 
@@ -212,7 +217,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    
     return m_autoCommand;
+    
   }
 
   public Command getInitCommand(){
