@@ -22,8 +22,8 @@ public final class Constants {
     //CAN
     public static final int leftLeaderChannel = 1;
     public static final int leftFollowerChannel = 4;
-    public static final int rightLeaderChannel = 3;
-    public static final int rightFollowerChannel = 2;
+    public static final int rightLeaderChannel = 2;
+    public static final int rightFollowerChannel = 3;
     
     public static final int intakeExtenderChannel = 10;
  
@@ -58,8 +58,8 @@ public final class Constants {
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
-    public static final double minimumHoodAngle = -30;
-    public static final double maximumHoodAngle = 0;
+    public static final double minimumHoodAngle = 0;
+    public static final double maximumHoodAngle = 30;
     public static final double stagingSpeed = 0.75;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;

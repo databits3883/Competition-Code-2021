@@ -8,26 +8,31 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.I2C;
 
-import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * Add your docs here.
  */
 public class Variables {
     private static Variables instance;
-    private static boolean created = false;
+ 
     public static Variables getInstance(){
-        if(!created){
+        if(instance == null){
+            System.out.println("running once");
             instance = new Variables();
-            created = true;
+            instance.navx.zeroYaw();
         }
         return instance;
+
     }
-    /*AHRS navx = new AHRS(Port.kMXP);
+    
+    AHRS navx = new AHRS(I2C.Port.kMXP );
+    
+   
     public double getGyroAngle(){
-        return navx.getAngle();
-    }*/
+        return (navx.getAngle());
+    }
 
     boolean m_isShooterEnabled;
     public boolean getShooterEnabled(){

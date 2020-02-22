@@ -128,8 +128,21 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void TankDrive(double leftValue, double rightValue){
+    double leftSpeedSetpoint = leftValue* Constants.maxDriveSpeed;
+    double rightSpeedSetpoint = rightValue* Constants.maxDriveSpeed;
     rightController.setReference(rightValue*Constants.maxDriveSpeed, ControlType.kVelocity);
     leftController.setReference(leftValue*Constants.maxDriveSpeed, ControlType.kVelocity);
+
+    rSPEntry.setDouble(rightSpeedSetpoint);
+    lSPEntry.setDouble(leftSpeedSetpoint);
+
+    rSP= rightSpeedSetpoint;
+    System.out.println(rightSpeedSetpoint);
+    lSP= leftSpeedSetpoint;
+  }
+
+  public void EmergencyStop(){
+    TankDrive(0, 0);
   }
 
   @Override
@@ -142,7 +155,9 @@ public class Drivetrain extends SubsystemBase {
   public double getLeftEncoder() {
     return leftEncoder.getPosition();
   }
-
+  public void resetLeftEncoder(){
+    leftEncoder.setPosition(0);
+  }
   private void updateGains(){
     if (lockEntry.getBoolean(true) != lockToLeft){
       lockToLeft = lockEntry.getBoolean(true);

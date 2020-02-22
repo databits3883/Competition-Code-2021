@@ -83,7 +83,7 @@ public class TurretRotator extends SubsystemBase {
   }
   public void changeAngle(double angleDelta){
     //System.out.println(angleDelta);
-    setAngle(setpoint + angleDelta);
+    setAngle(encoder.getPosition()+ angleDelta);
   }
 
   public void setCurrentPosition(){
@@ -132,10 +132,11 @@ public class TurretRotator extends SubsystemBase {
   public void periodic() {
      // This method will be called once per scheduler run
     updateGains();
-    testLimits();
+    if(DriverStation.getInstance().isDisabled()) testLimits();
+    
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
-    if(encoder.getVelocity()>100){
-      System.out.println(encoder.getVelocity());
+    if(encoder.getVelocity()>150){
+      System.out.println("Turret moving too fast! "+encoder.getVelocity()+" rpm");
       System.exit(1);
 
     }

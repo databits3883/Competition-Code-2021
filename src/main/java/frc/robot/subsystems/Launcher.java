@@ -50,6 +50,7 @@ public class Launcher extends SubsystemBase {
 
 
     Shuffleboard.getTab("LaunchingTuning").addNumber("pv", encoder::getVelocity);
+    Shuffleboard.getTab("LaunchingTuning").addNumber("pv - rpm", ()->encoder.getVelocity()/encoder.getVelocityConversionFactor());
     speedEntry = Shuffleboard.getTab("LaunchingTuning").add("speed",speed).getEntry();
 
     m_setpointLimiter.setTarget(0);
@@ -58,9 +59,9 @@ public class Launcher extends SubsystemBase {
   }
 
   void initGains(){
-    pEntry.setDouble(0.025);
+    pEntry.setDouble(0.03);
     ffEntry.setDouble(0.005);
-    dEntry.setDouble(0.2);
+    dEntry.setDouble(0.1);
     updateGains();
   }
 
