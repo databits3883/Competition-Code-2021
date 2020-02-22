@@ -46,6 +46,7 @@ public class RobotContainer {
   private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
+  private final LEDLights m_ledLights = new LEDLights();
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);

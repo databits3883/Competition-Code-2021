@@ -41,6 +41,7 @@ public final class Constants {
     public static final int hookLiftChannel = 3;
     public static final int liftWinchChannel = 4;
     public static final int camerServo = 5;
+    public static final int ledChannel = 6;
 
     //DIO
     public static final int upperStagingSensor = 9+10;

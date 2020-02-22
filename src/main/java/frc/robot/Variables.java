@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
 /**
@@ -22,14 +23,17 @@ public class Variables {
             System.out.println("running once");
             instance = new Variables();
             instance.navx.zeroYaw();
+
+            initShuffleboard();
         }
         return instance;
 
     }
+    static void initShuffleboard(){
+        Shuffleboard.getTab("Vaariables").addNumber("Power cells", instance::getContainedPowerCells);
+    }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );
-    
-   
     public double getGyroAngle(){
         return (navx.getAngle());
     }
@@ -40,5 +44,16 @@ public class Variables {
     }
     public void setShooterEnabled(boolean set){
         m_isShooterEnabled = set;
+    }
+
+    int containedPowerCells =0;
+    public void addPowerCell(){
+        containedPowerCells++;
+    }
+    public void subtractPowerCell(){
+        containedPowerCells--;
+    }
+    public int getContainedPowerCells(){
+        return containedPowerCells;
     }
 }
