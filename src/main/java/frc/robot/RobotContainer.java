@@ -81,7 +81,6 @@ public class RobotContainer {
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
-  private final TurnAngle m_TurnAngle = new TurnAngle(0, m_drivetrain);
   
   private final double joystickDeadband=(Math.pow(.07,3));
   private final Command manualArcadeDrive = new RunCommand(()->{
@@ -184,7 +183,7 @@ public class RobotContainer {
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
-    driverButton9.whenPressed(m_TurnAngle);
+
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);
     //gbutton3.whenPressed(m_rotation);

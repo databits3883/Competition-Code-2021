@@ -137,7 +137,6 @@ public class Drivetrain extends SubsystemBase {
     lSPEntry.setDouble(leftSpeedSetpoint);
 
     rSP= rightSpeedSetpoint;
-    System.out.println(rightSpeedSetpoint);
     lSP= leftSpeedSetpoint;
   }
 
