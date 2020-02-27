@@ -48,7 +48,7 @@ public class Launcher extends SubsystemBase {
     dEntry = Shuffleboard.getTab("LaunchingTuning").add("derivative",d).getEntry();
     ffEntry = Shuffleboard.getTab("LaunchingTuning").add("feedForward",ff).getEntry();
 
-
+    Shuffleboard.getTab("LaunchingTuning").addNumber("pdp voltage", ()->Variables.getInstance().getPDPCurrent(12));
     Shuffleboard.getTab("LaunchingTuning").addNumber("pv", encoder::getVelocity);
     Shuffleboard.getTab("LaunchingTuning").addNumber("pv - rpm", ()->encoder.getVelocity()/encoder.getVelocityConversionFactor());
     speedEntry = Shuffleboard.getTab("LaunchingTuning").add("speed",speed).getEntry();
@@ -85,6 +85,7 @@ public class Launcher extends SubsystemBase {
     double newSp = m_setpointLimiter.get();
     controller.setReference(newSp, ControlType.kVelocity);
     Variables.getInstance().setShooterEnabled((encoder.getVelocity() <=-Constants.minimumShootSpeed));
+    System.out.println("shooter voltage: "+Variables.getInstance().getPDPCurrent(12));
 
   }
   private void updateGains(){

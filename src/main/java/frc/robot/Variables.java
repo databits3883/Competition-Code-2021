@@ -9,6 +9,7 @@ package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 
@@ -55,5 +56,10 @@ public class Variables {
     }
     public int getContainedPowerCells(){
         return containedPowerCells;
+    }
+
+    PowerDistributionPanel m_powerDistributionPanel= new PowerDistributionPanel();;
+    public double getPDPCurrent(int channel){
+        return m_powerDistributionPanel.getCurrent(channel);
     }
 }

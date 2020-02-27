@@ -32,16 +32,22 @@ public class SetpointAccelerationLimiter {
     }
     public double get(){
         double deltaTime = m_timer.get();
-        m_timer.reset();
 
         double targetVelocity = (targetSetpoint - currentSetpoint)/deltaTime;
         
         targetVelocity = MathUtil.clamp(targetVelocity, -m_maxVelocity, m_maxVelocity);
-        //double targetAcceleration = (targetVelocity - currentVelocity)/deltaTime;
-        //targetAcceleration = MathUtil.clamp(targetAcceleration, -m_maxAcceleration, m_maxAcceleration);
-        //currentVelocity += targetAcceleration *deltaTime;
-        //currentSetpoint += currentVelocity*deltaTime;
-        currentSetpoint += targetVelocity*deltaTime;
+        
+        double targetAcceleration = (targetVelocity - currentVelocity)/deltaTime;
+        
+        
+        targetAcceleration = MathUtil.clamp(targetAcceleration, -m_maxAcceleration, m_maxAcceleration);
+        
+        
+        currentVelocity = currentVelocity+(targetAcceleration*deltaTime);//+0.8
+        currentSetpoint = currentSetpoint+(currentVelocity*deltaTime);//+0.016
+
+
+        m_timer.reset();
         return currentSetpoint;
     }
 }

@@ -100,7 +100,7 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
+  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith(parallel);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
@@ -134,7 +134,6 @@ public class RobotContainer {
       }
     m_hood.changeAngle(-1.0*stickValue*(1.0/12.0));
   }, m_hood);
-  private final DriveDistance m_driveDistance = new DriveDistance(5, m_drivetrain);
 
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
@@ -184,7 +183,6 @@ public class RobotContainer {
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
-    driverButton9.toggleWhenPressed(m_driveDistance);
 
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);

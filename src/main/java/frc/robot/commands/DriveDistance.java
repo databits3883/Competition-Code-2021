@@ -5,77 +5,63 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.Drivetrain;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class DriveDistance extends PIDCommand {
+public class DriveDistance extends ProfiledPIDCommand {
   Drivetrain m_drivetrain;
-  static TrapezoidProfile m_profile; 
-  TrapezoidProfile.Constraints m_Constraints = new TrapezoidProfile.Constraints(15, 20);
-  static Timer trapezoidTimer = new Timer();
-  double totalDistance;
   /**
    * Creates a new DriveDistance.
-   * @param targetDistance distance to drive in feet
-   * @param drivetrain is the drivetrain
    */
-  public DriveDistance(double targetDistance,Drivetrain drivetrain) {
-    
-
+  public DriveDistance(double distance,Drivetrain drivetrain) {
     super(
-        // The controller that the command will use
-        new PIDController(0, 0, 0),
+        // The ProfiledPIDController used by the command
+        new ProfiledPIDController(
+            // The PID gains
+            0.2, 0, 0,
+            // The motion profile constraints
+            new TrapezoidProfile.Constraints(15, 7)),
         // This should return the measurement
         () -> drivetrain.getRightEncoder(),
-        // This should return the setpoint (can also be a constant)
-        () -> m_profile.calculate(trapezoidTimer.get()).position ,
+        // This should return the goal (can also be a constant)
+        () -> new TrapezoidProfile.State(distance,0),
         // This uses the output
-        output -> {
-          // Use the output here
+        (output, setpoint) -> {
+          // Use the output (and setpoint, if desired) here
           drivetrain.ArcadeDrive(0, output);
         });
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-    addRequirements(drivetrain);
-    Shuffleboard.getTab("Distance driving tuning").add(getController());
-    Shuffleboard.getTab("Distance driving tuning").addNumber("current distance", ()->drivetrain.getRightEncoder());
-    Shuffleboard.getTab("Distance driving tuning").addNumber("target distance", ()->targetDistance);
     m_drivetrain = drivetrain;
-   totalDistance = targetDistance;
-   getController().setTolerance(1.0/12.0,.05);
-  }
-  @Override
-  public void initialize() {
-    trapezoidTimer.reset();
-    trapezoidTimer.start();
-    m_profile = new TrapezoidProfile(m_Constraints,
-      new TrapezoidProfile.State(totalDistance, 0),  
-      new TrapezoidProfile.State(0, 0));
-    
-    m_drivetrain.resetRightEncoder();
-    super.initialize();
+    addRequirements(m_drivetrain);
+    Shuffleboard.getTab("drive distance tuning").add("controller",getController());
+    Shuffleboard.getTab("drive distance tuning").addNumber("setpoint",()->getController().getSetpoint().position);
+    Shuffleboard.getTab("drive distance tuning").addNumber("pv", ()->drivetrain.getRightEncoder());
+    getController().setTolerance(1.0/12.0, (2.0/12.0));
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return getController().atSetpoint()&&getController().getSetpoint() == totalDistance;
+    return getController().atGoal();
   }
-  public void end(boolean interrupted) {
+  @Override
+  public void initialize() {
+    super.initialize();
+    m_drivetrain.resetRightEncoder();
+    getController().reset(0);
+  }
+  @Override
+  public void end(boolean interrupted){
     super.end(interrupted);
-    System.out.println("ended driving");
-    trapezoidTimer.stop();
-    trapezoidTimer.reset();
+    System.out.println("distance ended");
   }
 }
-
