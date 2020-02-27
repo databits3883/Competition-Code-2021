@@ -132,12 +132,13 @@ public class TurretRotator extends SubsystemBase {
   public void periodic() {
      // This method will be called once per scheduler run
     updateGains();
-    testLimits();
+    if (DriverStation.getInstance().isDisabled()) testLimits();
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
     if(encoder.getVelocity()>100){
       System.out.println(encoder.getVelocity());
       System.exit(1);
 
     }
+    
   }
 }

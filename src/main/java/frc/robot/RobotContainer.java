@@ -126,7 +126,7 @@ public class RobotContainer {
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
 
-  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator);
+  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
   private final double turretJoystickDeadband = 0.08;
   private final Command m_manualTurretPanning = new RunCommand(()->{
