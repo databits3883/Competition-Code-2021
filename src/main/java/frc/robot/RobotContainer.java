@@ -147,7 +147,8 @@ public class RobotContainer {
   private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
   private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
   
-
+  private final SetHoodAngle m_setHoodAngle5 = new SetHoodAngle(5, m_hood);
+  private final SetHoodAngle m_setHoodAngle25 = new SetHoodAngle(25, m_hood);
 
   private final SequentialCommandGroup m_initCommand = new SequentialCommandGroup(
     new InstantCommand(m_turretRotator::setCurrentPosition, m_turretRotator),

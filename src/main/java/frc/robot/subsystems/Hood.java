@@ -59,6 +59,10 @@ public class Hood extends SubsystemBase {
     updateGains();
   }
 
+  public boolean atAngle(){
+    return Math.abs(angle - encoder.getPosition())<=1.5;
+  }
+
   @Override
   public void periodic() {
     updateGains();
