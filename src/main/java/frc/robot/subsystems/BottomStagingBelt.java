@@ -45,7 +45,7 @@ public class BottomStagingBelt extends SubsystemBase {
   }
 
   boolean lastBottomSensor = false;
-  boolean lastUpperSensor = false;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -56,12 +56,8 @@ public class BottomStagingBelt extends SubsystemBase {
         Variables.getInstance().subtractPowerCell();
       }
     }
-    if(!lastUpperSensor && getSensorTop()){
-      if(beltMotor.get()<=0){
-        Variables.getInstance().subtractPowerCell();
-      }
-    }
+    
     lastBottomSensor = getSensorBottom();
-    lastUpperSensor = getSensorTop();
+
   }
 }

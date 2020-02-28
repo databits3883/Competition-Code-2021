@@ -26,12 +26,14 @@ public class Variables {
             instance.navx.zeroYaw();
 
             initShuffleboard();
+            
         }
         return instance;
 
     }
     static void initShuffleboard(){
-        Shuffleboard.getTab("Vaariables").addNumber("Power cells", instance::getContainedPowerCells);
+        Shuffleboard.getTab("Variables").addNumber("Power cells", instance::getContainedPowerCells);
+        Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
     }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );

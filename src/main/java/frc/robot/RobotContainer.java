@@ -47,6 +47,7 @@ public class RobotContainer {
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
   private final LEDLights m_ledLights = new LEDLights();
+  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -100,7 +101,7 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith(parallel);
+  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
@@ -183,6 +184,7 @@ public class RobotContainer {
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
+    driverButton9.whenPressed(m_shootThreePowerCells);
 
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);
