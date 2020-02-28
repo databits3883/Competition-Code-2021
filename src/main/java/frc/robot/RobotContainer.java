@@ -47,7 +47,7 @@ public class RobotContainer {
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
   private final LEDLights m_ledLights = new LEDLights();
-  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
+ 
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -143,6 +143,9 @@ public class RobotContainer {
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator);
+  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
+  private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
+  private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
   
 
 

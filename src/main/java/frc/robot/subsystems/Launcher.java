@@ -71,9 +71,15 @@ public class Launcher extends SubsystemBase {
    */
   public void setSpeed(double newSpeed){
     m_setpointLimiter.setTarget(newSpeed);
+    speed = newSpeed;
+    speedEntry.setDouble(speed);
   }
   public void changeSpeed(double angleDelta){
     setSpeed(speed + angleDelta);
+  }
+
+  public boolean atSpeed(){
+    return Math.abs(speed - encoder.getVelocity()) <1;
   }
   
   
