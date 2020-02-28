@@ -99,6 +99,9 @@ public class TurretRotator extends SubsystemBase {
   public double getCurrentError(){
     return velocityLimiter.getCurrentTarget() - getCurrentAngle();
   }
+  public boolean atTarget(){
+    return Math.abs(setpoint - encoder.getPosition())<1.5;
+  }
   
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
