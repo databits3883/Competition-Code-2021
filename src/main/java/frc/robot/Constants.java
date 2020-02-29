@@ -59,8 +59,8 @@ public final class Constants {
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
-    public static final double minimumHoodAngle = 0;
-    public static final double maximumHoodAngle = 30;
+    public static final double minimumHoodAngle = 17.6;
+    public static final double maximumHoodAngle = 26.2+minimumHoodAngle;
     public static final double lowerStagingSpeed = -0.75;
     public static final double upperStagingSpeed = -1;
     public static final double upperOuttakeSpeed = .4;

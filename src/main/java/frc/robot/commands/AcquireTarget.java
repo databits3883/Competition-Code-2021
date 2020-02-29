@@ -40,7 +40,7 @@ public class AcquireTarget extends CommandBase {
   public void execute() {
     verticalAim();
     horizontalAim();
-    System.out.println("distance: "+6.0/Math.tan(Math.toRadians(m_LimelightServo.getAngleToTarget())));
+    System.out.println("distance: "+(8.0+(3.75/12.0)-3.0)/Math.tan(Math.toRadians(m_LimelightServo.getAngleToTarget())));
   }
   boolean verticalOnTarget = true;
   void verticalAim(){
