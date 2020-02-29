@@ -31,8 +31,8 @@ public class Drivetrain extends SubsystemBase {
   private final CANPIDController rightController = new CANPIDController(rightLeader);
   private final CANPIDController leftController = new CANPIDController(leftLeader);
 
-  private final CANEncoder leftEncoder = new CANEncoder(rightLeader);
-  private final CANEncoder rightEncoder = new CANEncoder(leftLeader);
+  private final CANEncoder leftEncoder = new CANEncoder(leftLeader);
+  private final CANEncoder rightEncoder = new CANEncoder(rightLeader);
 
 
   private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
@@ -132,8 +132,20 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void TankDrive(double leftValue, double rightValue){
+    double leftSpeedSetpoint = leftValue* Constants.maxDriveSpeed;
+    double rightSpeedSetpoint = rightValue* Constants.maxDriveSpeed;
     rightController.setReference(rightValue*Constants.maxDriveSpeed, ControlType.kVelocity);
     leftController.setReference(leftValue*Constants.maxDriveSpeed, ControlType.kVelocity);
+
+    rSPEntry.setDouble(rightSpeedSetpoint);
+    lSPEntry.setDouble(leftSpeedSetpoint);
+
+    rSP= rightSpeedSetpoint;
+    lSP= leftSpeedSetpoint;
+  }
+
+  public void EmergencyStop(){
+    TankDrive(0, 0);
   }
 
   @Override
@@ -143,10 +155,12 @@ public class Drivetrain extends SubsystemBase {
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }
-  public double getLeftEncoder() {
-    return leftEncoder.getPosition();
+  public double getRightEncoder() {
+    return rightEncoder.getPosition();
   }
-
+  public void resetRightEncoder(){
+    rightEncoder.setPosition(0);
+  }
   private void updateGains(){
     if (lockEntry.getBoolean(true) != lockToLeft){
       lockToLeft = lockEntry.getBoolean(true);

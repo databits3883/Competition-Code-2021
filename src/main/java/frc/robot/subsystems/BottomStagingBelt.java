@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Variables;
 
 public class BottomStagingBelt extends SubsystemBase {
   private final VictorSP beltMotor = new VictorSP(Constants.lowerIntakeChannel);
@@ -42,8 +43,21 @@ public class BottomStagingBelt extends SubsystemBase {
   public void stopBelt(){
     beltMotor.set(0);
   }
+
+  boolean lastBottomSensor = false;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if(!lastBottomSensor && getSensorBottom()){
+      if(beltMotor.get()<=0){
+        Variables.getInstance().addPowerCell();
+      }else{
+        Variables.getInstance().subtractPowerCell();
+      }
+    }
+    
+    lastBottomSensor = getSensorBottom();
+
   }
 }

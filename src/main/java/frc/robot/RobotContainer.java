@@ -15,26 +15,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.commands.AcquireTarget;
-import frc.robot.commands.AdvanceStaging;
-import frc.robot.commands.BallFollowing;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.ExtendIntake;
-import frc.robot.commands.ManualLaunch;
-import frc.robot.commands.PositionControl;
-import frc.robot.commands.RetractIntake;
-import frc.robot.commands.Rotation;
-import frc.robot.commands.StagingToTop;
-import frc.robot.subsystems.BottomStagingBelt;
-import frc.robot.subsystems.ControlPanelSpinner;
-import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Launcher;
-import frc.robot.subsystems.LimelightServo;
-import frc.robot.subsystems.TurretRotator;
-import frc.robot.subsystems.UpperStagingBelt;
+
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -64,13 +48,18 @@ public class RobotContainer {
   private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
+  private final LEDLights m_ledLights = new LEDLights();
+ 
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
   private final JoystickButton driverTrigger = new JoystickButton(driverJoystick, 1);
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
+  private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
   private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton driverButton4 = new JoystickButton(driverJoystick, 4);
+  private final JoystickButton driverButton5 = new JoystickButton(driverJoystick, 5);
   private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
   private final JoystickButton dbutton9 = new JoystickButton(driverJoystick, 9);
@@ -84,7 +73,7 @@ public class RobotContainer {
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
-
+  private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
@@ -95,7 +84,7 @@ public class RobotContainer {
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
-  private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.32);
+  private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
   
   private final double joystickDeadband=(Math.pow(.07,3));
   private final Command manualArcadeDrive = new RunCommand(()->{
@@ -115,7 +104,7 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake);
+  private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
@@ -159,15 +148,21 @@ public class RobotContainer {
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator);
+  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
+  private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
+  private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
   
-
+  private final SetHoodAngle m_setHoodAngle5 = new SetHoodAngle(5, m_hood);
+  private final SetHoodAngle m_setHoodAngle25 = new SetHoodAngle(25, m_hood);
 
   private final SequentialCommandGroup m_initCommand = new SequentialCommandGroup(
     new InstantCommand(m_turretRotator::setCurrentPosition, m_turretRotator),
     new InstantCommand(m_hood::setCurrentPosition,m_hood),
     new PrintCommand("init teleop")
   );
-  
+  private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
+
+ 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -193,20 +188,25 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverEitherSideButton.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
+    driverButton9.whenPressed(m_shootThreePowerCells);
+
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);
     //gbutton3.whenPressed(m_rotation);
-    xButton.toggleWhenActive(m_stagingToTop);
+    xButton.toggleWhenPressed(m_stagingToTop);
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
+
     startButton.toggleWhenActive(m_acquireTarget);
     dbutton9.whileHeld(m_ballfollowing);
     
+
   }
 
 
@@ -217,9 +217,8 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    
-    return m_autoCommand;
-    
+
+    return new ShootAndMoveAutoBasic(m_hood, m_turretRotator, m_launcher, m_upperStagingBelt, m_bottomStagingBelt, m_drivetrain);
   }
 
   public Command getInitCommand(){

@@ -41,6 +41,7 @@ public final class Constants {
     public static final int hookLiftChannel = 3;
     public static final int liftWinchChannel = 4;
     public static final int camerServo = 5;
+    public static final int ledChannel = 6;
 
     //DIO
     public static final int upperStagingSensor = 9+10;
@@ -58,8 +59,8 @@ public final class Constants {
     public static final double maxDriveSpeed = 20;
     public static final double wheelDiameter = 7.0/12.0;
     public static final double driveTrainGearingRatio = 8.45;
-    public static final double minimumHoodAngle = -30;
-    public static final double maximumHoodAngle = 0;
+    public static final double minimumHoodAngle = 0;
+    public static final double maximumHoodAngle = 30;
     public static final double stagingSpeed = 0.75;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;

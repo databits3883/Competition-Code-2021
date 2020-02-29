@@ -56,7 +56,7 @@ public class AcquireTarget extends CommandBase {
   }
   void horizontalAim(){
     if(horizontalOnTarget){
-      double xOffset = tx.getDouble(0)*(1.0/4.0);
+      double xOffset = tx.getDouble(0)*(1.0);
       m_tTurretRotator.changeAngle(-xOffset);
       System.out.println(xOffset);
       horizontalOnTarget = false;

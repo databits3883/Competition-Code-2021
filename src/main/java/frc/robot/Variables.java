@@ -8,26 +8,38 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
-import edu.wpi.first.wpilibj.SPI.Port;
 
 /**
  * Add your docs here.
  */
 public class Variables {
     private static Variables instance;
-    private static boolean created = false;
+ 
     public static Variables getInstance(){
-        if(!created){
+        if(instance == null){
+            System.out.println("running once");
             instance = new Variables();
-            created = true;
+            instance.navx.zeroYaw();
+
+            initShuffleboard();
+            
         }
         return instance;
+
     }
-    /*AHRS navx = new AHRS(Port.kMXP);
+    static void initShuffleboard(){
+        Shuffleboard.getTab("Variables").addNumber("Power cells", instance::getContainedPowerCells);
+        Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
+    }
+    
+    AHRS navx = new AHRS(I2C.Port.kMXP );
     public double getGyroAngle(){
-        return navx.getAngle();
-    }*/
+        return (navx.getAngle());
+    }
 
     boolean m_isShooterEnabled;
     public boolean getShooterEnabled(){
@@ -35,5 +47,21 @@ public class Variables {
     }
     public void setShooterEnabled(boolean set){
         m_isShooterEnabled = set;
+    }
+
+    int containedPowerCells =0;
+    public void addPowerCell(){
+        containedPowerCells++;
+    }
+    public void subtractPowerCell(){
+        containedPowerCells--;
+    }
+    public int getContainedPowerCells(){
+        return containedPowerCells;
+    }
+
+    PowerDistributionPanel m_powerDistributionPanel= new PowerDistributionPanel();;
+    public double getPDPCurrent(int channel){
+        return m_powerDistributionPanel.getCurrent(channel);
     }
 }
