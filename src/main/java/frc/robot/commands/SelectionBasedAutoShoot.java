@@ -21,4 +21,14 @@ public class SelectionBasedAutoShoot extends SequentialCommandGroup {
     // super(new FooCommand(), new BarCommand());
     super();
   }
+
+  public enum StartPosition{
+    kLeft(0,0,0), kCenter(0,0,0), kRight(0,0,0);
+    double hoodAngle, turretAngle, launchSpeed;
+    StartPosition(double hoodAngle, double turretAngle, double launchSpeed){
+      this.hoodAngle = hoodAngle;
+      this.turretAngle = turretAngle;
+      this.launchSpeed = launchSpeed;
+    }
+  }
 }
