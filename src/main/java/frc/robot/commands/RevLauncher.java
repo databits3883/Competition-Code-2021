@@ -21,7 +21,7 @@ public class RevLauncher extends CommandBase {
     addRequirements(launcher);
     m_launcher = launcher;
     targetSpeed = speed;
-    Shuffleboard.getTab("commandDebuging").add(this.getName()+" speed: "+speed,this);
+    //Shuffleboard.getTab("commandDebuging").add(this.getName()+" speed: "+speed,this);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

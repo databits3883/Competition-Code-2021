@@ -21,7 +21,7 @@ public class SetHoodAngle extends CommandBase {
     addRequirements(hood);
     m_hood = hood;
     targetAngle = angle;
-    Shuffleboard.getTab("commandDebugging").add(this.getName() + " angle: " + angle,this);
+    //Shuffleboard.getTab("commandDebugging").add(this.getName() + " angle: " + angle,this);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

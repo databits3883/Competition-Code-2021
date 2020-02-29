@@ -8,7 +8,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystems.Drivetrain;
@@ -42,9 +41,6 @@ public class DriveDistance extends ProfiledPIDCommand {
     // Configure additional PID options by calling `getController` here.
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
-    Shuffleboard.getTab("drive distance tuning").add("controller",getController());
-    Shuffleboard.getTab("drive distance tuning").addNumber("setpoint",()->getController().getSetpoint().position);
-    Shuffleboard.getTab("drive distance tuning").addNumber("pv", ()->drivetrain.getRightEncoder());
     getController().setTolerance(1.0/12.0, (2.0/12.0));
   }
 

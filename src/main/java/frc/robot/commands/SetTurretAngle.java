@@ -21,7 +21,7 @@ public class SetTurretAngle extends CommandBase {
     addRequirements(rotator);
     m_turretRotator = rotator;
     targetAngle = angle;
-    Shuffleboard.getTab("commandDebugging").add(this.getName() + " angle: " + angle,this);
+    //Shuffleboard.getTab("commandDebugging").add(this.getName() + " angle: " + angle,this);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

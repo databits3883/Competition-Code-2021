@@ -27,7 +27,6 @@ public class ShootThreePowerCells extends CommandBase {
     addRequirements(upperStagingBelt, bottomStagingBelt);
     m_upperStagingBelt = upperStagingBelt;
     m_bottomStagingBelt = bottomStagingBelt;
-    Shuffleboard.getTab("commandDebuging").add(this);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -42,6 +41,7 @@ public class ShootThreePowerCells extends CommandBase {
   public void execute() {
     m_upperStagingBelt.runBelt(); 
     m_bottomStagingBelt.runBelt();
+    System.out.println("running shoot 3");
     
   }
 
