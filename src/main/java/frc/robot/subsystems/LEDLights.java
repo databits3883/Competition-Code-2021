@@ -23,22 +23,22 @@ public class LEDLights extends SubsystemBase {
    * Creates a new LEDLights.
    */
   public LEDLights() {
-    lights.setLength(60);
-    for(int i =0; i<buffer.getLength(); i++){
-      buffer.setLED(i, new Color(0,0,0));
-    }
-    lights.setData(buffer);
-    lights.start();
-    timer.start();
+    // lights.setLength(60);
+    // for(int i =0; i<buffer.getLength(); i++){
+    //   buffer.setLED(i, new Color(0,0,0));
+    // }
+    // lights.setData(buffer);
+    // lights.start();
+    // timer.start();
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    double time = timer.get()%10.0;
-    for(int i =0; i<buffer.getLength(); i++){
-      buffer.setLED(i, new Color(0,0.1,0));
-    }
-    lights.setData(buffer);
+    // double time = timer.get()%10.0;
+    // for(int i =0; i<buffer.getLength(); i++){
+    //   buffer.setLED(i, new Color(0,0.1,0));
+    // }
+    // lights.setData(buffer);
   }
 }

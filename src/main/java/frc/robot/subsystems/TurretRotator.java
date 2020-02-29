@@ -77,8 +77,8 @@ public class TurretRotator extends SubsystemBase {
     velocityLimiter.setTarget(setpoint);
   }
   public void setAngleStep(double newSetpoint){
-    System.out.println("reset i accum for turret: "+controller.setIAccum(0));
-    System.out.println(controller.getIAccum());
+    controller.setIAccum(0);
+    controller.getIAccum();
     setAngle(newSetpoint);
   }
   public void changeAngle(double angleDelta){
@@ -87,7 +87,7 @@ public class TurretRotator extends SubsystemBase {
   }
 
   public void setCurrentPosition(){
-    System.out.println("reset i accum for turret: "+controller.setIAccum(0));
+    controller.setIAccum(0);
     
     setpoint=encoder.getPosition();
     velocityLimiter.setWithoutRamp(setpoint);
@@ -138,7 +138,7 @@ public class TurretRotator extends SubsystemBase {
     if(DriverStation.getInstance().isDisabled()) testLimits();
     
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
-    if(encoder.getVelocity()>150){
+    if(encoder.getVelocity()>300){
       System.out.println("Turret moving too fast! "+encoder.getVelocity()+" rpm");
       System.exit(1);
 

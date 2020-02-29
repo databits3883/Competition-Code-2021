@@ -41,7 +41,6 @@ public class ShootThreePowerCells extends CommandBase {
   public void execute() {
     m_upperStagingBelt.runBelt(); 
     m_bottomStagingBelt.runBelt();
-    System.out.println("running shoot 3");
     
   }
 

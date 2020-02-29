@@ -114,7 +114,6 @@ public class Launcher extends SubsystemBase {
     if(d != dEntry.getDouble(0)){
       d = dEntry.getDouble(0);
       controller.setD(d);
-      System.out.println(controller.getD());
     }
     if(ff != ffEntry.getDouble(0)){
       ff = ffEntry.getDouble(0); 
@@ -122,7 +121,6 @@ public class Launcher extends SubsystemBase {
     }
     if(speed != speedEntry.getDouble(0)){
       speed = speedEntry.getDouble(0); 
-      System.out.println(speed);
       setSpeed(speed);
     }
   }
