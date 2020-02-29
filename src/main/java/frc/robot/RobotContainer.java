@@ -51,15 +51,19 @@ public class RobotContainer {
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
+
   private final JoystickButton driverTrigger = new JoystickButton(driverJoystick, 1);
-  private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
-  private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
   private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
   private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
   private final JoystickButton driverButton4 = new JoystickButton(driverJoystick, 4);
   private final JoystickButton driverButton5 = new JoystickButton(driverJoystick, 5);
   private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
+  private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
+  private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
+  private final JoystickButton driverButton10 = new JoystickButton(driverJoystick, 10);
+  private final JoystickButton driverButton11 = new JoystickButton(driverJoystick, 11);
+
   private final XboxController gunnerController = new XboxController(3);
   private final SupplierButton xButton = new SupplierButton( ()->gunnerController.getXButton());
   private final SupplierButton yButton = new SupplierButton( ()->gunnerController.getYButton());
@@ -71,6 +75,7 @@ public class RobotContainer {
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
   private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
+
   private final Trigger lowerIntakeTrigger = new Trigger(){
     @Override
     public boolean get(){
@@ -155,8 +160,10 @@ public class RobotContainer {
     new InstantCommand(m_hood::setCurrentPosition,m_hood),
     new PrintCommand("init teleop")
   );
-  private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
 
+  private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
+  private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
+  private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -188,7 +195,9 @@ public class RobotContainer {
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
     driverButton8.whenReleased(m_autoStopIntake.alongWith(m_stopBelt));
-    driverButton9.whenPressed(m_shootThreePowerCells);
+    //driverButton9.whenPressed(m_shootThreePowerCells);
+    driverButton10.whileHeld(m_manualLowerIntake);
+    driverButton11.whileHeld(m_manualRaiseIntake);
 
     //gbutton2.whenPressed(m_stagingToTop,false);
     lowerIntakeTrigger.whenActive(m_advanceStaging);
