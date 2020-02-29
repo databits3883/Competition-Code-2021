@@ -61,7 +61,9 @@ public final class Constants {
     public static final double driveTrainGearingRatio = 8.45;
     public static final double minimumHoodAngle = 0;
     public static final double maximumHoodAngle = 30;
-    public static final double stagingSpeed = 0.75;
+    public static final double lowerStagingSpeed = -0.75;
+    public static final double upperStagingSpeed = -1;
+    public static final double upperOuttakeSpeed = .4;
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;
     public static final double intakeSpeed = 1;

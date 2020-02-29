@@ -25,13 +25,13 @@ public class UpperStagingBelt extends SubsystemBase {
   public UpperStagingBelt() {}
   
   public void runBelt(){
-    beltMotor.set(-1);
+    beltMotor.set(Constants.upperStagingSpeed);
   }
   public void stopBelt(){
     beltMotor.stopMotor();
   }
   public void outTake(){
-    beltMotor.set(0.4);
+    beltMotor.set(Constants.upperOuttakeSpeed);
   }
 
   public boolean isBallPresent(){

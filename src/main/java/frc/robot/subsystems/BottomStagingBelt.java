@@ -35,10 +35,10 @@ public class BottomStagingBelt extends SubsystemBase {
     return !upperSwitch.get();
   }
   public void runBelt(){
-    beltMotor.set(-0.5);
+    beltMotor.set(Constants.lowerStagingSpeed);
   }
   public void outTake(){
-    beltMotor.set(0.5);
+    beltMotor.set(Constants.lowerStagingSpeed*-1);
   }
   public void stopBelt(){
     beltMotor.set(0);

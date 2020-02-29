@@ -113,7 +113,7 @@ public class RobotContainer {
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
   private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt).alongWith(new InstantCommand(m_upperStagingBelt::stopBelt, m_upperStagingBelt));
   private final Command m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt)
-      .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.5))
+      .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.15))
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
