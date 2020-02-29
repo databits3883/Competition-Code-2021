@@ -99,10 +99,6 @@ public class Drivetrain extends SubsystemBase {
     updateGains();
   }
 
-  void ballScan(){
-    ArcadeDrive(.1, 0);
-  }
-
   public void ArcadeDrive(double zRotation, double xSpeed){
 
     //frontLeft.setInverted(true);
