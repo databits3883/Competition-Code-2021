@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -60,10 +62,12 @@ public class RobotContainer {
   private final JoystickButton driverButton5 = new JoystickButton(driverJoystick, 5);
   private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
+
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
   private final JoystickButton driverButton10 = new JoystickButton(driverJoystick, 10);
   private final JoystickButton driverButton11 = new JoystickButton(driverJoystick, 11);
+
 
   private final XboxController gunnerController = new XboxController(3);
   private final SupplierButton xButton = new SupplierButton( ()->gunnerController.getXButton());
@@ -117,6 +121,8 @@ public class RobotContainer {
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
+
+  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
   private final double turretJoystickDeadband = 0.08;
   private final Command m_manualTurretPanning = new RunCommand(()->{
@@ -207,8 +213,11 @@ public class RobotContainer {
     dbutton6.whenPressed(m_extendIntake);
     dbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
-    startButton.toggleWhenPressed(m_acquireTarget);
-  
+
+    startButton.toggleWhenActive(m_acquireTarget);
+    dbutton9.whileHeld(m_ballfollowing);
+    
+
   }
 
 
@@ -219,6 +228,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+
     return new ShootAndMoveAutoBasic(m_hood, m_turretRotator, m_launcher, m_upperStagingBelt, m_bottomStagingBelt, m_drivetrain);
   }
 

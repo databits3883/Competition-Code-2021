@@ -12,11 +12,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class SelectionBasedAutonomous extends SequentialCommandGroup {
+public class SelectionBasedAutoShoot extends SequentialCommandGroup {
   /**
-   * Creates a new SelectionBasedAutonomous.
+   * Creates a new SelectionBasedAutoShoot.
    */
-  public SelectionBasedAutonomous() {
+  public SelectionBasedAutoShoot() {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super();
