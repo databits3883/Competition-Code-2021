@@ -215,7 +215,7 @@ public class RobotContainer {
     rightTriggButton.whileHeld(m_manualLaunch);
 
     startButton.toggleWhenActive(m_acquireTarget);
-    dbutton9.whileHeld(m_ballfollowing);
+    driverButton9.whileHeld(m_ballfollowing);
     
 
   }
