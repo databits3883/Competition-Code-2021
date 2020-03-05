@@ -145,7 +145,7 @@ public class RobotContainer {
       else {
         stickValue-=Math.copySign(turretJoystickDeadband, stickValue);
       }
-    m_hood.changeAngle(-1.0*stickValue*(1.0/12.0));
+    m_hood.changeAngle(stickValue*(1.0/12.0));
   }, m_hood);
 
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
