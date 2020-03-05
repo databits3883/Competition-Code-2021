@@ -107,14 +107,19 @@ public class Hood extends SubsystemBase {
     spEntry.setDouble(angle);
     velocityLimiter.setTarget(angle);
   }
+  
   public void changeAngle(double angleDelta){
     setAngle(angle + angleDelta);
   }
+  
 
   public void setCurrentPosition(){
 
     angle=encoder.getPosition();
     velocityLimiter.setWithoutRamp(angle);
     spEntry.setDouble(angle);
+  }
+  public double LaunchAngle(){
+    return (57.3-(encoder.getPosition()-17));
   }
 }
