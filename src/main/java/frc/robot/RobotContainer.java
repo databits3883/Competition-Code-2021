@@ -112,6 +112,7 @@ public class RobotContainer {
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
+  private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
@@ -215,7 +216,7 @@ public class RobotContainer {
     rightTriggButton.whileHeld(m_manualLaunch);
 
     startButton.toggleWhenActive(m_acquireTarget);
-    driverButton9.whileHeld(m_ballfollowing);
+    driverButton9.whileHeld(m_turnto90);
     
 
   }

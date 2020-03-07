@@ -68,7 +68,7 @@ public final class Constants {
     public static final double loweringIntakeSpeed = -.3;
     public static final double intakeSpeed = 1;
 
-    public static final double maxTurretVelocity = 40; //degrees per second
+    public static final double maxTurretVelocity = 120; //degrees per second
     public static final double maxHoodVelocity = 3000; //degrees per second
 
     public static final double minimumShootSpeed = 25;

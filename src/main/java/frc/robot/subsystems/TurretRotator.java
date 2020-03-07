@@ -30,7 +30,7 @@ public class TurretRotator extends SubsystemBase {
   private final CANDigitalInput forwardLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyOpen);
   private final CANDigitalInput reverseLimit = new CANDigitalInput(rotatorMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyOpen);
   private double p,i,d,ff;
-  private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
+  private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry,outputEntry;
   private final CANPIDController controller = new CANPIDController(rotatorMotor);
   private final SetpointVelocityLimiter velocityLimiter;
 
@@ -56,12 +56,13 @@ public class TurretRotator extends SubsystemBase {
     dEntry = Shuffleboard.getTab("turretRotatorTuning").add("derivative",d).getEntry();
     ffEntry = Shuffleboard.getTab("turretRotatorTuning").add("feedForward",ff).getEntry();
     spEntry = Shuffleboard.getTab("turretRotatorTuning").add("setpoint",setpoint).getEntry();
+    
     spEntry.setDouble(setpoint);
 
     Shuffleboard.getTab("turretRotatorTuning").addNumber("Process Variable", () -> encoder.getPosition());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("reverse Limit",()-> reverseLimit.get());
     Shuffleboard.getTab("turretRotatorTuning").addBoolean("forward Limit",()-> forwardLimit.get());
-
+    Shuffleboard.getTab("turretRotatorTuning").addNumber("output",()->rotatorMotor.get());
     setCurrentPosition();
     
     initGains();
@@ -70,6 +71,7 @@ public class TurretRotator extends SubsystemBase {
     pEntry.setDouble(0.1);
     updateGains();
   }
+  
   public void setAngle(double newSetpoint){
     
     setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
@@ -83,7 +85,7 @@ public class TurretRotator extends SubsystemBase {
   }
   public void changeAngle(double angleDelta){
     //System.out.println(angleDelta);
-    setAngle(encoder.getPosition()+ angleDelta);
+    setAngle(setpoint+ angleDelta);
   }
 
   public void setCurrentPosition(){
@@ -102,7 +104,6 @@ public class TurretRotator extends SubsystemBase {
   public boolean atTarget(){
     return Math.abs(setpoint - encoder.getPosition())<1.5;
   }
-  
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
       p = pEntry.getDouble(0);
@@ -139,7 +140,7 @@ public class TurretRotator extends SubsystemBase {
     if(DriverStation.getInstance().isDisabled()) testLimits();
    
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
-    if(encoder.getVelocity()>300){
+    if(encoder.getVelocity()>900&&false){
       System.out.println("Turret moving too fast! "+encoder.getVelocity()+" rpm");
       System.exit(1);
 
