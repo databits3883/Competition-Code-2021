@@ -82,11 +82,7 @@ public class BallFollowing extends CommandBase {
     
     if (ta.getDouble(1.9)<1.3&&m_limelightservo.getAngle()>155&&tv.isValid()){
       m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), 0);
-      if (ta.getDouble(1.7)>1.2){
-        m_intake.intake();
-  
-  
-      }
+      
     }
     else {
       if (m_turretrotator.getCurrentAngle()>267 && tv.isValid())
@@ -95,11 +91,7 @@ public class BallFollowing extends CommandBase {
     }
     System.out.println(m_limelightservo.getAngle());
 
-    if (ta.getDouble(1.7)>1.2){
-      m_intake.intake();
-
-
-    }
+    
     }
     
 
