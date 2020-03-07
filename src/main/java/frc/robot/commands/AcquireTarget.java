@@ -26,7 +26,9 @@ public class AcquireTarget extends CommandBase {
   Hood m_hood;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
-  NetworkTableEntry moving;
+  NetworkTableEntry filterLengthEntry;
+  NetworkTableEntry limelightTolerance, angleTolerance;
+  double filterLength;
   LinearFilter limeLightFilter = LinearFilter.movingAverage(10);
   /**
    * Creates a new AcquireTarget.
@@ -40,7 +42,10 @@ public class AcquireTarget extends CommandBase {
     addRequirements(m_LimelightServo,m_tTurretRotator);
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
-    moving = Shuffleboard.getTab("tuningLime").add("filter",10).getEntry();
+    filterLengthEntry = Shuffleboard.getTab("tuningLime").add("filter length",10).getEntry();
+
+    limelightTolerance = Shuffleboard.getTab("tuningLime").add("limelight tolerance",1).getEntry();
+    angleTolerance = Shuffleboard.getTab("tuningLime").add("turret angle tolerance",1).getEntry();
 
   }
   
@@ -59,6 +64,10 @@ public class AcquireTarget extends CommandBase {
     launcherPrime(angle);
 
     System.out.println("angle: "+m_LimelightServo.getAngleToTarget());
+    if(filterLengthEntry.getDouble(filterLength)!=filterLength){
+      filterLength = filterLengthEntry.getDouble(filterLength);
+      limeLightFilter = LinearFilter.movingAverage((int)filterLength);
+    }
   }
   boolean verticalOnTarget = true;
   void verticalAim(){
@@ -73,13 +82,13 @@ public class AcquireTarget extends CommandBase {
 
   }
   void horizontalAim(){
+    double xOffset = limeLightFilter.calculate(tx.getDouble(0));
     if(horizontalOnTarget){
-
-      double xOffset = tx.getDouble(0)*(1.0);
+      if (Math.abs(xOffset)<limelightTolerance.getDouble(1)) xOffset = 0;
       m_tTurretRotator.changeAngle(-xOffset);
       horizontalOnTarget = false;
     }
-    horizontalOnTarget = Math.abs(m_tTurretRotator.getCurrentError())<1; 
+    horizontalOnTarget = Math.abs(m_tTurretRotator.getCurrentError())<angleTolerance.getDouble(1); 
   }
   void hoodAim(double angle){
     m_hood.setAngle(
