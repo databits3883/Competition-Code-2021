@@ -111,7 +111,6 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  private final AutoAiming m_autoaiming = new AutoAiming(m_limelightServo, m_launcher, m_hood);
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
