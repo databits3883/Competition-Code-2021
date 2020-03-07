@@ -113,7 +113,9 @@ public class RobotContainer {
   },m_drivetrain );
   private final AutoAiming m_autoaiming = new AutoAiming(m_limelightServo, m_launcher, m_hood);
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
-  
+
+  private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
+
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
@@ -147,7 +149,7 @@ public class RobotContainer {
       else {
         stickValue-=Math.copySign(turretJoystickDeadband, stickValue);
       }
-    m_hood.changeAngle(-1.0*stickValue*(1.0/12.0));
+    m_hood.changeAngle(stickValue*(1.0/12.0));
   }, m_hood);
 
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
@@ -156,7 +158,7 @@ public class RobotContainer {
   private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
 
-  private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator);
+  private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
   private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
   private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
   private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
@@ -217,7 +219,9 @@ public class RobotContainer {
     rightTriggButton.whileHeld(m_manualLaunch);
 
     startButton.toggleWhenActive(m_acquireTarget);
-    driverButton9.whileHeld(m_autoaiming);
+
+    driverButton9.whileHeld(m_turnto90);
+
     
 
   }

@@ -34,6 +34,7 @@ public class Variables {
     static void initShuffleboard(){
         Shuffleboard.getTab("Variables").addNumber("Power cells", instance::getContainedPowerCells);
         Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
+        Shuffleboard.getTab("Variables").addBoolean("shooter at speed", instance::getShooterAtSpeed);
     }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );
@@ -47,6 +48,14 @@ public class Variables {
     }
     public void setShooterEnabled(boolean set){
         m_isShooterEnabled = set;
+    }
+
+    boolean m_shooterAtSpeed;
+    public boolean getShooterAtSpeed(){
+        return m_shooterAtSpeed;
+    }
+    public void setShooterAtSpeed(boolean atSpeed){
+        m_shooterAtSpeed = atSpeed;
     }
 
     int containedPowerCells =0;

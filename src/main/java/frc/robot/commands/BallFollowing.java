@@ -89,17 +89,14 @@ public class BallFollowing extends CommandBase {
       }
     }
     else {
-      if (m_turretrotator.getCurrentAngle()>267 && tv.isValid())
-    {
-      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), speedpid.calculate(ta.getDouble(2.1),2.1));
-    }
-    System.out.println(m_limelightservo.getAngle());
+      if (m_turretrotator.getCurrentAngle()>267 && tv.isValid()){
+        m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), speedpid.calculate(ta.getDouble(2.1),2.1));
+      }
+      System.out.println(m_limelightservo.getAngle());
 
-    if (ta.getDouble(1.7)>1.2){
-      m_intake.intake();
-
-
-    }
+      if (ta.getDouble(1.7)>1.2){
+        m_intake.intake();
+      }
     }
     
 

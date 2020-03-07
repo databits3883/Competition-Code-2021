@@ -35,9 +35,12 @@ public class ManualLaunch extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(Variables.getInstance().getShooterEnabled()){
+    if(Variables.getInstance().getShooterEnabled()&&Variables.getInstance().getShooterAtSpeed()){
       m_upperStagingBelt.runBelt();
       m_bottomStagingBelt.runBelt();
+    }else{
+      m_upperStagingBelt.stopBelt();
+      m_bottomStagingBelt.stopBelt();
     }
   }
 
