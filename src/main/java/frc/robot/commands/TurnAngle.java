@@ -30,7 +30,7 @@ public class TurnAngle extends PIDCommand {
   public TurnAngle(double angle ,Drivetrain drivetrain) {
     super(
         // The controller that the command will use
-        new PIDController(0.004, 0.001, 0),
+        new PIDController(0.006, 0.0012, 0),
         // This should return the measurement
         () -> Variables.getInstance().getGyroAngle() - initialAngle,
         // This should return the setpoint (can also be a constant)

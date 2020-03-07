@@ -92,6 +92,7 @@ public class Launcher extends SubsystemBase {
     double newSp = m_setpointLimiter.get();
     controller.setReference(newSp, ControlType.kVelocity);
     Variables.getInstance().setShooterEnabled((encoder.getVelocity() <=-Constants.minimumShootSpeed));
+    Variables.getInstance().setShooterAtSpeed(encoder.getVelocity()-speed<=2);
    
 
     double amps = Variables.getInstance().getPDPCurrent(3);

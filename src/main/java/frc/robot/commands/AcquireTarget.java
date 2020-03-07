@@ -9,27 +9,46 @@ package frc.robot.commands;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.LinearFilter;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
 
 public class AcquireTarget extends CommandBase {
   LimelightServo m_LimelightServo;
   TurretRotator m_tTurretRotator;
+  Launcher m_launcher;
+  Hood m_hood;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
+  NetworkTableEntry filterLengthEntry;
+  NetworkTableEntry limelightTolerance, angleTolerance;
+  double filterLength;
+  LinearFilter limeLightFilter = LinearFilter.movingAverage(10);
   /**
    * Creates a new AcquireTarget.
    */
-  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator) {
+  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator, Hood hood, Launcher launcher) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_LimelightServo = limelightServo;
     m_tTurretRotator = turretRotator;
+    m_hood = hood;
+    m_launcher = launcher;
     addRequirements(m_LimelightServo,m_tTurretRotator);
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
-  }
+    filterLengthEntry = Shuffleboard.getTab("tuningLime").add("filter length",10).getEntry();
 
+    limelightTolerance = Shuffleboard.getTab("tuningLime").add("limelight tolerance",1).getEntry();
+    angleTolerance = Shuffleboard.getTab("tuningLime").add("turret angle tolerance",1).getEntry();
+
+  }
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -40,7 +59,15 @@ public class AcquireTarget extends CommandBase {
   public void execute() {
     verticalAim();
     horizontalAim();
-    System.out.println("distance: "+6.0/Math.tan(Math.toRadians(m_LimelightServo.getAngleToTarget())));
+    double angle = m_LimelightServo.getAngleToTarget();
+    hoodAim(angle);
+    launcherPrime(angle);
+
+    System.out.println("angle: "+m_LimelightServo.getAngleToTarget());
+    if(filterLengthEntry.getDouble(filterLength)!=filterLength){
+      filterLength = filterLengthEntry.getDouble(filterLength);
+      limeLightFilter = LinearFilter.movingAverage((int)filterLength);
+    }
   }
   boolean verticalOnTarget = true;
   void verticalAim(){
@@ -55,12 +82,21 @@ public class AcquireTarget extends CommandBase {
 
   }
   void horizontalAim(){
+    double xOffset = limeLightFilter.calculate(tx.getDouble(0));
     if(horizontalOnTarget){
-      double xOffset = tx.getDouble(0)*(1.0);
+      if (Math.abs(xOffset)<limelightTolerance.getDouble(1)) xOffset = 0;
       m_tTurretRotator.changeAngle(-xOffset);
       horizontalOnTarget = false;
     }
-    horizontalOnTarget = Math.abs(m_tTurretRotator.getCurrentError())<1; 
+    horizontalOnTarget = Math.abs(m_tTurretRotator.getCurrentError())<angleTolerance.getDouble(1); 
+  }
+  void hoodAim(double angle){
+    m_hood.setAngle(
+      angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
+    );
+  }
+  void launcherPrime(double angle){
+    m_launcher.setSpeed(MathUtil.clamp((73.8-2.78*angle+0.201*angle*angle-(5.96e-3)*angle*angle*angle)*-1,-100,0));
   }
 
   boolean horizontalOnTarget = true;
@@ -71,6 +107,9 @@ public class AcquireTarget extends CommandBase {
       verticalOnTarget = true;
       System.out.println("ended");
       horizontalOnTarget = true;
+     if (interrupted){
+      m_launcher.setSpeed(0);
+     }
     
   }
 
