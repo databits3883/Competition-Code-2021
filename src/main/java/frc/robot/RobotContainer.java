@@ -154,7 +154,7 @@ public class RobotContainer {
   private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
 
-  private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator);
+  private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
   private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
   private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
   private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);

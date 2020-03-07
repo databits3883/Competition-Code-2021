@@ -10,21 +10,28 @@ package frc.robot.commands;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
 
 public class AcquireTarget extends CommandBase {
   LimelightServo m_LimelightServo;
   TurretRotator m_tTurretRotator;
+  Launcher m_launcher;
+  Hood m_hood;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
   /**
    * Creates a new AcquireTarget.
    */
-  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator) {
+  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator, Hood hood, Launcher launcher) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_LimelightServo = limelightServo;
     m_tTurretRotator = turretRotator;
+    m_hood = hood;
+    m_launcher = launcher;
     addRequirements(m_LimelightServo,m_tTurretRotator);
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
@@ -40,7 +47,11 @@ public class AcquireTarget extends CommandBase {
   public void execute() {
     verticalAim();
     horizontalAim();
-    System.out.println("distance: "+(5.1)/Math.tan(Math.toRadians(m_LimelightServo.getAngleToTarget())));
+    double angle = m_LimelightServo.getAngleToTarget();
+    hoodAim(angle);
+    launcherPrime(angle);
+
+    System.out.println("angle: "+m_LimelightServo.getAngleToTarget());
   }
   boolean verticalOnTarget = true;
   void verticalAim(){
@@ -62,6 +73,14 @@ public class AcquireTarget extends CommandBase {
     }
     horizontalOnTarget = Math.abs(m_tTurretRotator.getCurrentError())<1; 
   }
+  void hoodAim(double angle){
+    m_hood.setAngle(
+      angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
+    );
+  }
+  void launcherPrime(double angle){
+    m_launcher.setSpeed(MathUtil.clamp((73.8-2.78*angle+0.201*angle*angle-(5.96e-3)*angle*angle*angle)*-1,-100,0));
+  }
 
   boolean horizontalOnTarget = true;
   // Called once the command ends or is interrupted.
@@ -71,6 +90,9 @@ public class AcquireTarget extends CommandBase {
       verticalOnTarget = true;
       System.out.println("ended");
       horizontalOnTarget = true;
+     if (interrupted){
+      m_launcher.setSpeed(0);
+     }
     
   }
 
