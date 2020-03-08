@@ -111,7 +111,7 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  private final AutoAiming m_autoaiming = new AutoAiming(m_limelightServo, m_launcher, m_hood);
+  
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
@@ -235,7 +235,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
 
-    return new ShootAndMoveAutoBasic(m_hood, m_turretRotator, m_launcher, m_upperStagingBelt, m_bottomStagingBelt, m_drivetrain);
+    return new RightPositionAuto(m_drivetrain, m_intake, m_turretRotator, m_limelightServo, m_launcher, m_hood, m_upperStagingBelt, m_bottomStagingBelt);
   }
 
   public Command getInitCommand(){
