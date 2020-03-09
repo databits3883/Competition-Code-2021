@@ -45,7 +45,9 @@ public class RightPositionAuto extends SequentialCommandGroup {
       new PrintCommand("stopping intake"),
       new InstantCommand(intake::stop, intake),
       new PrintCommand("shooting"),
-      new ShootThreePowerCells(upperStagingBelt, bottomStagingBelt)
+      new ShootThreePowerCells(upperStagingBelt, bottomStagingBelt){
+        
+      }
 
 
     );
