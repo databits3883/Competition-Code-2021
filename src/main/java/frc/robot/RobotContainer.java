@@ -81,13 +81,6 @@ public class RobotContainer {
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
   private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
 
-  private final Trigger lowerIntakeTrigger = new Trigger(){
-    @Override
-    public boolean get(){
-      return m_bottomStagingBelt.getSensorBottom();
-    }
-  };
-
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
@@ -120,10 +113,7 @@ public class RobotContainer {
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
   private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt).alongWith(new InstantCommand(m_upperStagingBelt::stopBelt, m_upperStagingBelt));
-  private final Command m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt)
-      .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.15))
-      
-      .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
+  private final Command m_advanceStaging = new AutoAdvanceStaging(m_bottomStagingBelt);
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
 
   private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
@@ -192,6 +182,7 @@ public class RobotContainer {
     m_hood.setDefaultCommand(m_manualHoodMovement);
     m_turretRotator.setDefaultCommand(m_manualTurretPanning);
     //m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
+    m_bottomStagingBelt.setDefaultCommand(m_advanceStaging);
   }
 
   /**
@@ -211,7 +202,6 @@ public class RobotContainer {
     driverButton11.whileHeld(m_manualRaiseIntake);
 
     //gbutton2.whenPressed(m_stagingToTop,false);
-    lowerIntakeTrigger.whenActive(m_advanceStaging);
     //gbutton3.whenPressed(m_rotation);
     xButton.toggleWhenPressed(m_stagingToTop);
     dbutton6.whenPressed(m_extendIntake);
