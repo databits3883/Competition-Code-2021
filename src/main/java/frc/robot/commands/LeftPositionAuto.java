@@ -7,6 +7,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -27,10 +28,13 @@ public class LeftPositionAuto extends SequentialCommandGroup {
       new DriveDistance(3.75, drivetrain),
       new TurnAngle(-90, drivetrain),
       new DriveDistance(10.66, drivetrain),
+      new InstantCommand(intake::intake, intake),
       
       new TurnAngle(90, drivetrain),
       new DriveDistance(13.33, drivetrain),
-      new BallFollowing(drivetrain, turretrotator, limelightservo, intake)
+      //new BallFollowing(drivetrain, turretrotator, limelightservo, intake),
+      new InstantCommand(intake::stop, intake)
+
       
 
       
