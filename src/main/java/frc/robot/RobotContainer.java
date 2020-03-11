@@ -57,12 +57,14 @@ public class RobotContainer {
   private final Joystick gunnerJoystick = new Joystick(1);
 
   private final JoystickButton driverTrigger = new JoystickButton(driverJoystick, 1);
-  private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
-  private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton gunnerbutton2 = new JoystickButton(gunnerJoystick, 2);
+  private final JoystickButton gunnerbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton driverbutton2 = new JoystickButton(driverJoystick, 2);
+  private final JoystickButton driverbutton3 = new JoystickButton(driverJoystick, 3);
   private final JoystickButton driverButton4 = new JoystickButton(driverJoystick, 4);
   private final JoystickButton driverButton5 = new JoystickButton(driverJoystick, 5);
-  private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
-  private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
+  private final JoystickButton driverbutton6 = new JoystickButton(driverJoystick, 6);
+  private final JoystickButton driverbutton7 = new JoystickButton(driverJoystick, 7);
 
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
@@ -126,7 +128,8 @@ public class RobotContainer {
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
-  private final RaiseHook m_RaiseHook = new RaiseHook(m_climb);
+  private final RaiseHook m_raiseHook = new RaiseHook(m_climb);
+  private final RaiseHook m_lowerHook = new RaiseHook(m_climb);
 
   private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
@@ -203,6 +206,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverbutton2.whileHeld(m_lowerHook);
+    driverbutton3.whileHeld(m_raiseHook);
     driverEitherSideButton.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
@@ -216,8 +221,8 @@ public class RobotContainer {
     lowerIntakeTrigger.whenActive(m_advanceStaging);
     //gbutton3.whenPressed(m_rotation);
     xButton.toggleWhenPressed(m_stagingToTop);
-    dbutton6.whenPressed(m_extendIntake);
-    dbutton7.whenPressed(m_retractedIntake);
+    driverbutton6.whenPressed(m_extendIntake);
+    driverbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
 
     startButton.toggleWhenActive(m_acquireTarget);

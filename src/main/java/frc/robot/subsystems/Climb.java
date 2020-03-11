@@ -42,6 +42,9 @@ public class Climb extends SubsystemBase {
   public void raiseHook(){
     m_winch.set(-.5);
   }
+  public void stopHook(){
+    m_winch.set(0);
+  }
 
   @Override
   public void periodic() {
