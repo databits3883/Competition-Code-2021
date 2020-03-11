@@ -14,7 +14,7 @@ import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
 public class LimelightServo extends SubsystemBase {
-  Servo m_servo = new Servo(Constants.camerServo);
+  Servo m_servo = new Servo(Constants.cameraServo);
   SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(45);
   /**
    * Creates a new LimelightServo.
