@@ -8,16 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.BottomStagingBelt;
+import frc.robot.subsystems.Staging;
+
 
 public class StagingToTop extends CommandBase {
-  BottomStagingBelt m_bottomstagingbelt;
+  Staging staging;
   /**
    * Creates a new StagingToTop.
    */
-  public StagingToTop( BottomStagingBelt bottomStagingBelt ) {
-    m_bottomstagingbelt = bottomStagingBelt;
-    addRequirements(m_bottomstagingbelt);
+  public StagingToTop( Staging m_staging ) {
+    m_staging = staging;
+    addRequirements(m_staging);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -29,18 +30,20 @@ public class StagingToTop extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_bottomstagingbelt.runBelt();
+    staging.Jostle();
+    staging.UpperStage();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_bottomstagingbelt.stopBelt();
+    staging.StopJostle();
+    staging.StopUpperStage();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_bottomstagingbelt.getSensorTop();
+    return staging.GetTopSensor();
   }
 }
