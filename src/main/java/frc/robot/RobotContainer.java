@@ -50,6 +50,7 @@ public class RobotContainer {
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
   private final LEDLights m_ledLights = new LEDLights();
+  private final Climb m_climb =new Climb();
  
 
   private final Joystick driverJoystick = new Joystick(0);
@@ -125,6 +126,7 @@ public class RobotContainer {
       
       .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
   private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
+  private final RaiseHook m_RaiseHook = new RaiseHook(m_climb);
 
   private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 

@@ -42,6 +42,8 @@ public final class Constants {
     public static final int liftWinchChannel = 4;
     public static final int camerServo = 5;
     public static final int ledChannel = 6;
+    public static final int climbServoChannel = -1;
+
 
     //DIO
     public static final int upperStagingSensor = 9+10;
@@ -67,6 +69,8 @@ public final class Constants {
     public static final double Raiseintakespeed =.3;
     public static final double loweringIntakeSpeed = -.3;
     public static final double intakeSpeed = 1;
+    public static final double climbServoEngagedLimit = 1;
+    public static final double climbServoDisengagedLimit = 0;
 
     public static final double maxTurretVelocity = 120; //degrees per second
     public static final double maxHoodVelocity = 3000; //degrees per second
