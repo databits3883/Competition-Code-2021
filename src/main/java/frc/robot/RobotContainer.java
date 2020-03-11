@@ -80,9 +80,6 @@ public class RobotContainer {
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
   private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
 
-  
-
-
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
@@ -112,6 +109,10 @@ public class RobotContainer {
 
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
+
+
+  private final Command m_advanceStaging = new AutoAdvanceStaging(m_bottomStagingBelt);
+
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_staging::ReverseStaging,m_staging));
   private final Command m_stopBelt = new InstantCommand(m_staging::StopStaging, m_staging);
   
@@ -183,6 +184,7 @@ public class RobotContainer {
     m_hood.setDefaultCommand(m_manualHoodMovement);
     m_turretRotator.setDefaultCommand(m_manualTurretPanning);
     //m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
+    m_bottomStagingBelt.setDefaultCommand(m_advanceStaging);
   }
 
   /**
