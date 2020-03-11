@@ -14,7 +14,7 @@ import frc.robot.Constants;
 
 public class Staging extends SubsystemBase {
   private final Victor Upperstage = new Victor(2);
-  private final Victor Jostler = new Victor(2);
+  private final Victor Jostler = new Victor(1);
 
   private final DigitalInput BottomSensor = new DigitalInput(Constants.BottomSensor);
   private final DigitalInput MiddleSensor = new DigitalInput(Constants.MiddleSensor);
