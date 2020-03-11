@@ -27,6 +27,7 @@ public class BallFollowing extends CommandBase {
   NetworkTableEntry ty;
   NetworkTableEntry ta;
   NetworkTableEntry tv;
+  NetworkTableEntry Pipeline;
   PIDController turnpid = new PIDController(0.01,0,0);
   
   PIDController speedpid = new PIDController(0.01,0,0);
@@ -39,6 +40,7 @@ public class BallFollowing extends CommandBase {
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv");
+    Pipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("getPipeline");
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
     m_turretrotator = turretrotator;
@@ -71,6 +73,8 @@ public class BallFollowing extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Pipeline.setNumber(3);
+    
     
     m_turretrotator.setAngleStep(268);
     

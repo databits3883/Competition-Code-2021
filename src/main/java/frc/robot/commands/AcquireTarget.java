@@ -28,6 +28,7 @@ public class AcquireTarget extends CommandBase {
   NetworkTableEntry ty;
   NetworkTableEntry filterLengthEntry;
   NetworkTableEntry limelightTolerance, angleTolerance;
+  NetworkTableEntry Pipeline;
   double filterLength;
   LinearFilter limeLightFilter = LinearFilter.movingAverage(10);
   /**
@@ -42,6 +43,7 @@ public class AcquireTarget extends CommandBase {
     addRequirements(m_LimelightServo,m_tTurretRotator);
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
+    Pipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("getPipeline");
     filterLengthEntry = Shuffleboard.getTab("tuningLime").add("filter length",10).getEntry();
 
     limelightTolerance = Shuffleboard.getTab("tuningLime").add("limelight tolerance",1).getEntry();
@@ -52,6 +54,7 @@ public class AcquireTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
