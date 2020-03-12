@@ -8,17 +8,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.BottomStagingBelt;
+import frc.robot.subsystems.Staging;
 
-public class AdvanceStaging extends CommandBase {
-  private final BottomStagingBelt m_bottomStagingBelt;
+public class AutoAdvanceStaging extends CommandBase {
+  Staging m_staging;
   /**
-   * Creates a new AdvanceStaging.
+   * Creates a new autoAdsvanceStaging.
    */
-  public AdvanceStaging(BottomStagingBelt bottomBelt) {
-    m_bottomStagingBelt = bottomBelt;
-    addRequirements(bottomBelt);
+  public AutoAdvanceStaging(Staging stagingBelt) {
     // Use addRequirements() here to declare subsystem dependencies.
+    m_staging = stagingBelt;
+    addRequirements(stagingBelt);
   }
 
   // Called when the command is initially scheduled.
@@ -26,21 +26,49 @@ public class AdvanceStaging extends CommandBase {
   public void initialize() {
   }
 
+  boolean cellAtBottom = false;
+  boolean wasCellAtBottom = false;
+
+  boolean cellAtMiddle = false;
+  boolean wasCellAtMiddle= false;
+
+  boolean isBeltRunning;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_bottomStagingBelt.runBelt();
+    wasCellAtBottom =cellAtBottom;
+    cellAtBottom = m_staging.GetBottomSensor();
+
+    wasCellAtMiddle = cellAtMiddle;
+    cellAtMiddle = m_staging.GetMiddleSensor();
+
+    if(cellAtBottom && !wasCellAtBottom && !isBeltRunning){
+      isBeltRunning = true;
+    }
+    if(isBeltRunning && !wasCellAtMiddle && cellAtMiddle){
+      isBeltRunning = false;
+    }
+    if(m_staging.GetTopSensor()) isBeltRunning = false;
+
+    if(isBeltRunning){
+      m_staging.RunStaging();
+      m_staging.Jostle();
+    }else{
+      m_staging.StopStaging();
+      m_staging.StopJostle();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_bottomStagingBelt.stopBelt();
+    m_staging.StopJostle();
+    m_staging.StopStaging();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_bottomStagingBelt.getSensorTop() || ! m_bottomStagingBelt.getSensorBottom();
+    return false;
   }
 }

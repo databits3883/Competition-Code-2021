@@ -9,21 +9,20 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Variables;
-import frc.robot.subsystems.BottomStagingBelt;
-import frc.robot.subsystems.UpperStagingBelt;
+
+import frc.robot.subsystems.Staging;
+
 
 public class ManualLaunch extends CommandBase {
-  UpperStagingBelt m_upperStagingBelt;
-  BottomStagingBelt m_bottomStagingBelt;
+  Staging staging;
   boolean ballEntered;
   /**
    * Creates a new ManualLaunch.
    */
-  public ManualLaunch(UpperStagingBelt upperStagingBelt, BottomStagingBelt bottomStagingBelt) {
+  public ManualLaunch(Staging m_staging) {
     // Use addRequirements() here to declare subsystem dependencies.
-    m_upperStagingBelt = upperStagingBelt;
-    m_bottomStagingBelt = bottomStagingBelt;
-    addRequirements(upperStagingBelt, bottomStagingBelt);
+    m_staging = staging;
+    addRequirements(staging);
   }
 
   // Called when the command is initially scheduled.
@@ -36,19 +35,16 @@ public class ManualLaunch extends CommandBase {
   @Override
   public void execute() {
     if(Variables.getInstance().getShooterEnabled()&&Variables.getInstance().getShooterAtSpeed()){
-      m_upperStagingBelt.runBelt();
-      m_bottomStagingBelt.runBelt();
+      staging.RunStaging();
     }else{
-      m_upperStagingBelt.stopBelt();
-      m_bottomStagingBelt.stopBelt();
+      staging.StopStaging();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_upperStagingBelt.stopBelt();
-    m_bottomStagingBelt.stopBelt();
+    staging.StopStaging();
   }
 
   // Returns true when the command should end.

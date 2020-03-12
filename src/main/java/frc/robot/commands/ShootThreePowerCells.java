@@ -11,22 +11,20 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Variables;
-import frc.robot.subsystems.BottomStagingBelt;
-import frc.robot.subsystems.UpperStagingBelt;
+import frc.robot.subsystems.Staging;
+
 
 
 
 public class ShootThreePowerCells extends CommandBase {
-  UpperStagingBelt m_upperStagingBelt;
-  BottomStagingBelt m_bottomStagingBelt;
+  Staging staging;
   int numberOfPowerCells;
   /**
    * Creates a new shootThreeBalls.
    */
-  public ShootThreePowerCells(UpperStagingBelt upperStagingBelt, BottomStagingBelt bottomStagingBelt) {
-    addRequirements(upperStagingBelt, bottomStagingBelt);
-    m_upperStagingBelt = upperStagingBelt;
-    m_bottomStagingBelt = bottomStagingBelt;
+  public ShootThreePowerCells(Staging m_staging) {
+    addRequirements(staging);
+    m_staging = staging;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -39,16 +37,14 @@ public class ShootThreePowerCells extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_upperStagingBelt.runBelt(); 
-    m_bottomStagingBelt.runBelt();
+    staging.RunStaging();
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_bottomStagingBelt.stopBelt();
-    m_upperStagingBelt.stopBelt();
+    staging.StopStaging();
   }
 
   // Returns true when the command should end.

@@ -40,15 +40,15 @@ public final class Constants {
     public static final int upperIntakeChannel = 2;
     public static final int hookLiftChannel = 3;
     public static final int liftWinchChannel = 4;
-    public static final int camerServo = 5;
+    public static final int cameraServo = 5;
     public static final int ledChannel = 6;
     public static final int climbServoChannel = -1;
 
 
     //DIO
-    public static final int upperStagingSensor = 9+10;
-    public static final int lowerStagingStartSensor = 8+10;
-    public static final int lowerStagingEndSensor = 7+10;
+    public static final int TopSensor = 9+10;
+    public static final int BottomSensor = 8+10;
+    public static final int MiddleSensor = 7+10;
 
     public static final int controlPanelPressedChannel = 5;
 
