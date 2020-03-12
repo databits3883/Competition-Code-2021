@@ -7,6 +7,8 @@
 
 package frc.robot.commands;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.PIDController;
@@ -31,11 +33,13 @@ public class BallFollowing extends CommandBase {
   PIDController turnpid = new PIDController(0.01,0,0);
   
   PIDController speedpid = new PIDController(0.01,0,0);
+  DoubleSupplier yaxis;
   
   /**
    * Creates a new BallFollowing.
    */
-  public BallFollowing(Drivetrain drivetrain, TurretRotator turretrotator, LimelightServo limelightservo, Intake intake) {
+  public BallFollowing(DoubleSupplier yAxis, Drivetrain drivetrain, TurretRotator turretrotator, LimelightServo limelightservo, Intake intake) {
+    yaxis=yAxis;    
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
@@ -92,7 +96,7 @@ public class BallFollowing extends CommandBase {
 
       if (m_turretrotator.getCurrentAngle()>267 && tv.isValid())
     {
-      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), speedpid.calculate(ta.getDouble(2.1),2.1));
+      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), yaxis.getAsDouble());
     }
     System.out.println(m_limelightservo.getAngle());
 
