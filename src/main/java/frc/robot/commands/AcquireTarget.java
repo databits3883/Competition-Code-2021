@@ -54,7 +54,7 @@ public class AcquireTarget extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setDouble(1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -113,6 +113,7 @@ public class AcquireTarget extends CommandBase {
      if (interrupted){
       m_launcher.setSpeed(0);
      }
+     NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setDouble(3);
     
   }
 

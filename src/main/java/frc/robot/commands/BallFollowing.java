@@ -40,7 +40,7 @@ public abstract class BallFollowing extends CommandBase {
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv");
-    Pipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("getPipeline");
+    Pipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline");
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
     m_turretrotator = turretrotator;
@@ -77,6 +77,7 @@ public abstract class BallFollowing extends CommandBase {
     
     
     m_turretrotator.setAngleStep(268);
+    m_limelightservo.setPosition(149);
     
   }
 
@@ -93,11 +94,11 @@ public abstract class BallFollowing extends CommandBase {
       noTargetDrive();
     }
 
-    verticalAim();
+    //verticalAim();
   }
 
    boolean shouldTurn(){
-      return (tv.getDouble(0) == 1 && ta.getDouble(0)>1.3) && m_limelightservo.getAngle()< -10 ;
+      return (tv.getDouble(0) == 1 && ta.getDouble(0)>.14);
    } 
    boolean shouldDrive(){
      return( shouldTurn() &&  Math.abs(tx.getDouble(0))<5);

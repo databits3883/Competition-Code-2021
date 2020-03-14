@@ -77,8 +77,7 @@ public class RobotContainer {
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
-  private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
-
+  
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
@@ -150,6 +149,7 @@ public class RobotContainer {
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
   private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_staging);
+  private final TeleopBallFollowing m_teleopBallFollowing = new TeleopBallFollowing(driverJoystick, m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
   private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
   private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
   
@@ -194,7 +194,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driverbutton2.whileHeld(m_lowerHook);
     driverbutton3.whileHeld(m_raiseHook);
-    driverEitherSideButton.whileHeld(m_emergencyStopDrivetrain, false);
+    driverButton4.whileHeld(m_teleopBallFollowing);
+    driverButton5.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
     driverButton8.whileHeld(m_runOutake, false);
