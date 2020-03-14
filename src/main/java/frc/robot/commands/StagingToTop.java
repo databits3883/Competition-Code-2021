@@ -17,7 +17,7 @@ public class StagingToTop extends CommandBase {
    * Creates a new StagingToTop.
    */
   public StagingToTop( Staging m_staging ) {
-    m_staging = staging;
+     staging = m_staging;
     addRequirements(m_staging);
     // Use addRequirements() here to declare subsystem dependencies.
   }

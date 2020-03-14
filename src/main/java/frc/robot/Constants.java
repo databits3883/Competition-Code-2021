@@ -42,7 +42,7 @@ public final class Constants {
     public static final int liftWinchChannel = 4;
     public static final int cameraServo = 5;
     public static final int ledChannel = 6;
-    public static final int climbServoChannel = -1;
+    public static final int climbServoChannel = 7;
 
 
     //DIO
@@ -65,9 +65,9 @@ public final class Constants {
     public static final double maximumHoodAngle = 26.2+minimumHoodAngle;
     public static final double lowerStagingSpeed = -0.75;
     public static final double upperStagingSpeed = -1;
-    public static final double upperOuttakeSpeed = .4;
-    public static final double Raiseintakespeed =.3;
-    public static final double loweringIntakeSpeed = -.3;
+    public static final double upperOuttakeSpeed = 1;
+    public static final double Raiseintakespeed =0.6;
+    public static final double loweringIntakeSpeed = -0.3;
     public static final double intakeSpeed = 1;
     public static final double climbServoEngagedLimit = 1;
     public static final double climbServoDisengagedLimit = 0;

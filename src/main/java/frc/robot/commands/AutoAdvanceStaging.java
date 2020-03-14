@@ -32,7 +32,7 @@ public class AutoAdvanceStaging extends CommandBase {
   boolean cellAtMiddle = false;
   boolean wasCellAtMiddle= false;
 
-  boolean isBeltRunning;
+  boolean isBeltRunning = false;
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
@@ -48,14 +48,14 @@ public class AutoAdvanceStaging extends CommandBase {
     if(isBeltRunning && !wasCellAtMiddle && cellAtMiddle){
       isBeltRunning = false;
     }
-    if(m_staging.GetTopSensor()) isBeltRunning = false;
-
+    if(m_staging.GetTopSensor()){
+     isBeltRunning = false;
+    }
     if(isBeltRunning){
       m_staging.RunStaging();
-      m_staging.Jostle();
-    }else{
+    }
+    else{
       m_staging.StopStaging();
-      m_staging.StopJostle();
     }
   }
 

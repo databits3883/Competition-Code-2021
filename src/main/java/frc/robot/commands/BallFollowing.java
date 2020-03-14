@@ -18,7 +18,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
 
-public class BallFollowing extends CommandBase {
+public abstract class BallFollowing extends CommandBase {
   Drivetrain m_drivetrain;
   TurretRotator m_turretrotator;
   LimelightServo m_limelightservo;
@@ -83,28 +83,28 @@ public class BallFollowing extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    if (ta.getDouble(1.9)<1.3&&m_limelightservo.getAngle()>155&&tv.isValid()){
+    if (shouldTurn()&& !shouldDrive()){
       m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), 0);
-      
+    }
+    else if(shouldDrive()){
+      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), calculatespeed());
     }
     else {
-
-      if (m_turretrotator.getCurrentAngle()>267 && tv.isValid())
-    {
-      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), speedpid.calculate(ta.getDouble(2.1),2.1));
+      noTargetDrive();
     }
-    System.out.println(m_limelightservo.getAngle());
-
-    
-
-    }
-    
 
     verticalAim();
-    
-
   }
+
+   boolean shouldTurn(){
+      return (tv.getDouble(0) == 1 && ta.getDouble(0)>1.3) && m_limelightservo.getAngle()< -10 ;
+   } 
+   boolean shouldDrive(){
+     return( shouldTurn() &&  Math.abs(tx.getDouble(0))<5);
+   }
+   abstract double calculatespeed();
+   abstract void noTargetDrive();
+
 
   // Called once the command ends or is interrupted.
   @Override

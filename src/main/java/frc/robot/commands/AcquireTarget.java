@@ -47,7 +47,7 @@ public class AcquireTarget extends CommandBase {
     filterLengthEntry = Shuffleboard.getTab("tuningLime").add("filter length",10).getEntry();
 
     limelightTolerance = Shuffleboard.getTab("tuningLime").add("limelight tolerance",1).getEntry();
-    angleTolerance = Shuffleboard.getTab("tuningLime").add("turret angle tolerance",1).getEntry();
+    angleTolerance = Shuffleboard.getTab("tuningLime").add("turret angle tolerance",.5).getEntry();
 
   }
   

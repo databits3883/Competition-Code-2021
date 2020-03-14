@@ -17,12 +17,12 @@ import frc.robot.subsystems.Staging;
 
 
 public class ShootThreePowerCells extends CommandBase {
-  Staging staging;
+  Staging m_staging;
   int numberOfPowerCells;
   /**
    * Creates a new shootThreeBalls.
    */
-  public ShootThreePowerCells(Staging m_staging) {
+  public ShootThreePowerCells(Staging staging) {
     addRequirements(staging);
     m_staging = staging;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -37,14 +37,14 @@ public class ShootThreePowerCells extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    staging.RunStaging();
+    m_staging.RunStaging();
     
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    staging.StopStaging();
+    m_staging.StopStaging();
   }
 
   // Returns true when the command should end.

@@ -14,12 +14,12 @@ import frc.robot.subsystems.Staging;
 
 
 public class ManualLaunch extends CommandBase {
-  Staging staging;
+  Staging m_staging;
   boolean ballEntered;
   /**
    * Creates a new ManualLaunch.
    */
-  public ManualLaunch(Staging m_staging) {
+  public ManualLaunch(Staging staging) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_staging = staging;
     addRequirements(staging);
@@ -35,16 +35,16 @@ public class ManualLaunch extends CommandBase {
   @Override
   public void execute() {
     if(Variables.getInstance().getShooterEnabled()&&Variables.getInstance().getShooterAtSpeed()){
-      staging.RunStaging();
+      m_staging.RunStaging();
     }else{
-      staging.StopStaging();
+      m_staging.StopStaging();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    staging.StopStaging();
+    m_staging.StopStaging();
   }
 
   // Returns true when the command should end.

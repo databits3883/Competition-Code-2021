@@ -18,20 +18,23 @@ public class Climb extends SubsystemBase {
   VictorSP m_winch =new VictorSP(Constants.liftWinchChannel);
   boolean isEngaged;
   double position;
+  
   /**
    * Creates a new Climb.
    */
-
+  public Climb(){
+    this.setEngaged(true);
+  }
   public void setEngaged(boolean engaged){
     if(engaged){
-      position= 180;
+      position= .7;
       isEngaged= true;
     }
     else {
-      position =0;
+      position =1;
       isEngaged= false;
     }
-    m_servo.setAngle(position);
+    m_servo.set(position);
   }
   public boolean isServoEngaged(){
     return isEngaged;
@@ -40,7 +43,7 @@ public class Climb extends SubsystemBase {
     m_winch.set(1);
   }
   public void raiseHook(){
-    m_winch.set(-.5);
+    m_winch.set(-.3);
   }
   public void stopHook(){
     m_winch.set(0);
