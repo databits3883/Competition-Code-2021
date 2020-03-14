@@ -20,14 +20,14 @@ public class DriveDistance extends ProfiledPIDCommand {
   /**
    * Creates a new DriveDistance.
    */
-  public DriveDistance(double distance,Drivetrain drivetrain) {
+  public DriveDistance(double distance,Drivetrain drivetrain,double maxSpeed) {
     super(
         // The ProfiledPIDController used by the command
         new ProfiledPIDController(
             // The PID gains
             0.2, 0, 0,
             // The motion profile constraints
-            new TrapezoidProfile.Constraints(15, 7)),
+            new TrapezoidProfile.Constraints(maxSpeed, 7)),
         // This should return the measurement
         () -> drivetrain.getRightEncoder(),
         // This should return the goal (can also be a constant)
@@ -42,6 +42,9 @@ public class DriveDistance extends ProfiledPIDCommand {
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
     getController().setTolerance(1.0/12.0, (2.0/12.0));
+  }
+  public DriveDistance(double distance, Drivetrain drivetrain){
+    this(distance,drivetrain,15.0);
   }
 
   // Returns true when the command should end.

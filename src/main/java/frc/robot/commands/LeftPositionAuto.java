@@ -29,8 +29,8 @@ public class LeftPositionAuto extends SequentialCommandGroup {
       new DriveDistance(10.66, drivetrain),
       
       new TurnAngle(90, drivetrain),
-      new DriveDistance(13.33, drivetrain),
-      new BallFollowing(drivetrain, turretrotator, limelightservo, intake)
+      new DriveDistance(13.33, drivetrain)
+      //new BallFollowing(drivetrain, turretrotator, limelightservo, intake)
       
 
       
