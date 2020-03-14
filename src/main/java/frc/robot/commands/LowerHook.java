@@ -7,12 +7,13 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Climb;
 
 public class LowerHook extends CommandBase {
   private final Climb m_climb;
+  private final Timer m_timer =new Timer();
   /**
    * Creates a new LowerHook.
    */
@@ -25,13 +26,15 @@ public class LowerHook extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_climb.setEngaged(false);
+    m_climb.setEngaged(true);
+    m_timer.reset();
+    m_timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CommandScheduler.getInstance().timeSinceScheduled(this) > .5  ){
+    if (m_timer.get() > .5  ){
       m_climb.lowerHook();
     }
   }

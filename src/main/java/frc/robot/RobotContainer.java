@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.util.Set;
-import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -21,15 +19,12 @@ import frc.robot.subsystems.*;
 
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -45,12 +40,13 @@ public class RobotContainer {
   private final Staging m_staging = new Staging();
   private final TurretRotator m_turretRotator = new TurretRotator();
   private final Launcher m_launcher = new Launcher();
-  private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
+  //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
   private final LEDLights m_ledLights = new LEDLights();
   private final Climb m_climb =new Climb();
- 
+  private final RaiseHook m_raiseHook = new RaiseHook(m_climb);
+  private final LowerHook m_lowerHook = new LowerHook(m_climb);
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -120,7 +116,7 @@ public class RobotContainer {
   
   private final StagingToTop m_stagingToTop = new StagingToTop(m_staging);
 
-  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
+  //private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
   private final double turretJoystickDeadband = 0.08;
   private final Command m_manualTurretPanning = new RunCommand(()->{
@@ -210,10 +206,10 @@ public class RobotContainer {
     //gbutton2.whenPressed(m_stagingToTop,false);
     
     //gbutton3.whenPressed(m_rotation);
-    xButton.toggleWhenPressed(m_stagingToTop);
     driverbutton6.whenPressed(m_extendIntake);
     driverbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
+    xButton.toggleWhenPressed(m_stagingToTop);
 
     startButton.toggleWhenActive(m_acquireTarget);
 

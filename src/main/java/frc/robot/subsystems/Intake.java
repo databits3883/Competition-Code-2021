@@ -16,6 +16,8 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,7 +31,9 @@ public class Intake extends SubsystemBase {
    * Creates a new Intake.
    */
   public Intake() {
-
+    
+    Shuffleboard.getTab("Variables").addBoolean("extended switch",extendedLimitSwitch::get);
+    Shuffleboard.getTab("Variables").addBoolean("retracted switch", retractedLimitSwitch::get);
   }
   public void intake(){
     intakeMotor.set(Constants.intakeSpeed);

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Staging extends SubsystemBase {
-  private final Victor Upperstage = new Victor(2);
+  private final Victor Upperstage = new Victor(1);
   private final Victor Jostler = new Victor(2);
 
   private final DigitalInput BottomSensor = new DigitalInput(Constants.BottomSensor);
@@ -60,13 +60,13 @@ public class Staging extends SubsystemBase {
     ReverseUpperStage();
   }
   public boolean GetTopSensor(){
-    return TopSensor.get();
+    return !TopSensor.get();
   }
   public boolean GetMiddleSensor(){
-    return TopSensor.get();
+    return !MiddleSensor.get();
   }
   public boolean GetBottomSensor(){
-    return TopSensor.get();
+    return !BottomSensor.get();
   }
 
   @Override

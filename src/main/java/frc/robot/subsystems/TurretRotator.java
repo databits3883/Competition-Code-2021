@@ -68,7 +68,7 @@ public class TurretRotator extends SubsystemBase {
     initGains();
   }
   void initGains(){
-    pEntry.setDouble(0.1);
+    pEntry.setDouble(0.04);
     updateGains();
   }
   
