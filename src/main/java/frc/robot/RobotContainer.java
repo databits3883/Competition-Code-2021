@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -100,7 +101,7 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
-  
+
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
@@ -166,6 +167,7 @@ public class RobotContainer {
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
   private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
+  SendableChooser<Command> chooser = new SendableChooser<Command>();
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -174,6 +176,7 @@ public class RobotContainer {
     setDefaultCommands();
     // Configure the button bindings
     configureButtonBindings();
+    addAutonomous();
   }
 
   private void setDefaultCommands(){
@@ -220,6 +223,11 @@ public class RobotContainer {
 
   }
 
+  void addAutonomous(){
+    chooser.setDefaultOption("no autonomous", new PrintCommand("no autonomous selected"));
+    Shuffleboard.getTab("Game screen").add(chooser);
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -229,7 +237,8 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
 
-    return new RightPositionAuto(m_drivetrain, m_intake, m_turretRotator, m_limelightServo, m_launcher, m_hood, m_staging);
+    return chooser.getSelected();
+
   }
 
   public Command getInitCommand(){
