@@ -18,7 +18,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
 
-public class BallFollowing extends CommandBase {
+public abstract class BallFollowing extends CommandBase {
   Drivetrain m_drivetrain;
   TurretRotator m_turretrotator;
   LimelightServo m_limelightservo;
@@ -27,6 +27,7 @@ public class BallFollowing extends CommandBase {
   NetworkTableEntry ty;
   NetworkTableEntry ta;
   NetworkTableEntry tv;
+  NetworkTableEntry Pipeline;
   PIDController turnpid = new PIDController(0.01,0,0);
   
   PIDController speedpid = new PIDController(0.01,0,0);
@@ -39,6 +40,7 @@ public class BallFollowing extends CommandBase {
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");
     tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv");
+    Pipeline = NetworkTableInstance.getDefault().getTable("limelight").getEntry("getPipeline");
     m_drivetrain = drivetrain;
     addRequirements(m_drivetrain);
     m_turretrotator = turretrotator;
@@ -71,6 +73,8 @@ public class BallFollowing extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    Pipeline.setNumber(3);
+    
     
     m_turretrotator.setAngleStep(268);
     
@@ -79,31 +83,28 @@ public class BallFollowing extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    if (ta.getDouble(1.9)<1.3&&m_limelightservo.getAngle()>155&&tv.isValid()){
+    if (shouldTurn()&& !shouldDrive()){
       m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), 0);
-      if (ta.getDouble(1.7)>1.2){
-        m_intake.intake();
-  
-  
-      }
+    }
+    else if(shouldDrive()){
+      m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), calculatespeed());
     }
     else {
-      if (m_turretrotator.getCurrentAngle()>267 && tv.isValid()){
-        m_drivetrain.ArcadeDrive(-turnpid.calculate(tx.getDouble(0), 0), speedpid.calculate(ta.getDouble(2.1),2.1));
-      }
-      System.out.println(m_limelightservo.getAngle());
-
-      if (ta.getDouble(1.7)>1.2){
-        m_intake.intake();
-      }
+      noTargetDrive();
     }
-    
 
     verticalAim();
-    
-
   }
+
+   boolean shouldTurn(){
+      return (tv.getDouble(0) == 1 && ta.getDouble(0)>1.3) && m_limelightservo.getAngle()< -10 ;
+   } 
+   boolean shouldDrive(){
+     return( shouldTurn() &&  Math.abs(tx.getDouble(0))<5);
+   }
+   abstract double calculatespeed();
+   abstract void noTargetDrive();
+
 
   // Called once the command ends or is interrupted.
   @Override

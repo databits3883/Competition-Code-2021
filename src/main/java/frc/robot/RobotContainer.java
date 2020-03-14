@@ -7,8 +7,6 @@
 
 package frc.robot;
 
-import java.util.Set;
-import java.util.function.BooleanSupplier;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
@@ -22,15 +20,12 @@ import frc.robot.subsystems.*;
 
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -43,26 +38,29 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
-  private final BottomStagingBelt m_bottomStagingBelt = new BottomStagingBelt();
-  private final UpperStagingBelt m_upperStagingBelt = new UpperStagingBelt();
+  private final Staging m_staging = new Staging();
   private final TurretRotator m_turretRotator = new TurretRotator();
   private final Launcher m_launcher = new Launcher();
-  private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
+  //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final Hood m_hood = new Hood();
   private final LEDLights m_ledLights = new LEDLights();
- 
+  private final Climb m_climb =new Climb();
+  private final RaiseHook m_raiseHook = new RaiseHook(m_climb);
+  private final LowerHook m_lowerHook = new LowerHook(m_climb);
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
 
   private final JoystickButton driverTrigger = new JoystickButton(driverJoystick, 1);
-  private final JoystickButton gbutton2 = new JoystickButton(gunnerJoystick, 2);
-  private final JoystickButton gbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton gunnerbutton2 = new JoystickButton(gunnerJoystick, 2);
+  private final JoystickButton gunnerbutton3 = new JoystickButton(gunnerJoystick, 3);
+  private final JoystickButton driverbutton2 = new JoystickButton(driverJoystick, 2);
+  private final JoystickButton driverbutton3 = new JoystickButton(driverJoystick, 3);
   private final JoystickButton driverButton4 = new JoystickButton(driverJoystick, 4);
   private final JoystickButton driverButton5 = new JoystickButton(driverJoystick, 5);
-  private final JoystickButton dbutton6 = new JoystickButton(driverJoystick, 6);
-  private final JoystickButton dbutton7 = new JoystickButton(driverJoystick, 7);
+  private final JoystickButton driverbutton6 = new JoystickButton(driverJoystick, 6);
+  private final JoystickButton driverbutton7 = new JoystickButton(driverJoystick, 7);
 
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
@@ -81,14 +79,6 @@ public class RobotContainer {
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
   private final SupplierButton driverEitherSideButton = new SupplierButton(()-> driverButton4.get() || driverButton5.get());
-
-  private final Trigger lowerIntakeTrigger = new Trigger(){
-    @Override
-    public boolean get(){
-      return m_bottomStagingBelt.getSensorBottom();
-    }
-  };
-
 
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
@@ -112,21 +102,22 @@ public class RobotContainer {
       }
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
+
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
 
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
-  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_bottomStagingBelt::outTake, m_bottomStagingBelt)).alongWith(new InstantCommand(m_upperStagingBelt::outTake,m_upperStagingBelt));
-  private final Command m_stopBelt = new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt).alongWith(new InstantCommand(m_upperStagingBelt::stopBelt, m_upperStagingBelt));
-  private final Command m_advanceStaging = new AdvanceStaging(m_bottomStagingBelt)
-      .andThen(new RunCommand(m_bottomStagingBelt::runBelt, m_bottomStagingBelt).withTimeout(0.15))
-      
-      .andThen(new InstantCommand(m_bottomStagingBelt::stopBelt, m_bottomStagingBelt));
-  private final StagingToTop m_stagingToTop = new StagingToTop(m_bottomStagingBelt);
 
-  private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
+  private final Command m_advanceStaging = new AutoAdvanceStaging(m_staging);
+
+  private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_staging::ReverseStaging,m_staging));
+  private final Command m_stopBelt = new InstantCommand(m_staging::StopStaging, m_staging);
+  
+  private final StagingToTop m_stagingToTop = new StagingToTop(m_staging);
+
+  //private final BallFollowing m_ballfollowing = new BallFollowing(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
   private final double turretJoystickDeadband = 0.08;
   private final Command m_manualTurretPanning = new RunCommand(()->{
@@ -155,11 +146,11 @@ public class RobotContainer {
   private final Command debugCommand = new InstantCommand(()-> System.out.println("test successful"));
   private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
   private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
-  private final Command m_manualLaunch = new ManualLaunch(m_upperStagingBelt, m_bottomStagingBelt).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
+  private final Command m_manualLaunch = new ManualLaunch(m_staging).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
   private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
-  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_upperStagingBelt, m_bottomStagingBelt);
+  private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_staging);
   private final RevLauncher m_revLauncher70 = new RevLauncher(70, m_launcher);
   private final RevLauncher m_revLauncher0 = new RevLauncher(0, m_launcher);
   
@@ -194,6 +185,7 @@ public class RobotContainer {
     m_hood.setDefaultCommand(m_manualHoodMovement);
     m_turretRotator.setDefaultCommand(m_manualTurretPanning);
     //m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
+    m_staging.setDefaultCommand(m_advanceStaging);
   }
 
   /**
@@ -203,6 +195,8 @@ public class RobotContainer {
    * {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    driverbutton2.whileHeld(m_lowerHook);
+    driverbutton3.whileHeld(m_raiseHook);
     driverEitherSideButton.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
@@ -213,12 +207,12 @@ public class RobotContainer {
     driverButton11.whileHeld(m_manualRaiseIntake);
 
     //gbutton2.whenPressed(m_stagingToTop,false);
-    lowerIntakeTrigger.whenActive(m_advanceStaging);
+    
     //gbutton3.whenPressed(m_rotation);
-    xButton.toggleWhenPressed(m_stagingToTop);
-    dbutton6.whenPressed(m_extendIntake);
-    dbutton7.whenPressed(m_retractedIntake);
+    driverbutton6.whenPressed(m_extendIntake);
+    driverbutton7.whenPressed(m_retractedIntake);
     rightTriggButton.whileHeld(m_manualLaunch);
+    xButton.toggleWhenPressed(m_stagingToTop);
 
     startButton.toggleWhenActive(m_acquireTarget);
 
@@ -241,7 +235,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+
     return chooser.getSelected();
+
   }
 
   public Command getInitCommand(){

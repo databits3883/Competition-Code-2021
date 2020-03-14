@@ -7,43 +7,50 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Staging;
+import frc.robot.subsystems.Climb;
 
+public class RaiseHook extends CommandBase {
+  private final Climb m_climb;
+  private final Timer m_timer =new Timer();
 
-public class StagingToTop extends CommandBase {
-  Staging staging;
   /**
-   * Creates a new StagingToTop.
+   * Creates a new RaiseHook.
    */
-  public StagingToTop( Staging m_staging ) {
-     staging = m_staging;
-    addRequirements(m_staging);
+  public RaiseHook(Climb climb) {
+     m_climb =climb;
+    addRequirements(m_climb);
+
+
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_timer.reset();
+    m_timer.start();
+    m_climb.setEngaged(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    staging.Jostle();
-    staging.UpperStage();
+    if (m_timer.get() > .5  ){
+      m_climb.raiseHook();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    staging.StopJostle();
-    staging.StopUpperStage();
+    m_climb.stopHook();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return staging.GetTopSensor();
+    return false;
   }
 }

@@ -8,28 +8,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Launcher;
-import frc.robot.subsystems.Staging;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
-
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/latest/docs/software/commandbased/convenience-features.html
-public class ShootAndMoveAutoBasic extends SequentialCommandGroup {
+public class LeftPositionAuto extends SequentialCommandGroup {
   /**
-   * Creates a new ShootAndMoveAutoBasic.
+   * Creates a new LeftPositionAuto.
    */
-  public ShootAndMoveAutoBasic(Hood m_hood, TurretRotator m_turretRotator, Launcher m_launcher, Staging m_staging, Drivetrain m_drivetrain) {
+  public LeftPositionAuto(Drivetrain drivetrain, Intake intake, TurretRotator turretrotator, LimelightServo limelightservo) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-      new FullTurretAim(22.5, 98, -78.7, m_hood, m_turretRotator, m_launcher),
-      new ShootThreePowerCells(m_staging), 
-      new DriveDistance(1, m_drivetrain)
+      new DriveDistance(3.75, drivetrain),
+      new TurnAngle(-90, drivetrain),
+      new DriveDistance(10.66, drivetrain),
+      
+      new TurnAngle(90, drivetrain),
+      new DriveDistance(13.33, drivetrain),
+      new BallFollowing(drivetrain, turretrotator, limelightservo, intake)
+      
+
+      
+
+
+
     );
   }
 }

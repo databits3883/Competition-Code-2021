@@ -40,13 +40,15 @@ public final class Constants {
     public static final int upperIntakeChannel = 2;
     public static final int hookLiftChannel = 3;
     public static final int liftWinchChannel = 4;
-    public static final int camerServo = 5;
+    public static final int cameraServo = 5;
     public static final int ledChannel = 6;
+    public static final int climbServoChannel = 7;
+
 
     //DIO
-    public static final int upperStagingSensor = 9+10;
-    public static final int lowerStagingStartSensor = 8+10;
-    public static final int lowerStagingEndSensor = 7+10;
+    public static final int TopSensor = 9+10;
+    public static final int BottomSensor = 8+10;
+    public static final int MiddleSensor = 7+10;
 
     public static final int controlPanelPressedChannel = 5;
 
@@ -63,10 +65,12 @@ public final class Constants {
     public static final double maximumHoodAngle = 26.2+minimumHoodAngle;
     public static final double lowerStagingSpeed = -0.75;
     public static final double upperStagingSpeed = -1;
-    public static final double upperOuttakeSpeed = .4;
-    public static final double Raiseintakespeed =.3;
-    public static final double loweringIntakeSpeed = -.3;
+    public static final double upperOuttakeSpeed = 1;
+    public static final double Raiseintakespeed =0.6;
+    public static final double loweringIntakeSpeed = -0.3;
     public static final double intakeSpeed = 1;
+    public static final double climbServoEngagedLimit = 1;
+    public static final double climbServoDisengagedLimit = 0;
 
     public static final double maxTurretVelocity = 120; //degrees per second
     public static final double maxHoodVelocity = 3000; //degrees per second

@@ -7,36 +7,48 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class UpperStagingBelt extends SubsystemBase {
-  private final VictorSP beltMotor = new VictorSP(Constants.upperIntakeChannel);
+public class Climb extends SubsystemBase {
+  Servo m_servo = new Servo(Constants.climbServoChannel);
+  VictorSP m_winch =new VictorSP(Constants.liftWinchChannel);
+  boolean isEngaged;
+  double position;
   
-  private final DigitalInput ballSensor = new DigitalInput(Constants.upperStagingSensor);
   /**
-   * Creates a new UpperStagingBelt.
+   * Creates a new Climb.
    */
-  public UpperStagingBelt() {}
-  
-  public void runBelt(){
-    beltMotor.set(Constants.upperStagingSpeed);
+  public Climb(){
+    this.setEngaged(true);
   }
-  public void stopBelt(){
-    beltMotor.stopMotor();
+  public void setEngaged(boolean engaged){
+    if(engaged){
+      position= .7;
+      isEngaged= true;
+    }
+    else {
+      position =1;
+      isEngaged= false;
+    }
+    m_servo.set(position);
   }
-  public void outTake(){
-    beltMotor.set(Constants.upperOuttakeSpeed);
+  public boolean isServoEngaged(){
+    return isEngaged;
+  }
+  public void lowerHook(){
+    m_winch.set(1);
+  }
+  public void raiseHook(){
+    m_winch.set(-.3);
+  }
+  public void stopHook(){
+    m_winch.set(0);
   }
 
-  public boolean isBallPresent(){
-    return !ballSensor.get();
-  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

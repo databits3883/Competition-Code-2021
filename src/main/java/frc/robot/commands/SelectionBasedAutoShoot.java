@@ -8,11 +8,12 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.BottomStagingBelt;
+
 import frc.robot.subsystems.Hood;
 import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.Staging;
 import frc.robot.subsystems.TurretRotator;
-import frc.robot.subsystems.UpperStagingBelt;
+
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
@@ -21,12 +22,12 @@ public class SelectionBasedAutoShoot extends SequentialCommandGroup {
   /**
    * Creates a new SelectionBasedAutoShoot.
    */
-  public SelectionBasedAutoShoot(StartPosition startPosition, Hood hood, TurretRotator turretRotator, Launcher launcher, UpperStagingBelt upperStagingBelt, BottomStagingBelt bottomStagingBelt) {
+  public SelectionBasedAutoShoot(StartPosition startPosition, Hood hood, TurretRotator turretRotator, Launcher launcher, Staging staging) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
     new FullTurretAim(startPosition.getHoodAngle(), startPosition.getTurretAngle(), startPosition.getLaunchSpeed(), hood, turretRotator, launcher),
-    new ShootThreePowerCells(upperStagingBelt, bottomStagingBelt)
+    new ShootThreePowerCells(staging)
     );
   }
 
