@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+/**Climb mechanism subsystem.
+ * Handles the climb motor and brake rathcet servo.
+ */
+
 public class Climb extends SubsystemBase {
   Servo m_servo = new Servo(Constants.climbServoChannel);
   VictorSP m_winch =new VictorSP(Constants.liftWinchChannel);
@@ -20,11 +24,16 @@ public class Climb extends SubsystemBase {
   double position;
   
   /**
-   * Creates a new Climb.
+   * Creates a new Climb subsystem instance. Engages the brake.
    */
   public Climb(){
     this.setEngaged(true);
   }
+
+  /**
+   * Set the state of the climb brake
+   * @param engaged - true for locking the ratchet, false for unlocking.
+   */
   public void setEngaged(boolean engaged){
     if(engaged){
       position= .7;
@@ -36,15 +45,27 @@ public class Climb extends SubsystemBase {
     }
     m_servo.set(position);
   }
+  /**
+   * Is the locking servo currently engaged
+   * @return false if ratchet open. True if locked.
+   */
   public boolean isServoEngaged(){
     return isEngaged;
   }
+  /**
+   * Sets the winch motor to full speed lowering the hook.
+   * {@link #stopHook() stopHook()} should be called after this.
+   */
   public void lowerHook(){
     m_winch.set(1);
   }
+  /**Sets the winch motor to raise the hook.
+   * {@link #stopHook() stopHook()} should be called after this.
+   */
   public void raiseHook(){
     m_winch.set(-.3);
   }
+  /**Stops the winch motor from running.*/
   public void stopHook(){
     m_winch.set(0);
   }
