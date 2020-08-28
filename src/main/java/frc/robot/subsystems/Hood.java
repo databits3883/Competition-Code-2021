@@ -23,10 +23,8 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
+/**Aiming hood subsystem. Manages the hood moving motor.*/
 public class Hood extends SubsystemBase {
-  /**
-  * Creates a new Hood.
-  */  
   private final CANSparkMax hoodMotor = new CANSparkMax(Constants.turretHoodChannel, MotorType.kBrushless);
   private final CANDigitalInput lowerLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kReverse, LimitSwitchPolarity.kNormallyClosed);
   private final CANDigitalInput upperLimit = new CANDigitalInput(hoodMotor, LimitSwitch.kForward, LimitSwitchPolarity.kNormallyClosed);
@@ -37,7 +35,9 @@ public class Hood extends SubsystemBase {
   private NetworkTableEntry pEntry,iEntry,dEntry,ffEntry,spEntry;
 
   private SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(Constants.maxHoodVelocity);
- 
+   /**
+  * Creates a new Hood subsystem instance.
+  */  
   public Hood() {
 
     encoder.setPositionConversionFactor(16.0*360.0/264.0/50.0);
@@ -54,15 +54,22 @@ public class Hood extends SubsystemBase {
     initGains();
   }
 
+  /**Sets default values for PID gains to network tables, then updates controller gains from network tables.*/
   void initGains(){
     pEntry.setDouble(0.02);
     updateGains();
   }
 
+  /**Is the hood at the set target angle? 
+   * @return True if current hood angle is within tolerance of the set target angle.
+  */
   public boolean atAngle(){
     return Math.abs(angle - encoder.getPosition())<=1.5;
   }
 
+  /**Updates PID gains from shuffleboard. Checks end switches for the hood. Updates the spark max's setpoint to velocity limit.
+   * <p>Should be called in the Robot periodic method</p>
+  */
   @Override
   public void periodic() {
     updateGains();
@@ -70,6 +77,7 @@ public class Hood extends SubsystemBase {
     controller.setReference(velocityLimiter.get(), ControlType.kPosition);
     // This method will be called once per scheduler run
   }
+  /**Updates spark max PID gains from network tables */
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
       p = pEntry.getDouble(0);
@@ -94,6 +102,7 @@ public class Hood extends SubsystemBase {
     }
    
   }
+  /**Checks if limit switches are pressed and corrects position if they are.*/
   private void checkEndpoints(){
     if(lowerLimit.get()){
       encoder.setPosition(Constants.minimumHoodAngle);
@@ -102,23 +111,32 @@ public class Hood extends SubsystemBase {
       encoder.setPosition(Constants.maximumHoodAngle);
     }
   }
+  /**Sets absolute angle setpoint.
+   * @param newAngle angle to set hood to.
+  */
   public void setAngle(double newAngle){
     angle = MathUtil.clamp(newAngle, Constants.minimumHoodAngle, Constants.maximumHoodAngle);
     spEntry.setDouble(angle);
     velocityLimiter.setTarget(angle);
   }
-  
+  /**Sets angle setpoint relative to current setpoint.
+   * @param angleDelta angle to add to current setpoint.
+   */
   public void changeAngle(double angleDelta){
     setAngle(angle + angleDelta);
   }
   
-
+/**sets setpoint to current measure position
+ * <p> meant to be run while disabled</p>
+ */
   public void setCurrentPosition(){
 
     angle=encoder.getPosition();
     velocityLimiter.setWithoutRamp(angle);
     spEntry.setDouble(angle);
   }
+  //TODO: find where this method is used. Maybe a command written by jacob?
+  /**Gets current angle adjusted to use in <b>??</b> */
   public double LaunchAngle(){
     return (57.3-(encoder.getPosition()-17));
   }
