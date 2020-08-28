@@ -18,7 +18,6 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.util.SetpointAccelerationLimiter;
 
 /**Drivetrain class. Handles PID velocity control for the drivetrain*/
 public class Drivetrain extends SubsystemBase {
