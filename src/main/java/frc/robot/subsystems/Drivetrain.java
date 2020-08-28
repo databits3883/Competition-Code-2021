@@ -8,7 +8,6 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANError;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -17,11 +16,11 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.SetpointAccelerationLimiter;
 
+/**Drivetrain class. Handles PID velocity control for the drivetrain*/
 public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
   private final CANSparkMax rightFollower = new CANSparkMax(Constants.rightFollowerChannel, MotorType.kBrushless);
@@ -39,11 +38,10 @@ public class Drivetrain extends SubsystemBase {
   private boolean lockToLeft = false;
   private NetworkTableEntry lPEntry, lIEntry,lDEntry , lFEntry, rPEntry, rIEntry, rDEntry, rFEntry, lSPEntry, rSPEntry, lockEntry;
 
-  private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
   
   /**
-   * Creates a new Drivetrain.
+   * Creates a new Drivetrain instance. Initialilzes shuffleboard tuning
    */
   public Drivetrain() {
     leftLeader.setInverted(false);
@@ -87,18 +85,20 @@ public class Drivetrain extends SubsystemBase {
     Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", leftLeader::getVoltageCompensationNominalVoltage);
     initGains();
 
-    m_setpointLimiter = new SetpointAccelerationLimiter(20, 40);
-    m_setpointLimiter.setSetpoint(20);
     limitedEntry = Shuffleboard.getTab("velocity drive tuning").add("limited",0).getEntry();
   }
 
+  /**Sets networkTables values and updates controllers from networkTables. */
   void initGains(){
     lockEntry.setBoolean(true);
     lPEntry.setDouble(0.08);
     lFEntry.setDouble(0.053);
     updateGains();
   }
-
+  /**Arcade-style drive using velocity control.
+   * @param zRotation rotation value from -1.0 to 1.0. negative values turn left. Typically the joystick X axis.
+   * @param xSpeed speed value from -1.0 to 1.0. negative speeds go backwards. Typically the joystick Y axis
+   */
   public void ArcadeDrive(double zRotation, double xSpeed){
 
     //frontLeft.setInverted(true);
@@ -126,7 +126,10 @@ public class Drivetrain extends SubsystemBase {
     } 
     TankDrive(leftMotorOutput, rightMotorOutput);
   }
-
+  /**Tank-style drive using velocity control./
+   * @param leftValue left-side speed, from -1.0 to 1.0
+   * @param rightValue right-side speed, from -1.0 to 1.0
+   */
   public void TankDrive(double leftValue, double rightValue){
     double leftSpeedSetpoint = leftValue* Constants.maxDriveSpeed;
     double rightSpeedSetpoint = rightValue* Constants.maxDriveSpeed;
@@ -140,14 +143,16 @@ public class Drivetrain extends SubsystemBase {
     lSP= leftSpeedSetpoint;
   }
 
+  /**Sets both motor sides to active braking.
+   * <p><b>At high speeds this <i>will</i> tip the robot</b></p>
+   */
   public void EmergencyStop(){
     TankDrive(0, 0);
   }
-
+/**Updateds pid gains from shuffleboard. SHould be called in robot periodic method.*/
   @Override
   public void periodic() {
     updateGains();
-    limitedEntry.setDouble(m_setpointLimiter.get());
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }
@@ -166,7 +171,7 @@ public class Drivetrain extends SubsystemBase {
     }
     updateUnlocked();
   }
-
+/**Sets right network table entries equal to left network table values. */
   private void lockGains(){
     rPEntry.setDouble(lPEntry.getDouble(0));
     rIEntry.setDouble(lIEntry.getDouble(0));
@@ -174,6 +179,7 @@ public class Drivetrain extends SubsystemBase {
     rFEntry.setDouble(lFEntry.getDouble(0));
     rSPEntry.setDouble(lSPEntry.getDouble(0));
   }
+  /**Updtates all spark max gains to values from network tables. If left and right are supposed to be locked, this assumes the network table values are already equal.*/
   private void updateUnlocked(){
     if(lP!=lPEntry.getDouble(0)){
       lP=lPEntry.getDouble(0);
