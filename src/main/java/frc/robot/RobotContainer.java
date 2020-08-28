@@ -35,7 +35,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Drivetrain m_drivetrain = new Drivetrain();
   private final Intake m_intake = new Intake();
   private final Staging m_staging = new Staging();
@@ -78,8 +77,6 @@ public class RobotContainer {
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
-  
-  private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
   
