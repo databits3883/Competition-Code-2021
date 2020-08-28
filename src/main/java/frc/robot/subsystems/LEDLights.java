@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+/**LED Lights subsystem. Manages LED strip on head. */
 public class LEDLights extends SubsystemBase {
   AddressableLED lights = new AddressableLED(Constants.ledChannel);
   AddressableLEDBuffer buffer = new AddressableLEDBuffer(60);
   Timer timer = new Timer();
   /**
-   * Creates a new LEDLights.
+   * Creates a new LEDLights instance.
    */
   public LEDLights() {
     // lights.setLength(60);
@@ -32,6 +33,7 @@ public class LEDLights extends SubsystemBase {
     // timer.start();
   }
 
+  /**Updates LED colors <p>Should be called in Robot periodic methods</p> */
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

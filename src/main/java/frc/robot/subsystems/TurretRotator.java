@@ -24,6 +24,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
+/**Turret rotator aiming subsystem. Manages rotator spark max. */
 public class TurretRotator extends SubsystemBase {
   private final CANSparkMax rotatorMotor = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless);
   private final CANEncoder encoder = new CANEncoder(rotatorMotor);
@@ -37,7 +38,7 @@ public class TurretRotator extends SubsystemBase {
   private double setpoint;
 
   /**
-   * Creates a new TurretRotator.
+   * Creates a new TurretRotator instance. Sets up pid gain inputs in shuffleboard.
    */
   public TurretRotator() {
     double gearRatio = (1.0/15.0);
@@ -67,27 +68,40 @@ public class TurretRotator extends SubsystemBase {
     
     initGains();
   }
+  /**sets default gains in networkTables, then updates conroller gains from network tables. */
   void initGains(){
     pEntry.setDouble(0.04);
     updateGains();
   }
   
+  /**sets target angle for the turret 
+   * @param newSetpoint target angle, positive is clockwise.
+  */
   public void setAngle(double newSetpoint){
     
     setpoint = MathUtil.clamp(newSetpoint, 0, Constants.maxTurretAngle);
     spEntry.setDouble(setpoint);
     velocityLimiter.setTarget(setpoint);
   }
+  /**sets target angle for the turret without smoothing.
+   * <p><b>Possibly dangerous if used while enabled.</b></p>
+   * @param newSetpoint target angle, positive is clockwise.
+   */
   public void setAngleStep(double newSetpoint){
     controller.setIAccum(0);
     controller.getIAccum();
     setAngle(newSetpoint);
   }
+  /**changes the target angle relative to the current angle
+   * @param angleDelta value to add to current angle, positive is clockwise.
+   */
   public void changeAngle(double angleDelta){
     //System.out.println(angleDelta);
     setAngle(setpoint+ angleDelta);
   }
-
+/**sets the current measured position as the setpoint.
+ * <p>meant to be used while disabled</p>
+ */
   public void setCurrentPosition(){
     controller.setIAccum(0);
     
@@ -95,15 +109,25 @@ public class TurretRotator extends SubsystemBase {
     velocityLimiter.setWithoutRamp(setpoint);
     spEntry.setDouble(setpoint);
   }
+  /**gets current encoder-measured angle
+   * @return current measured angle
+   */
   public double getCurrentAngle(){
     return encoder.getPosition();
   }
+  /**gets current PID error
+   * @return current calculated error
+   */
   public double getCurrentError(){
     return velocityLimiter.getCurrentTarget() - getCurrentAngle();
   }
+  /**gets whether the turret is faced at the target angle
+   * @return true if the current error is within tolerance
+   */
   public boolean atTarget(){
     return Math.abs(setpoint - encoder.getPosition())<1.5;
   }
+  /**Updates controller gains based on network table values. */
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
       p = pEntry.getDouble(0);
@@ -126,12 +150,15 @@ public class TurretRotator extends SubsystemBase {
       setAngleStep(setpoint);
     }
   }
+  /** updates measured position if end limit switches are pressed. */
   private void testLimits(){
     if(forwardLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
     if(reverseLimit.get()) encoder.setPosition(0);
   }
     
-  
+  /**Sets controller setpoint based on smoothed value. updates controller gains from network tables, and if disabled detects switches to set position.
+   * <p>Should run in all Robot periodic methods </p>
+   */
   @Override
   public void periodic() {
      // This method will be called once per scheduler run

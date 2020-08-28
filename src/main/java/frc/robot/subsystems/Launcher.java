@@ -22,6 +22,7 @@ import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 import frc.robot.Variables;
 
+/**Launcher wheel subsystem. Manages leader and follower motors. */
 public class Launcher extends SubsystemBase {
   private final CANSparkMax leader = new CANSparkMax(Constants.launcherLeaderChannel, MotorType.kBrushless);
   private final CANSparkMax follower = new CANSparkMax(Constants.launcherFollowerChannel, MotorType.kBrushless);
@@ -35,7 +36,7 @@ public class Launcher extends SubsystemBase {
 
   public SetpointVelocityLimiter m_setpointLimiter = new SetpointVelocityLimiter(25);
   /**
-   * Creates a new Launcher.
+   * Creates a new Launcher instance. Sets up PID tuning entries in shuffle board.
    */
   public Launcher() {
     follower.follow(leader,true);
@@ -58,6 +59,7 @@ public class Launcher extends SubsystemBase {
     initGains();
   }
 
+  /**Sets default gains in network tables then updates conroller gains from network tables. */
   void initGains(){
     pEntry.setDouble(0.03);
     ffEntry.setDouble(0.005);
@@ -67,17 +69,23 @@ public class Launcher extends SubsystemBase {
 
   /**
    * Sets the speed of the Launcher wheel
-   * @param speed the target speed of the wheel in inches per second
+   * @param newSpeed the target speed of the wheel in inches per second. Negative to eject ball.
+   * <p><i>inches per second is surface speed of flywheel, not exit speed of the ball</i></p>
    */
   public void setSpeed(double newSpeed){
     m_setpointLimiter.setTarget(newSpeed);
     speed = newSpeed;
     speedEntry.setDouble(speed);
   }
+  /**changes speed by a certain amount
+   * @param angleDelta number to add to current speed.
+   */
   public void changeSpeed(double angleDelta){
     setSpeed(speed + angleDelta);
   }
-
+  /**Is the wheel currently at the target speed?
+   * @return true if the wheel speed is within tolerance of target speed
+   */
   public boolean atSpeed(){
     return Math.abs(speed - encoder.getVelocity()) <1;
   }
@@ -85,6 +93,9 @@ public class Launcher extends SubsystemBase {
   
   boolean lastTrigger = false;
   double triggerAmps = 9;
+  /**updates gains from network tables. updates controller setpoint to limited acceleration setpoint. updaes {@link frc.robot.Variables#getShooterAtSpeed() Variables} 
+   * depending on whether shooting is allowed. Updates Variables to estimate a count of power cells exiting.
+   */
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -103,6 +114,7 @@ public class Launcher extends SubsystemBase {
     }
     lastTrigger = trigger;
   }
+  /**Updates controller gains from network tables */
   private void updateGains(){
     if(p != pEntry.getDouble(0)){
       p = pEntry.getDouble(0);
