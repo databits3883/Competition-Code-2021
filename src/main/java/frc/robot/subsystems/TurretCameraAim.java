@@ -13,13 +13,13 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
-public class LimelightServo extends SubsystemBase {
+public class TurretCameraAim extends SubsystemBase {
   Servo m_servo = new Servo(Constants.cameraServo);
   SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(45);
   /**
    * Creates a new LimelightServo.
    */
-  public LimelightServo() {
+  public TurretCameraAim() {
     m_servo.setPosition(1);
   }
   public void setPosition(double position){

@@ -15,13 +15,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LimelightServo;
+import frc.robot.subsystems.TurretCameraAim;
 import frc.robot.subsystems.TurretRotator;
 
 public abstract class BallFollowing extends CommandBase {
   Drivetrain m_drivetrain;
   TurretRotator m_turretrotator;
-  LimelightServo m_limelightservo;
+  TurretCameraAim m_limelightservo;
   Intake m_intake;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
@@ -35,7 +35,7 @@ public abstract class BallFollowing extends CommandBase {
   /**
    * Creates a new BallFollowing.
    */
-  public BallFollowing(Drivetrain drivetrain, TurretRotator turretrotator, LimelightServo limelightservo, Intake intake) {
+  public BallFollowing(Drivetrain drivetrain, TurretRotator turretrotator, TurretCameraAim limelightservo, Intake intake) {
     tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx");
     ty = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty");
     ta = NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta");

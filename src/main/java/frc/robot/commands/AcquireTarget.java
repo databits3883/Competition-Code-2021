@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.subsystems.TurretHood;
 import frc.robot.subsystems.TurretLauncher;
-import frc.robot.subsystems.LimelightServo;
+import frc.robot.subsystems.TurretCameraAim;
 import frc.robot.subsystems.TurretRotator;
 
 public class AcquireTarget extends CommandBase {
-  LimelightServo m_LimelightServo;
+  TurretCameraAim m_LimelightServo;
   TurretRotator m_tTurretRotator;
   TurretLauncher m_launcher;
   TurretHood m_hood;
@@ -34,7 +34,7 @@ public class AcquireTarget extends CommandBase {
   /**
    * Creates a new AcquireTarget.
    */
-  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator, TurretHood hood, TurretLauncher launcher) {
+  public AcquireTarget(TurretCameraAim limelightServo, TurretRotator turretRotator, TurretHood hood, TurretLauncher launcher) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_LimelightServo = limelightServo;
     m_tTurretRotator = turretRotator;
