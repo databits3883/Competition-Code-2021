@@ -40,7 +40,7 @@ public class RobotContainer {
   private final Intake m_intake = new Intake();
   private final Staging m_staging = new Staging();
   private final TurretRotator m_turretRotator = new TurretRotator();
-  private final Launcher m_launcher = new Launcher();
+  private final TurretLauncher m_launcher = new TurretLauncher();
   //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
   private final TurretHood m_hood = new TurretHood();

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.TurretHood;
-import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.TurretLauncher;
 import frc.robot.subsystems.Staging;
 import frc.robot.subsystems.TurretRotator;
 
@@ -23,7 +23,7 @@ public class ShootAndMoveAutoBasic extends SequentialCommandGroup {
   /**
    * Creates a new ShootAndMoveAutoBasic.
    */
-  public ShootAndMoveAutoBasic(TurretHood m_hood, TurretRotator m_turretRotator, Launcher m_launcher, Staging m_staging, Drivetrain m_drivetrain) {
+  public ShootAndMoveAutoBasic(TurretHood m_hood, TurretRotator m_turretRotator, TurretLauncher m_launcher, Staging m_staging, Drivetrain m_drivetrain) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
