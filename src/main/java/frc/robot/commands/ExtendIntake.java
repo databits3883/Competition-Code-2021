@@ -29,13 +29,13 @@ public class ExtendIntake extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Intake.moveWinchDown();
+    m_Intake.extendIntake();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_Intake.stopWinch();
+    m_Intake.stopExtension();
   }
 
   // Returns true when the command should end.
