@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.TurretHood;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.LimelightServo;
 import frc.robot.subsystems.TurretRotator;
@@ -23,7 +23,7 @@ public class AcquireTarget extends CommandBase {
   LimelightServo m_LimelightServo;
   TurretRotator m_tTurretRotator;
   Launcher m_launcher;
-  Hood m_hood;
+  TurretHood m_hood;
   NetworkTableEntry tx;
   NetworkTableEntry ty;
   NetworkTableEntry filterLengthEntry;
@@ -34,7 +34,7 @@ public class AcquireTarget extends CommandBase {
   /**
    * Creates a new AcquireTarget.
    */
-  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator, Hood hood, Launcher launcher) {
+  public AcquireTarget(LimelightServo limelightServo, TurretRotator turretRotator, TurretHood hood, Launcher launcher) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_LimelightServo = limelightServo;
     m_tTurretRotator = turretRotator;

@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.TurretHood;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.LimelightServo;
@@ -27,7 +27,7 @@ public class RightPositionAuto extends SequentialCommandGroup {
   /**
    * Creates a new RightPositionAuto.
    */
-  public RightPositionAuto(Drivetrain drivetrain, Intake intake, TurretRotator turretrotator, LimelightServo limelightservo, Launcher launcher, Hood hood, Staging staging) {
+  public RightPositionAuto(Drivetrain drivetrain, Intake intake, TurretRotator turretrotator, LimelightServo limelightservo, Launcher launcher, TurretHood hood, Staging staging) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(

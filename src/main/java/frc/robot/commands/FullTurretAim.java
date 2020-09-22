@@ -8,7 +8,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.TurretHood;
 import frc.robot.subsystems.Launcher;
 import frc.robot.subsystems.TurretRotator;
 
@@ -19,7 +19,7 @@ public class FullTurretAim extends ParallelCommandGroup {
   /**
    * Creates a new FullTurretAim.
    */
-  public FullTurretAim(double hoodAngle, double turretAngle, double launchSpeed,Hood m_hood, TurretRotator m_turretRotator, Launcher m_launcher) {
+  public FullTurretAim(double hoodAngle, double turretAngle, double launchSpeed,TurretHood m_hood, TurretRotator m_turretRotator, Launcher m_launcher) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());super();
     super(

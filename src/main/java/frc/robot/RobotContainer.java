@@ -43,7 +43,7 @@ public class RobotContainer {
   private final Launcher m_launcher = new Launcher();
   //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
   private final LimelightServo m_limelightServo = new LimelightServo();
-  private final Hood m_hood = new Hood();
+  private final TurretHood m_hood = new TurretHood();
   private final LEDLights m_ledLights = new LEDLights();
   private final Climb m_climb =new Climb();
   private final RaiseHook m_raiseHook = new RaiseHook(m_climb);
