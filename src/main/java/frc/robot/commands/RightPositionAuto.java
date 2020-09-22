@@ -31,7 +31,7 @@ public class RightPositionAuto extends SequentialCommandGroup {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(
-      new InstantCommand(intake::moveWinchDown),
+      new InstantCommand(intake::extendIntake),
       new FullTurretAim(39.32, 120, -75, hood, turretrotator, launcher),
       new ShootThreePowerCells(staging).withTimeout(5),
       

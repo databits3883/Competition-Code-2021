@@ -45,13 +45,13 @@ public class Intake extends SubsystemBase {
     intakeMotor.set(-Constants.intakeSpeed);
   }
 
-  public void moveWinchUp(){
+  public void retractIntake(){
     extenderMotor.set(Constants.Raiseintakespeed);
   }
-  public void moveWinchDown(){
+  public void extendIntake(){
     extenderMotor.set(Constants.loweringIntakeSpeed);
   }
-  public void stopWinch(){
+  public void stopExtension(){
     extenderMotor.set(0);
   }
   public boolean getExtendLimit(){
