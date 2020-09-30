@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
@@ -36,18 +37,19 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Drivetrain m_drivetrain = new Drivetrain();
-  private final Intake m_intake = new Intake();
-  private final Staging m_staging = new Staging();
-  private final TurretRotator m_turretRotator = new TurretRotator();
-  private final Launcher m_launcher = new Launcher();
+  private final Drivetrain       m_drivetrain =       new Drivetrain();
+  private final Intake           m_intake =           new Intake();
+  private final Staging          m_staging =          new Staging();
+  private final TurretRotator    m_turretRotator =    new TurretRotator();
+  private final Launcher         m_launcher =         new Launcher();
   //private final ControlPanelSpinner m_controlPanelSpinner = new ControlPanelSpinner();
-  private final LimelightServo m_limelightServo = new LimelightServo();
-  private final Hood m_hood = new Hood();
-  private final LEDLights m_ledLights = new LEDLights();
-  private final Climb m_climb =new Climb();
-  private final RaiseHook m_raiseHook = new RaiseHook(m_climb);
-  private final LowerHook m_lowerHook = new LowerHook(m_climb);
+  private final LimelightServo   m_limelightServo =   new LimelightServo();
+  private final Hood             m_hood =             new Hood();
+  private final LEDLights        m_ledLights =        new LEDLights();
+  private final Climb            m_climb =            new Climb();
+  private final RaiseHook        m_raiseHook =        new RaiseHook(m_climb);
+  private final LowerHook        m_lowerHook =        new LowerHook(m_climb);
+  private final FindLocation     m_findLocation =     new FindLocation(m_drivetrain,m_limelightServo);
 
   private final Joystick driverJoystick = new Joystick(0);
   private final Joystick gunnerJoystick = new Joystick(1);
@@ -78,6 +80,8 @@ public class RobotContainer {
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
+
+  
   
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
   
@@ -168,6 +172,8 @@ public class RobotContainer {
   private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
   SendableChooser<Command> chooser = new SendableChooser<Command>();
+  
+  
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
@@ -181,11 +187,14 @@ public class RobotContainer {
 
   private void setDefaultCommands(){
     m_drivetrain.setDefaultCommand(manualArcadeDrive);
+    
     m_limelightServo.setDefaultCommand(m_turnServo);
     m_hood.setDefaultCommand(m_manualHoodMovement);
     m_turretRotator.setDefaultCommand(m_manualTurretPanning);
     //m_launcher.setDefaultCommand(m_manualLauncherWheelSpin);
     m_staging.setDefaultCommand(m_advanceStaging);
+
+
   }
 
   /**
@@ -227,6 +236,8 @@ public class RobotContainer {
     chooser.setDefaultOption("no autonomous", new PrintCommand("no autonomous selected"));
     Shuffleboard.getTab("Game screen").add(chooser);
   }
+
+ 
 
 
   /**

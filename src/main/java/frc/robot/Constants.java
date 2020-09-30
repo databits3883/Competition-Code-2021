@@ -9,6 +9,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -71,11 +73,30 @@ public final class Constants {
     public static final double intakeSpeed = 1;
     public static final double climbServoEngagedLimit = 1;
     public static final double climbServoDisengagedLimit = 0;
+    public static final double cameraHeight = 0;
+    
+    public static final double powerPortTopReflectorAltitude = 2.49555; //meters
+    public static final double powerPortTopReflectorWidth = 0.99695; //meters
+    public static final double powerPortTopReflectorHeight = 0.8636; //meters
+    public static final double fieldLengthMeters = 15.98295; //meters
+    public static final double fieldWidthMeters = 8.21055; //meters
+    public static final double powerPortToWallLenght = 2.404364; //meters
+
 
     public static final double maxTurretVelocity = 120; //degrees per second
     public static final double maxHoodVelocity = 3000; //degrees per second
 
     public static final double minimumShootSpeed = 25;
+
+    //start positions, feet. INCOMPLETE
+    //public static final Vector2d startPositionOne = new Vector2d(0d,0d);
+    //public static final Vector2d startPositionTwo = new Vector2d(0d,0d);
+    //public static final Vector2d startPositionThree = new Vector2d(0d,0d);
+
+    public static final Translation2d startPositionOne = new Translation2d(0, 0);
+    public static final Translation2d startPositionTwo = new Translation2d(0, 0);
+    public static final Translation2d startPositionThree = new Translation2d(0, 0);
+
     
     //Color
     public static final double redThreshold = 0.3;
