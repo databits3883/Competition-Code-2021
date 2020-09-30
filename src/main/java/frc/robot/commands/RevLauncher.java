@@ -9,15 +9,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.TurretLauncher;
 
 public class RevLauncher extends CommandBase {
-  Launcher m_launcher;
+  TurretLauncher m_launcher;
   double targetSpeed;
   /**
    * Creates a new RevLauncher.
    */
-  public RevLauncher(double speed, Launcher launcher) {
+  public RevLauncher(double speed, TurretLauncher launcher) {
     addRequirements(launcher);
     m_launcher = launcher;
     targetSpeed = speed;

@@ -22,7 +22,7 @@ import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 import frc.robot.Variables;
 
-public class Launcher extends SubsystemBase {
+public class TurretLauncher extends SubsystemBase {
   private final CANSparkMax leader = new CANSparkMax(Constants.launcherLeaderChannel, MotorType.kBrushless);
   private final CANSparkMax follower = new CANSparkMax(Constants.launcherFollowerChannel, MotorType.kBrushless);
 
@@ -37,7 +37,7 @@ public class Launcher extends SubsystemBase {
   /**
    * Creates a new Launcher.
    */
-  public Launcher() {
+  public TurretLauncher() {
     follower.follow(leader,true);
     leader.setIdleMode(IdleMode.kCoast);
     follower.setIdleMode(IdleMode.kCoast);

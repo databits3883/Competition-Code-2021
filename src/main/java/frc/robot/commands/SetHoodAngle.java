@@ -9,15 +9,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Hood;
+import frc.robot.subsystems.TurretHood;
 
 public class SetHoodAngle extends CommandBase {
-  Hood m_hood;
+  TurretHood m_hood;
   double targetAngle;
   /**
    * Creates a new SetHoodAngle.
    */
-  public SetHoodAngle(double angle, Hood hood) {
+  public SetHoodAngle(double angle, TurretHood hood) {
     addRequirements(hood);
     m_hood = hood;
     targetAngle = angle;

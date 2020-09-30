@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.LimelightServo;
+import frc.robot.subsystems.TurretCameraAim;
 import frc.robot.subsystems.TurretRotator;
 
 public class TeleopBallFollowing extends BallFollowing {
@@ -21,7 +21,7 @@ public class TeleopBallFollowing extends BallFollowing {
   /**
    * Creates a new TeleopBallFollowing.
    */
-  public TeleopBallFollowing(Joystick joystick,Drivetrain drivetrain, TurretRotator turretrotator, LimelightServo limelightservo, Intake intake) {
+  public TeleopBallFollowing(Joystick joystick,Drivetrain drivetrain, TurretRotator turretrotator, TurretCameraAim limelightservo, Intake intake) {
     super(drivetrain, turretrotator, limelightservo, intake);
     m_joystick=joystick;
 

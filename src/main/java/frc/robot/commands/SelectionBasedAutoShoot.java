@@ -9,8 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import frc.robot.subsystems.Hood;
-import frc.robot.subsystems.Launcher;
+import frc.robot.subsystems.TurretHood;
+import frc.robot.subsystems.TurretLauncher;
 import frc.robot.subsystems.Staging;
 import frc.robot.subsystems.TurretRotator;
 
@@ -22,7 +22,7 @@ public class SelectionBasedAutoShoot extends SequentialCommandGroup {
   /**
    * Creates a new SelectionBasedAutoShoot.
    */
-  public SelectionBasedAutoShoot(StartPosition startPosition, Hood hood, TurretRotator turretRotator, Launcher launcher, Staging staging) {
+  public SelectionBasedAutoShoot(StartPosition startPosition, TurretHood hood, TurretRotator turretRotator, TurretLauncher launcher, Staging staging) {
     // Add your commands in the super() call, e.g.
     // super(new FooCommand(), new BarCommand());
     super(

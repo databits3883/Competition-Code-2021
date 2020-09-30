@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Staging extends SubsystemBase {
-  private final Victor Upperstage = new Victor(1);
-  private final Victor Jostler = new Victor(2);
+  private final Victor TowerMotor = new Victor(1);
+  private final Victor JostlerMotor = new Victor(2);
 
   private final DigitalInput BottomSensor = new DigitalInput(Constants.BottomSensor);
   private final DigitalInput MiddleSensor = new DigitalInput(Constants.MiddleSensor);
@@ -28,36 +28,39 @@ public class Staging extends SubsystemBase {
   public Staging() {
 
   }
+  /**
+   * Enable the mechanism to prevent PowerCell jamming in the intake.
+   */
   public void Jostle(){
-    Jostler.setSpeed(Constants.lowerStagingSpeed);
+    JostlerMotor.setSpeed(Constants.lowerStagingSpeed);
   }
-  public void UpperStage(){
-    Upperstage.setSpeed(Constants.upperStagingSpeed);
+  public void MovePowerCelltoLauncher(){
+    TowerMotor.setSpeed(Constants.upperStagingSpeed);
   }
   public void RunStaging(){
-    UpperStage();
+    MovePowerCelltoLauncher();
     Jostle();
   }
   public void StopStaging(){
-    StopUpperStage();
+    MovePowerCellStop();
     StopJostle();
 
   }
   public void StopJostle(){
-    Jostler.setSpeed(0);
+    JostlerMotor.setSpeed(0);
   }
-  public void StopUpperStage(){
-    Upperstage.setSpeed(0);
+  public void MovePowerCellStop(){
+    TowerMotor.setSpeed(0);
   }
   public void ReverseJostle(){
-    Jostler.setSpeed(Constants.upperOuttakeSpeed);
+    JostlerMotor.setSpeed(Constants.upperOuttakeSpeed);
   }
-  public void ReverseUpperStage(){
-    Upperstage.setSpeed(Constants.upperOuttakeSpeed);
+  public void MovePowerCelltoIntake(){
+    TowerMotor.setSpeed(Constants.upperOuttakeSpeed);
   }
   public void ReverseStaging(){
     ReverseJostle();
-    ReverseUpperStage();
+    MovePowerCelltoIntake();
   }
   public boolean GetTopSensor(){
     return !TopSensor.get();

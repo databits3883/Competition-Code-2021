@@ -32,16 +32,16 @@ public class ManualIntakeMove extends CommandBase {
   @Override
   public void execute() {
     if(Math.signum(m_speed)>=0){
-      m_intake.moveWinchUp();
+      m_intake.retractIntake();
     }else{
-      m_intake.moveWinchDown();
+      m_intake.extendIntake();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.stopWinch();
+    m_intake.stopExtension();
   }
 
   // Returns true when the command should end.

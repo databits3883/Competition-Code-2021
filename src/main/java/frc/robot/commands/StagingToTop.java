@@ -31,14 +31,14 @@ public class StagingToTop extends CommandBase {
   @Override
   public void execute() {
     staging.Jostle();
-    staging.UpperStage();
+    staging.MovePowerCelltoLauncher();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     staging.StopJostle();
-    staging.StopUpperStage();
+    staging.MovePowerCellStop();
   }
 
   // Returns true when the command should end.

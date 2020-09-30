@@ -23,7 +23,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
 
-public class Hood extends SubsystemBase {
+public class TurretHood extends SubsystemBase {
   /**
   * Creates a new Hood.
   */  
@@ -38,7 +38,7 @@ public class Hood extends SubsystemBase {
 
   private SetpointVelocityLimiter velocityLimiter = new SetpointVelocityLimiter(Constants.maxHoodVelocity);
  
-  public Hood() {
+  public TurretHood() {
 
     encoder.setPositionConversionFactor(16.0*360.0/264.0/50.0);
 
