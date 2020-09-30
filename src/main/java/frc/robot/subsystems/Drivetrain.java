@@ -43,7 +43,7 @@ public class Drivetrain extends SubsystemBase {
   private double lastPosition;
   private double currentAngle;
   private Pose2d robotPosition;
-  private DifferentialDriveOdometry robotOdometry;
+  private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
   private Rotation2d robotRotation;
   private Translation2d robotTranslation;
   Drivetrain m_drivetrain;
@@ -119,6 +119,9 @@ public class Drivetrain extends SubsystemBase {
     double leftMotorOutput;
     double rightMotorOutput;
     double maxInput = Math.copySign(Math.max(Math.abs(zRotation), Math.abs(xSpeed)), xSpeed);
+    double LeftDistanceMeters;
+    double RightDistanceMeters;
+    int slow_print;
     if (xSpeed >= 0.0) {
       // First quadrant, else second quadrant
       if (zRotation >= 0.0) {
@@ -146,11 +149,17 @@ public class Drivetrain extends SubsystemBase {
     robotRotation = Rotation2d.fromDegrees(currentAngle);
 
     //worldVector = worldVector.se
-    robotOdometry.update(robotRotation, Variables.getInstance().GetLeftDistanceMeters(), Variables.getInstance().GetRightDistanceMeters());
+    LeftDistanceMeters = GetLeftDistanceMeters();
+    RightDistanceMeters = GetRightDistanceMeters();
+    robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
     robotPosition =  robotOdometry.getPoseMeters();
     robotTranslation = robotPosition.getTranslation();
-    System.out.println("x Translation" + robotTranslation.getX());
-    System.out.println("y Translation" + robotTranslation.getY());
+    //if (slow_print > 1000) {
+      System.out.printf("X:%8.3f  Y:%8.3f  Angle:%8.3f  Left:%8f  Right:%8f\n", robotTranslation.getX(),robotTranslation.getY(), currentAngle, LeftDistanceMeters, RightDistanceMeters);
+      slow_print = 0;
+    //} 
+    //++slow_print;
+    //if (slow_print < 0) slow_print = 0;
   }
 
   public void TankDrive(double leftValue, double rightValue){
@@ -178,7 +187,7 @@ public class Drivetrain extends SubsystemBase {
     robotRotation = Rotation2d.fromDegrees(currentAngle);
 
     //worldVector = worldVector.se
-    robotOdometry.update(robotRotation, Variables.getInstance().GetLeftDistanceMeters(), Variables.getInstance().GetRightDistanceMeters());
+    robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
     robotPosition =  robotOdometry.getPoseMeters();
     robotTranslation = robotPosition.getTranslation();
     System.out.println("x Translation" + robotTranslation.getX());
@@ -216,7 +225,13 @@ public class Drivetrain extends SubsystemBase {
     }
     updateUnlocked();
   }
+  public double GetLeftDistanceMeters(){
+    return GetLeftEncoder()*Variables.getInstance().positionalConversion;
+ }
 
+ public double GetRightDistanceMeters(){
+     return getRightEncoder()*Variables.getInstance().positionalConversion;
+  }
   private void lockGains(){
     rPEntry.setDouble(lPEntry.getDouble(0));
     rIEntry.setDouble(lIEntry.getDouble(0));

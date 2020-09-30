@@ -17,7 +17,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import frc.robot.subsystems.LimelightServo;
+import frc.robot.subsystems.TurretCameraAim;
 
 
 /**
@@ -59,7 +59,7 @@ public class Variables {
 
     private final CANEncoder leftEncoder = new CANEncoder(leftLeader);
     private final CANEncoder rightEncoder = new CANEncoder(rightLeader);
-    double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
+    public double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
 
     public double GetLeftDistanceMeters(){
        return leftEncoder.getPosition()*positionalConversion;

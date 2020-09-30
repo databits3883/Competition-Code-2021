@@ -21,7 +21,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Variables;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.LimelightServo;
+import frc.robot.subsystems.TurretCameraAim;
 
 
 
@@ -36,7 +36,7 @@ public class FindLocation extends CommandBase {
   Rotation2d robotRotation;
   Translation2d robotTranslation;
   Drivetrain m_drivetrain;
-  LimelightServo m_limeLightServo;
+  TurretCameraAim m_limeLightServo;
 
   
   
@@ -65,7 +65,7 @@ public class FindLocation extends CommandBase {
   
   
 
-  public FindLocation(Drivetrain drivetrain, LimelightServo limelightServo) {
+  public FindLocation(Drivetrain drivetrain, TurretCameraAim limelightServo) {
     m_drivetrain = drivetrain;
     m_limeLightServo = limelightServo;
     
