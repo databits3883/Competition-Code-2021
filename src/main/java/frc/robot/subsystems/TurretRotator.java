@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.SetpointVelocityLimiter;
+import frc.robot.util.SparkMaxPIDController;
 
 public class TurretRotator extends SubsystemBase {
   private final CANSparkMax rotatorMotor = new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless);
@@ -50,12 +51,12 @@ public class TurretRotator extends SubsystemBase {
     encoder.setPositionConversionFactor(conversionFactor);
     velocityLimiter = new SetpointVelocityLimiter(Constants.maxTurretVelocity);
    
+    SparkMaxPIDController controllerContainer = new SparkMaxPIDController(rotatorMotor);
+    Shuffleboard.getTab("turretRotatorTuning").add(controllerContainer);
+    controllerContainer.setP(0.04);
+    controllerContainer.setI(0);
+    controllerContainer.setD(0);
     
-    pEntry = Shuffleboard.getTab("turretRotatorTuning").add("portional",p).getEntry();
-    iEntry = Shuffleboard.getTab("turretRotatorTuning").add("integral",i).getEntry();
-    dEntry = Shuffleboard.getTab("turretRotatorTuning").add("derivative",d).getEntry();
-    ffEntry = Shuffleboard.getTab("turretRotatorTuning").add("feedForward",ff).getEntry();
-    spEntry = Shuffleboard.getTab("turretRotatorTuning").add("setpoint",setpoint).getEntry();
     
     spEntry.setDouble(setpoint);
 
@@ -65,11 +66,6 @@ public class TurretRotator extends SubsystemBase {
     Shuffleboard.getTab("turretRotatorTuning").addNumber("output",()->rotatorMotor.get());
     setCurrentPosition();
     
-    initGains();
-  }
-  void initGains(){
-    pEntry.setDouble(0.04);
-    updateGains();
   }
   
   public void setAngle(double newSetpoint){
@@ -104,28 +100,6 @@ public class TurretRotator extends SubsystemBase {
   public boolean atTarget(){
     return Math.abs(setpoint - encoder.getPosition())<1.5;
   }
-  private void updateGains(){
-    if(p != pEntry.getDouble(0)){
-      p = pEntry.getDouble(0);
-      controller.setP(p);
-    }
-    if(i != iEntry.getDouble(0)){
-      i = iEntry.getDouble(0);
-      controller.setI(i);
-    }
-    if(d != dEntry.getDouble(0)){
-      d = dEntry.getDouble(0);
-      controller.setD(d);
-    }
-    if(ff != ffEntry.getDouble(0)){
-      ff = ffEntry.getDouble(0); 
-      controller.setFF(ff);
-    }
-    if(setpoint!=spEntry.getDouble(setpoint)){
-      setpoint=spEntry.getDouble(setpoint);
-      setAngleStep(setpoint);
-    }
-  }
   private void testLimits(){
     if(forwardLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
     if(reverseLimit.get()) encoder.setPosition(0);
@@ -135,7 +109,6 @@ public class TurretRotator extends SubsystemBase {
   @Override
   public void periodic() {
      // This method will be called once per scheduler run
-    updateGains();
 
     if(DriverStation.getInstance().isDisabled()) testLimits();
    
