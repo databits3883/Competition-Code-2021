@@ -26,6 +26,11 @@ public class SparkMaxPIDController implements Sendable{
     CANPIDController m_controller;
     double m_setpoint;
     ControlType m_controlType;
+
+    double p;
+    double i;
+    double d;
+    double ff;
     
     public SparkMaxPIDController(CANSparkMax sparkMax){
         m_motor = sparkMax;
@@ -34,28 +39,41 @@ public class SparkMaxPIDController implements Sendable{
     }
     //gain setters & getters
     public void setP(double P){
-        m_controller.setP(P);
+        if (p!=P){
+            m_controller.setP(P);
+            p=P;
+        }
     }
     public void setI(double I){
-        m_controller.setI(I);
+        if (i!=I){
+            m_controller.setI(I);
+            i=I;
+        }
+        
     }
     public void setD(double D){
-        m_controller.setD(D);
+        if(d!=D){
+            m_controller.setD(D);
+            d=D;
+        }
     }
     public void setFF(double FF){
-        m_controller.setFF(FF);
+        if(ff!=FF){
+            m_controller.setFF(FF);
+            ff=FF;
+        }
     }
     public double getP(){
-        return m_controller.getP();
+        return p;
     }
     public double getI(){
-        return m_controller.getI();
+        return i;
     }
     public double getD(){
-        return m_controller.getD();
+        return d;
     }
     public double getFF(){
-        return m_controller.getFF();
+        return ff;
     }
 
     public double getSetpoint(){
