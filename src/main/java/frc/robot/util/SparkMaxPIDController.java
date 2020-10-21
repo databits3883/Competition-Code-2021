@@ -26,9 +26,10 @@ public class SparkMaxPIDController{
     double d;
     double ff;
     
-    public SparkMaxPIDController(CANSparkMax sparkMax){
+    public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
         m_motor = sparkMax;
         m_controller = m_motor.getPIDController();
+        m_controlType = controlType;
     }
     //gain setters & getters
     public void setP(double P){

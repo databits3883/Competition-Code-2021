@@ -52,8 +52,7 @@ public class TurretRotator extends SubsystemBase {
     velocityLimiter = new SetpointVelocityLimiter(Constants.maxTurretVelocity);
     spEntry = Shuffleboard.getTab("turretRotatorTuning").add("setpoint",0).getEntry();
    
-    SparkMaxPIDController controllerContainer = new SparkMaxPIDController(rotatorMotor);
-    Shuffleboard.getTab("turretRotatorTuning").add(controllerContainer);
+    SparkMaxPIDController controllerContainer = new SparkMaxPIDController(rotatorMotor, ControlType.kPosition);
     controllerContainer.setP(0.04);
     controllerContainer.setI(0);
     controllerContainer.setD(0);
