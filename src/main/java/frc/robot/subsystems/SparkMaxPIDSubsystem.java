@@ -13,19 +13,15 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
 
 public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
-  CANSparkMax m_mainMotor;
-  SparkMaxPIDController m_mainController;
-  ControlType m_controlType;
-
-  String name;
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
-  public SparkMaxPIDSubsystem() {
-    m_mainController=new SparkMaxPIDController(m_mainMotor,m_controlType);
+  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, SparkMaxPIDController mainController, ControlType controlType, PIDTuningParameters tuning) {
+    mainController=new SparkMaxPIDController(mainMotor,controlType,tuning);
 
     ShuffleboardLayout tuningLayout = Shuffleboard.getTab(name).getLayout("tuning");
   }
