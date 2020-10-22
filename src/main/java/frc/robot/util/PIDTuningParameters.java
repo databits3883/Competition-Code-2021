@@ -25,4 +25,7 @@ public class PIDTuningParameters {
     public PIDTuningParameters(double initialP, double initialI, double initialD){
         this(initialP,initialI,initialD,0);
     }
+    public PIDTuningParameters(){
+        this(0,0,0,0);
+    }
 }

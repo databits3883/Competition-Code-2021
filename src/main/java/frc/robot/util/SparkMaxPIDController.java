@@ -21,53 +21,55 @@ public class SparkMaxPIDController{
     double m_setpoint;
     ControlType m_controlType;
 
-    double p;
-    double i;
-    double d;
-    double ff;
+    PIDTuningParameters m_tuning;
+
     
-    public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
+    public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType, PIDTuningParameters tuning){
         m_motor = sparkMax;
         m_controller = m_motor.getPIDController();
         m_controlType = controlType;
+        m_tuning=tuning;
+    }
+    public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
+        this(sparkMax,controlType,new PIDTuningParameters());
     }
     //gain setters & getters
     public void setP(double P){
-        if (p!=P){
+        if (m_tuning.p!=P){
             m_controller.setP(P);
-            p=P;
+            m_tuning.p=P;
         }
     }
     public void setI(double I){
-        if (i!=I){
+        if (m_tuning.i!=I){
             m_controller.setI(I);
-            i=I;
+            m_tuning.i=I;
         }
         
     }
     public void setD(double D){
-        if(d!=D){
+        if(m_tuning.d!=D){
             m_controller.setD(D);
-            d=D;
+            m_tuning.d=D;
         }
     }
     public void setFF(double FF){
-        if(ff!=FF){
+        if(m_tuning.ff!=FF){
             m_controller.setFF(FF);
-            ff=FF;
+            m_tuning.ff=FF;
         }
     }
     public double getP(){
-        return p;
+        return m_tuning.p;
     }
     public double getI(){
-        return i;
+        return m_tuning.i;
     }
     public double getD(){
-        return d;
+        return m_tuning.d;
     }
     public double getFF(){
-        return ff;
+        return m_tuning.ff;
     }
 
     public double getSetpoint(){
