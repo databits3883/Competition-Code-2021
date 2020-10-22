@@ -29,6 +29,11 @@ public class SparkMaxPIDController{
         m_controller = m_motor.getPIDController();
         m_controlType = controlType;
         m_tuning=tuning;
+        
+        m_controller.setP(m_tuning.p);
+        m_controller.setI(m_tuning.i);
+        m_controller.setD(m_tuning.d);
+        m_controller.setFF(m_tuning.ff);
     }
     public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
         this(sparkMax,controlType,new PIDTuningParameters());
