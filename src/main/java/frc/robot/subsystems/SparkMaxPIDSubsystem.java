@@ -20,10 +20,11 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
-  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, SparkMaxPIDController mainController, ControlType controlType, PIDTuningParameters tuning) {
-    mainController=new SparkMaxPIDController(mainMotor,controlType,tuning);
+  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning) {
+    SparkMaxPIDController mainController =new SparkMaxPIDController(mainMotor,controlType,tuning);
 
     ShuffleboardLayout tuningLayout = Shuffleboard.getTab(name).getLayout("tuning");
+    mainController.addTuningToShuffleboard(tuningLayout);
   }
 
   @Override

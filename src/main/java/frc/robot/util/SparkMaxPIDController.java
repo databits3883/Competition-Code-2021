@@ -7,10 +7,12 @@
 
 package frc.robot.util;
 
-
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 /**
  * Controller for PID operations with the Spark Max motor controller
@@ -38,6 +40,18 @@ public class SparkMaxPIDController{
     public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
         this(sparkMax,controlType,new PIDTuningParameters());
     }
+    /**
+     * Adds the PID controller tuning parameters to Shuffleboard
+     * @param container the tab or layout to display the tuning parameters in
+     */
+    public void addTuningToShuffleboard(ShuffleboardContainer container){
+        container.add("p",m_tuning.p).getEntry().addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("i",m_tuning.i).getEntry().addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("d",m_tuning.d).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("ff",m_tuning.ff).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+    }
+
+
     //gain setters & getters
     public void setP(double P){
         if (m_tuning.p!=P){
