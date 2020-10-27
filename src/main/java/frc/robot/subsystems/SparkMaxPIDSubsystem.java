@@ -19,14 +19,18 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
 
 public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
+  SparkMaxPIDController m_mainController;
+  double m_setpointMin;
+  double m_setpointMax;
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
-  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor) {
+  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max) {
     //set up conversion factor and accessor for the process variable
     DoubleSupplier processVariable;
     CANEncoder encoder = mainMotor.getEncoder();
@@ -40,18 +44,20 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
       default: throw new IllegalArgumentException("SparkMaxPIDSubsystem doesn't yet support control type "+controlType.toString());
     }
 
-    SparkMaxPIDController mainController =new SparkMaxPIDController(mainMotor,controlType,tuning);
+    m_mainController =new SparkMaxPIDController(mainMotor,controlType,tuning);
+
+    m_setpointMin = min;
+    m_setpointMax = max;
 
     ShuffleboardTab tab = Shuffleboard.getTab(name);
     ShuffleboardLayout tuningLayout = tab.getLayout("tuning");
-    mainController.addTuningToShuffleboard(tuningLayout);
+    m_mainController.addTuningToShuffleboard(tuningLayout);
     //add a graph with the setpoint and the current value
-    tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {processVariable.getAsDouble(),mainController.getSetpoint()}))
+    tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {processVariable.getAsDouble(),m_mainController.getSetpoint()}))
       .withWidget(BuiltInWidgets.kGraph);
   }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  public void setSetpoint(double newSetpoint){
+    newSetpoint = MathUtil.clamp(newSetpoint, m_setpointMin, m_setpointMax);
+    m_mainController.setSetpoint(newSetpoint);
   }
 }
