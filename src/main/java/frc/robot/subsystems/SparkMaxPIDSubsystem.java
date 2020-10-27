@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.ControlType;
 
+import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANEncoder;
@@ -17,6 +18,8 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -27,6 +30,8 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   SparkMaxPIDController m_mainController;
   double m_setpointMin;
   double m_setpointMax;
+
+  NetworkTableEntry m_setpointEntry;
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
@@ -55,9 +60,20 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     //add a graph with the setpoint and the current value
     tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {processVariable.getAsDouble(),m_mainController.getSetpoint()}))
       .withWidget(BuiltInWidgets.kGraph);
+    m_setpointEntry = tab.add("setpoint", m_mainController.getSetpoint())
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of("Min",m_setpointMin,"Max",m_setpointMax))
+      .getEntry();
+    m_setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
   }
-  public void setSetpoint(double newSetpoint){
+
+  void setSetpointInternal(double newSetpoint){
     newSetpoint = MathUtil.clamp(newSetpoint, m_setpointMin, m_setpointMax);
     m_mainController.setSetpoint(newSetpoint);
+    m_setpointEntry.setDouble(newSetpoint);
+  }
+  public void setSetpoint(double newSetpoint){
+    setSetpointInternal(newSetpoint);
+    m_setpointEntry.setDouble(newSetpoint);
   }
 }
