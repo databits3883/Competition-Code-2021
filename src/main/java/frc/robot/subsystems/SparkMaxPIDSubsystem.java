@@ -59,7 +59,7 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     m_setpointMax = max;
 
     ShuffleboardTab tab = Shuffleboard.getTab(name);
-    ShuffleboardLayout tuningLayout = tab.getLayout("tuning");
+    ShuffleboardLayout tuningLayout = tab.getLayout("tuning","List");
     m_mainController.addTuningToShuffleboard(tuningLayout);
     //add a graph with the setpoint and the current value
     tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
