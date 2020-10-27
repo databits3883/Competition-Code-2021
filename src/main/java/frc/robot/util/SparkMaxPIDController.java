@@ -50,6 +50,10 @@ public class SparkMaxPIDController{
         container.add("d",m_tuning.d).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("ff",m_tuning.ff).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
     }
+    public void reset(){
+        m_controller.setIAccum(0);
+        setSetpoint(getSetpoint());
+    }
 
 
     //gain setters & getters

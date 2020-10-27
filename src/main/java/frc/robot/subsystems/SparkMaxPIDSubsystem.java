@@ -28,26 +28,30 @@ import frc.robot.util.SparkMaxPIDController;
 
 public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   SparkMaxPIDController m_mainController;
+  CANSparkMax m_motor;
   double m_setpointMin;
   double m_setpointMax;
 
   NetworkTableEntry m_setpointEntry;
+  DoubleSupplier m_processVariable;
+
+  double m_tolerance;
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
   public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max) {
     //set up conversion factor and accessor for the process variable
-    DoubleSupplier processVariable;
     CANEncoder encoder = mainMotor.getEncoder();
     switch (controlType){
       case kPosition: encoder.setPositionConversionFactor(conversionFactor);
-        processVariable = encoder::getPosition;
+        m_processVariable = encoder::getPosition;
         break;
       case kVelocity: encoder.setVelocityConversionFactor(conversionFactor);
-        processVariable = encoder::getVelocity;
+        m_processVariable = encoder::getVelocity;
         break;
       default: throw new IllegalArgumentException("SparkMaxPIDSubsystem doesn't yet support control type "+controlType.toString());
     }
+    m_motor = mainMotor;
 
     m_mainController =new SparkMaxPIDController(mainMotor,controlType,tuning);
 
@@ -58,7 +62,7 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     ShuffleboardLayout tuningLayout = tab.getLayout("tuning");
     m_mainController.addTuningToShuffleboard(tuningLayout);
     //add a graph with the setpoint and the current value
-    tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {processVariable.getAsDouble(),m_mainController.getSetpoint()}))
+    tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
       .withWidget(BuiltInWidgets.kGraph);
     m_setpointEntry = tab.add("setpoint", m_mainController.getSetpoint())
       .withWidget(BuiltInWidgets.kNumberSlider)
@@ -75,5 +79,21 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   public void setSetpoint(double newSetpoint){
     setSetpointInternal(newSetpoint);
     m_setpointEntry.setDouble(newSetpoint);
+  }
+
+  public void holdCurrentPosition(){
+    setSetpoint(m_processVariable.getAsDouble());
+    m_mainController.reset();
+  }
+
+  public double getCurrentError(){
+    return m_mainController.getSetpoint() - m_processVariable.getAsDouble();
+  }
+
+  public boolean onTarget(){
+    return Math.abs(getCurrentError()) <=m_tolerance;
+  }
+  public void setTolerance(double tolerance){
+    m_tolerance = tolerance;
   }
 }
