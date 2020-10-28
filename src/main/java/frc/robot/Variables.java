@@ -60,6 +60,7 @@ public class Variables {
     private final CANEncoder leftEncoder = new CANEncoder(leftLeader);
     private final CANEncoder rightEncoder = new CANEncoder(rightLeader);
     public double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
+    public double positionalConversionOdom = 1.0/3.28;  // One meter is 3.28 Feet This will convert feet to meters when multiplied. 
 
     public double GetLeftDistanceMeters(){
        return leftEncoder.getPosition()*positionalConversion;
@@ -104,13 +105,6 @@ public class Variables {
         
         d = robotAndReflectorHeightDifference/Math.cos(angle);
         return d;
-
-        
-
-
-
-
-
 
     }
 

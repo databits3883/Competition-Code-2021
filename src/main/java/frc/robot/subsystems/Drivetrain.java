@@ -226,11 +226,11 @@ public class Drivetrain extends SubsystemBase {
     updateUnlocked();
   }
   public double GetLeftDistanceMeters(){
-    return GetLeftEncoder()*Variables.getInstance().positionalConversion;
+    return GetLeftEncoder()*Variables.getInstance().positionalConversionOdom;
  }
 
  public double GetRightDistanceMeters(){
-     return getRightEncoder()*Variables.getInstance().positionalConversion;
+     return getRightEncoder()*Variables.getInstance().positionalConversionOdom;
   }
   private void lockGains(){
     rPEntry.setDouble(lPEntry.getDouble(0));
