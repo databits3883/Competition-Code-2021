@@ -74,7 +74,6 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   void setSetpointInternal(double newSetpoint){
     newSetpoint = MathUtil.clamp(newSetpoint, m_setpointMin, m_setpointMax);
     m_mainController.setSetpoint(newSetpoint);
-    m_setpointEntry.setDouble(newSetpoint);
   }
   public void setSetpoint(double newSetpoint){
     setSetpointInternal(newSetpoint);

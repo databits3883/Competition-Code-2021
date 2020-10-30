@@ -28,7 +28,6 @@ public class ProfiledSparkMaxPIDSubsystem extends SparkMaxPIDSubsystem {
   void setSetpointInternal(double newSetpoint) {
     newSetpoint = MathUtil.clamp(newSetpoint, m_setpointMin, m_setpointMax);
     m_limiter.setTarget(newSetpoint);
-    m_setpointEntry.setDouble(newSetpoint);
   }
 
   @Override
