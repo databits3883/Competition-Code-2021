@@ -27,7 +27,6 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   CANDigitalInput forwardLimit;
   CANDigitalInput reverseLimit;
   CANEncoder encoder;
-  private double setpoint;
 
   /**
    * Creates a new TurretRotator.
@@ -56,7 +55,7 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   }
   public void changeAngle(double angleDelta){
     //System.out.println(angleDelta);
-    setAngle(setpoint+ angleDelta);
+    setAngle(m_mainController.getSetpoint()+ angleDelta);
   }
 
   public void setCurrentPosition(){
