@@ -28,7 +28,7 @@ public class TurretHood extends ProfiledSparkMaxPIDSubsystem {
     ControlType.kPosition, 
     new PIDTuningParameters(0.02,0,0),
     conversionFactor, 
-    Constants.minimumHoodAngle, Constants.maximumHoodAngle, Constants.maxHoodVelocity,LimitSwitchPolarity.kNormallyOpen);
+    Constants.minimumHoodAngle, Constants.maximumHoodAngle, Constants.maxHoodVelocity,LimitSwitchPolarity.kNormallyClosed);
 
     setTolerance(1.5);
   }
