@@ -76,7 +76,7 @@ public abstract class BallFollowing extends CommandBase {
     Pipeline.setNumber(3);
     
     
-    m_turretrotator.setAngleStep(268);
+    m_turretrotator.setAngleStep(277);
     m_limelightservo.setPosition(149);
     
   }

@@ -142,21 +142,21 @@ public class Drivetrain extends SubsystemBase {
       }
     } 
     TankDrive(leftMotorOutput, rightMotorOutput);
-    v = GetSpeedInMetersPerCentisecond(lastPosition);
-    lastPosition = GetEncodersTotal();
+    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // lastPosition = GetEncodersTotal();
 
-    currentAngle = Variables.getInstance().getGyroAngle();
-    robotRotation = Rotation2d.fromDegrees(currentAngle);
+    // currentAngle = Variables.getInstance().getGyroAngle();
+    // robotRotation = Rotation2d.fromDegrees(currentAngle);
 
-    //worldVector = worldVector.se
-    LeftDistanceMeters = GetLeftDistanceMeters();
-    RightDistanceMeters = GetRightDistanceMeters();
-    robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
-    robotPosition =  robotOdometry.getPoseMeters();
-    robotTranslation = robotPosition.getTranslation();
-    //if (slow_print > 1000) {
-      System.out.printf("X:%8.3f  Y:%8.3f  Angle:%8.3f  Left:%8f  Right:%8f\n", robotTranslation.getX(),robotTranslation.getY(), currentAngle, LeftDistanceMeters, RightDistanceMeters);
-      slow_print = 0;
+    // //worldVector = worldVector.se
+    // LeftDistanceMeters = GetLeftDistanceMeters();
+    // RightDistanceMeters = GetRightDistanceMeters();
+    // robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
+    // robotPosition =  robotOdometry.getPoseMeters();
+    // robotTranslation = robotPosition.getTranslation();
+    // //if (slow_print > 1000) {
+    //   System.out.printf("X:%8.3f  Y:%8.3f  Angle:%8.3f  Left:%8f  Right:%8f\n", robotTranslation.getX(),robotTranslation.getY(), currentAngle, LeftDistanceMeters, RightDistanceMeters);
+    //   slow_print = 0;
     //} 
     //++slow_print;
     //if (slow_print < 0) slow_print = 0;
@@ -180,18 +180,18 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void PrintLocation(){
-    v = GetSpeedInMetersPerCentisecond(lastPosition);
-    lastPosition = GetEncodersTotal();
+    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // lastPosition = GetEncodersTotal();
 
-    currentAngle = Variables.getInstance().getGyroAngle();
-    robotRotation = Rotation2d.fromDegrees(currentAngle);
+    // currentAngle = Variables.getInstance().getGyroAngle();
+    // robotRotation = Rotation2d.fromDegrees(currentAngle);
 
-    //worldVector = worldVector.se
-    robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
-    robotPosition =  robotOdometry.getPoseMeters();
-    robotTranslation = robotPosition.getTranslation();
-    System.out.println("x Translation" + robotTranslation.getX());
-    System.out.println("y Translation" + robotTranslation.getY());
+    // //worldVector = worldVector.se
+    // robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
+    // robotPosition =  robotOdometry.getPoseMeters();
+    // robotTranslation = robotPosition.getTranslation();
+    // System.out.println("x Translation" + robotTranslation.getX());
+    // System.out.println("y Translation" + robotTranslation.getY());
   }
 
   @Override
