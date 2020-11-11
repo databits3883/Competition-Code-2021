@@ -47,7 +47,7 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   }
   public void changeAngle(double angleDelta){
     //System.out.println(angleDelta);
-    setAngle(m_mainController.getSetpoint()+ angleDelta);
+    setAngle(m_limiter.getCurrentTarget()+ angleDelta);
   }
 
   public void setCurrentPosition(){
