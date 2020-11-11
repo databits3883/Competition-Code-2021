@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.util.PIDTuningParameters;
@@ -19,8 +20,8 @@ public class ProfiledSparkMaxPIDSubsystem extends SparkMaxPIDSubsystem {
   /**
    * Creates a new ProfiledSparkMaxPIDSubsystem.
    */
-  public ProfiledSparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max, double maxVelocity) {
-    super(name,mainMotor,controlType,tuning,conversionFactor,min,max);
+  public ProfiledSparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max, double maxVelocity, LimitSwitchPolarity switchPolarity) {
+    super(name,mainMotor,controlType,tuning,conversionFactor,min,max,switchPolarity);
     m_limiter = new SetpointVelocityLimiter(maxVelocity);
   }
 

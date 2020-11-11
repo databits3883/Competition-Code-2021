@@ -8,10 +8,12 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.ControlType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
 import java.util.Map;
 import java.util.function.DoubleSupplier;
 
+import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
@@ -29,6 +31,10 @@ import frc.robot.util.SparkMaxPIDController;
 public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   SparkMaxPIDController m_mainController;
   CANSparkMax m_motor;
+  CANDigitalInput lowerLimit;
+  CANDigitalInput upperLimit;
+  CANEncoder m_encoder;
+
   double m_setpointMin;
   double m_setpointMax;
 
@@ -39,15 +45,18 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   /**
    * Creates a new SparkMaxPIDSubsystem.
    */
-  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max) {
+  public SparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max, LimitSwitchPolarity limitPolarity) {
     //set up conversion factor and accessor for the process variable
-    CANEncoder encoder = mainMotor.getEncoder();
+    m_encoder = mainMotor.getEncoder();
+    lowerLimit = mainMotor.getReverseLimitSwitch(limitPolarity);
+    upperLimit = mainMotor.getForwardLimitSwitch(limitPolarity);
+
     switch (controlType){
-      case kPosition: encoder.setPositionConversionFactor(conversionFactor);
-        m_processVariable = encoder::getPosition;
+      case kPosition: m_encoder.setPositionConversionFactor(conversionFactor);
+        m_processVariable = m_encoder::getPosition;
         break;
-      case kVelocity: encoder.setVelocityConversionFactor(conversionFactor);
-        m_processVariable = encoder::getVelocity;
+      case kVelocity: m_encoder.setVelocityConversionFactor(conversionFactor);
+        m_processVariable = m_encoder::getVelocity;
         break;
       default: throw new IllegalArgumentException("SparkMaxPIDSubsystem doesn't yet support control type "+controlType.toString());
     }
@@ -94,5 +103,14 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   }
   public void setTolerance(double tolerance){
     m_tolerance = tolerance;
+  }
+
+  void checkLimitSwitches(){
+    if(lowerLimit.get()){
+      m_encoder.setPosition(m_setpointMin);
+    }
+    if(upperLimit.get()){
+      m_encoder.setPosition(m_setpointMax);
+    }
   }
 }

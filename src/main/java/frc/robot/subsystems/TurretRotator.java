@@ -78,6 +78,6 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   public void periodic() {
      // This method will be called once per scheduler run
     super.periodic();
-    if(DriverStation.getInstance().isDisabled()) testLimits();
+    if(DriverStation.getInstance().isDisabled()) checkLimitSwitches();
   }
 }
