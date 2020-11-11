@@ -24,10 +24,6 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   static double degreeRatio = (360.0);
   static double conversionFactor = gearRatio*degreeRatio;
 
-  CANDigitalInput forwardLimit;
-  CANDigitalInput reverseLimit;
-  CANEncoder encoder;
-
   /**
    * Creates a new TurretRotator.
    */
@@ -41,10 +37,6 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
       Constants.maxTurretVelocity,LimitSwitchPolarity.kNormallyOpen);
     setTolerance(1.5);
     setCurrentPosition();
-
-    forwardLimit = m_motor.getForwardLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    reverseLimit = m_motor.getReverseLimitSwitch(LimitSwitchPolarity.kNormallyOpen);
-    encoder=m_motor.getEncoder();
   }
   
   public void setAngle(double newSetpoint){
@@ -68,10 +60,7 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
   public boolean atTarget(){
     return onTarget();
   }
-  private void testLimits(){
-    if(forwardLimit.get()) encoder.setPosition(Constants.maxTurretAngle);
-    if(reverseLimit.get()) encoder.setPosition(0);
-  }
+
     
   
   @Override
