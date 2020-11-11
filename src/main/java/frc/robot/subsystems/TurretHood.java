@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import frc.robot.Constants;
@@ -27,7 +28,7 @@ public class TurretHood extends ProfiledSparkMaxPIDSubsystem {
     ControlType.kPosition, 
     new PIDTuningParameters(0.02,0,0),
     conversionFactor, 
-    Constants.minimumHoodAngle, Constants.maximumHoodAngle, Constants.maxHoodVelocity);
+    Constants.minimumHoodAngle, Constants.maximumHoodAngle, Constants.maxHoodVelocity,LimitSwitchPolarity.kNormallyOpen);
 
     setTolerance(1.5);
   }
