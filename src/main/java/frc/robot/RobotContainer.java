@@ -7,11 +7,16 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.*;
+
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -23,6 +28,30 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+  private final Drivetrain       m_drivetrain =       new Drivetrain();
+
+  private final Joystick driverJoystick = new Joystick(0);
+
+  private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
+  private final double joystickDeadband=(Math.pow(.07,3));
+  private final Command manualArcadeDrive = new RunCommand(()->{
+    double x = Math.pow(driverJoystick.getX(),3);
+    double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    if( Math.abs(x)<joystickDeadband){
+      x=0;
+      }
+      else {
+        x-=Math.copySign(joystickDeadband, x);
+      }
+    if( Math.abs(y)<joystickDeadband){
+       y=0;
+      }
+      else{
+       y-=Math.copySign(joystickDeadband, y);
+      }
+  m_drivetrain.ArcadeDrive(x, y);
+  },m_drivetrain );
+
   private final ExampleCommand m_autoCommand = new ExampleCommand(m_exampleSubsystem);
 
 
@@ -33,6 +62,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+    m_drivetrain.setDefaultCommand(manualArcadeDrive);
   }
 
   /**

@@ -17,6 +17,15 @@ package frc.robot;
  */
 public final class Constants {
     public static final double cameraHeight = 0;
-    
     public static final double powerPortTopReflectorAltitude = 2.49555; //meters
+
+    //CAN
+    public static final int leftLeaderChannel = 1;
+    public static final int leftFollowerChannel = 4;
+    public static final int rightLeaderChannel = 2;
+    public static final int rightFollowerChannel = 3;
+
+    //physical
+    //distances in feet, time in seconds
+    public static final double maxDriveSpeed = 20;
 }
