@@ -14,6 +14,7 @@ import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -61,6 +62,18 @@ public class Drivetrain extends SubsystemBase {
     leftLeader.setIdleMode(IdleMode.kBrake);
 
 
+    lPEntry = Shuffleboard.getTab("velocity drive tuning").add("left P", lP).getEntry();
+    lIEntry = Shuffleboard.getTab("velocity drive tuning").add("left I", lI).getEntry();
+    lDEntry = Shuffleboard.getTab("velocity drive tuning").add("left D", lD).getEntry();
+    lFEntry = Shuffleboard.getTab("velocity drive tuning").add("left FF", lF).getEntry();
+    lSPEntry = Shuffleboard.getTab("velocity drive tuning").add("left Setpoint", lSP).getEntry();
+
+    rPEntry = Shuffleboard.getTab("velocity drive tuning").add("right P", rP).getEntry();
+    rIEntry = Shuffleboard.getTab("velocity drive tuning").add("right I", rI).getEntry();
+    rDEntry = Shuffleboard.getTab("velocity drive tuning").add("right D", rD).getEntry();
+    rFEntry = Shuffleboard.getTab("velocity drive tuning").add("right FF", rF).getEntry();
+    rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
+
     double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
     double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
    leftEncoder.setVelocityConversionFactor(velocityConversion);
@@ -70,10 +83,18 @@ public class Drivetrain extends SubsystemBase {
    leftEncoder.setPosition(0.0);
    rightEncoder.setPosition(0.0);
 
+   Shuffleboard.getTab("velocity drive tuning").addNumber("left pv", leftEncoder::getVelocity);
+   Shuffleboard.getTab("velocity drive tuning").addNumber("right pv", rightEncoder::getVelocity);
+
+   lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
+   Shuffleboard.getTab("velocity drive tuning").addNumber("left output", leftLeader::get);
+   Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", leftLeader::getVoltageCompensationNominalVoltage);
+
     initGains();
 
     m_setpointLimiter = new SetpointAccelerationLimiter(20, 40);
     m_setpointLimiter.setSetpoint(20);
+    limitedEntry = Shuffleboard.getTab("velocity drive tuning").add("limited",0).getEntry();
   }
 
   void initGains(){
