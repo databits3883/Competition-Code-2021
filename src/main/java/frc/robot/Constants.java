@@ -16,4 +16,7 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    public static final double cameraHeight = 0;
+    
+    public static final double powerPortTopReflectorAltitude = 2.49555; //meters
 }
