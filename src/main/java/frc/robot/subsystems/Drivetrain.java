@@ -7,7 +7,6 @@
 
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
@@ -22,6 +21,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.SetpointAccelerationLimiter;
+import frc.robot.util.NavX;
 
 public class Drivetrain extends SubsystemBase {
   
@@ -49,8 +49,8 @@ public class Drivetrain extends SubsystemBase {
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
 
-  // Gyro
-  private AHRS ahrs;
+  private final Object sensorLock = new Object();
+  private final NavX navX = new NavX(I2C.Port.kMXP);
   
   /**
    * Creates a new Drivetrain.
@@ -102,13 +102,6 @@ public class Drivetrain extends SubsystemBase {
     m_setpointLimiter.setSetpoint(20);
     limitedEntry = Shuffleboard.getTab("velocity drive tuning").add("limited",0).getEntry();
 
-    try {
-      ahrs = new AHRS(I2C.Port.kMXP);
-    } catch (RuntimeException ex) {
-      DriverStation.reportError("Error instantiating navX-MXP: " + ex.getMessage(), true);
-    }
-
-    ahrs.reset();
   }
 
   void initGains(){
@@ -167,7 +160,9 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     updateGains();
     limitedEntry.setDouble(m_setpointLimiter.get());
-    Shuffleboard.getTab("velocity drive tuning").add("Current Angle", getAHRSGyroAngle());
+    synchronized (sensorLock) {
+      Shuffleboard.getTab("velocity drive tuning").add("Current Angle", navX.getAngle());
+    }
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }
@@ -250,18 +245,6 @@ public class Drivetrain extends SubsystemBase {
       rSP=rSPEntry.getDouble(0);
       rightController.setReference(rSP, ControlType.kVelocity);
     }
-  }
-
-  public double getAHRSGyroAngle() {
-    return ahrs.getAngle();
-  }
-
-  public void resetAHRSGyro() {
-    ahrs.reset();
-  }
-
-  public void setAHRSAdjustment(double adj) {
-    ahrs.setAngleAdjustment(adj);
   }
 
 }
