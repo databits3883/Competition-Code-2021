@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -42,7 +43,7 @@ public class Drivetrain extends SubsystemBase {
   Drivetrain m_drivetrain;
 
 
-  private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
+  private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP, nav;
   private boolean lockToLeft = false;
   private NetworkTableEntry lPEntry, lIEntry,lDEntry , lFEntry, rPEntry, rIEntry, rDEntry, rFEntry, lSPEntry, rSPEntry, lockEntry;
 
@@ -51,6 +52,8 @@ public class Drivetrain extends SubsystemBase {
 
   private final Object sensorLock = new Object();
   private final NavX navX = new NavX(I2C.Port.kMXP);
+
+  NetworkTableEntry navx_data;
   
   /**
    * Creates a new Drivetrain.
@@ -80,6 +83,9 @@ public class Drivetrain extends SubsystemBase {
     rFEntry = Shuffleboard.getTab("velocity drive tuning").add("right FF", rF).getEntry();
     rSPEntry = Shuffleboard.getTab("velocity drive tuning").add("right Setpoint", rSP).getEntry();
 
+    navx_data = Shuffleboard.getTab("velocity drive tuning").add("navx angle", nav).getEntry();
+
+
     double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
     double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
    leftEncoder.setVelocityConversionFactor(velocityConversion);
@@ -95,6 +101,7 @@ public class Drivetrain extends SubsystemBase {
    lockEntry = Shuffleboard.getTab("velocity drive tuning").add("lock values to left", lockToLeft).getEntry();
    Shuffleboard.getTab("velocity drive tuning").addNumber("left output", leftLeader::get);
    Shuffleboard.getTab("velocity drive tuning").addNumber("left output voltage", leftLeader::getVoltageCompensationNominalVoltage);
+
 
     initGains();
 
@@ -160,9 +167,10 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     updateGains();
     limitedEntry.setDouble(m_setpointLimiter.get());
-    synchronized (sensorLock) {
-      Shuffleboard.getTab("velocity drive tuning").add("Current Angle", navX.getAngle());
-    }
+    //synchronized (sensorLock) {
+      // Shuffleboard.getTab("velocity drive tuning").set .add("Navx Angle", navX.getAngle().toDegrees());
+    //}
+    navx_data.setDouble(navX.getAngle().toDegrees());
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
   }
