@@ -73,7 +73,7 @@ public class Drivetrain extends SubsystemBase {
 
     tab.addNumber("left output", leftLeader::get);
 
-    tab.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
+    tab.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_rightController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
     tab.addDoubleArray("left setpoint vs pv", ()-> (new double[] {leftEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
   }
 
