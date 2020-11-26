@@ -7,17 +7,21 @@
 
 package frc.robot.util;
 
+import java.util.Map;
+
 import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 /**
  * Controller for PID operations with the Spark Max motor controller
  */
 public class SparkMaxPIDController{
+    public static final Map<String,Object> tuningDisplayMap = Map.of("Number of columns",2,"Number of rows",2,"Label position","LEFT");
+
     CANSparkMax m_motor;
     CANPIDController m_controller;
     double m_setpoint;
@@ -44,11 +48,12 @@ public class SparkMaxPIDController{
      * Adds the PID controller tuning parameters to Shuffleboard
      * @param container the tab or layout to display the tuning parameters in
      */
-    public void addTuningToShuffleboard(ShuffleboardContainer container){
+    public ShuffleboardLayout addTuningToShuffleboard(ShuffleboardLayout container){
         container.add("p",m_tuning.p).getEntry().addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("i",m_tuning.i).getEntry().addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("d",m_tuning.d).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("ff",m_tuning.ff).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        return container;
     }
     public void reset(){
         m_controller.setIAccum(0);

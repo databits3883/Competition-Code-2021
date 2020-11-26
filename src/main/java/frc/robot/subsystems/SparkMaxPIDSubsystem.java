@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
@@ -67,13 +68,13 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     m_setpointMin = min;
     m_setpointMax = max;
 
-    ShuffleboardTab tab = Shuffleboard.getTab(name);
-    ShuffleboardLayout tuningLayout = tab.getLayout("tuning","Grid Layout");
-    m_mainController.addTuningToShuffleboard(tuningLayout);
+    ShuffleboardLayout container = Shuffleboard.getTab(name).getLayout(name,BuiltInLayouts.kList).withProperties(Map.of("Label position","TOP")).withSize(2, 5);
+    ShuffleboardLayout tuningLayout = container.getLayout("tuning","Grid Layout");
+    m_mainController.addTuningToShuffleboard(tuningLayout).withProperties(SparkMaxPIDController.tuningDisplayMap).withSize(2, 2);
     //add a graph with the setpoint and the current value
-    tab.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
+    container.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
       .withWidget(BuiltInWidgets.kGraph);
-    m_setpointEntry = tab.add("setpoint", m_mainController.getSetpoint())
+    m_setpointEntry = container.add("setpoint", m_mainController.getSetpoint())
       .withWidget(BuiltInWidgets.kNumberSlider)
       .withProperties(Map.of("Min",m_setpointMin,"Max",m_setpointMax))
       .getEntry();

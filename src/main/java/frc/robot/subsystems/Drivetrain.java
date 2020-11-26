@@ -7,14 +7,18 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -64,17 +68,17 @@ public class Drivetrain extends SubsystemBase {
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);
 
-    ShuffleboardTab tab = Shuffleboard.getTab("Velocity Drive");
-    m_rightController.addTuningToShuffleboard(tab.getLayout("right tuning", "Grid Layout"));
-    m_leftController.addTuningToShuffleboard(tab.getLayout("left tuning", "Grid Layout"));
+    ShuffleboardLayout container = Shuffleboard.getTab("Velocity Drive").getLayout("Velocity Drive",BuiltInLayouts.kList).withProperties(Map.of("Label position","TOP")).withSize(2, 5);
+    m_rightController.addTuningToShuffleboard(container.getLayout("right tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap).withSize(2, 2);
+    m_leftController.addTuningToShuffleboard(container.getLayout("left tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap).withSize(2, 2);
 
-    tab.addNumber("left pv", leftEncoder::getVelocity);
-    tab.addNumber("right pv", rightEncoder::getVelocity);
+    container.addNumber("left pv", leftEncoder::getVelocity);
+    container.addNumber("right pv", rightEncoder::getVelocity);
 
-    tab.addNumber("left output", leftLeader::get);
+    container.addNumber("left output", leftLeader::get);
 
-    tab.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_rightController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
-    tab.addDoubleArray("left setpoint vs pv", ()-> (new double[] {leftEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
+    container.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_rightController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
+    container.addDoubleArray("left setpoint vs pv", ()-> (new double[] {leftEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
