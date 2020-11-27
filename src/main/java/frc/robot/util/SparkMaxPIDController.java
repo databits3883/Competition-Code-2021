@@ -17,9 +17,10 @@ import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 /**
- * Controller for PID operations with the Spark Max motor controller
+ * Manager for PID operations with a Spark Max motor controller
  */
 public class SparkMaxPIDController{
+    /**preferred properties for a grid layout given to {@link #addTuningToShuffleboard(ShuffleboardLayout) addTuningToShuffleboard()} */
     public static final Map<String,Object> tuningDisplayMap = Map.of("Number of columns",2,"Number of rows",2,"Label position","LEFT");
 
     CANSparkMax m_motor;
@@ -29,7 +30,12 @@ public class SparkMaxPIDController{
 
     PIDTuningParameters m_tuning;
 
-    
+    /**
+     * Create a new SparkMaxPIDController
+     * @param sparkMax the CANSparkMax this controller will manage
+     * @param controlType the PID control type, velocity or positional
+     * @param tuning the initial PID tuning for the controller
+     */
     public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType, PIDTuningParameters tuning){
         m_motor = sparkMax;
         m_controller = m_motor.getPIDController();
@@ -41,20 +47,30 @@ public class SparkMaxPIDController{
         m_controller.setD(m_tuning.d);
         m_controller.setFF(m_tuning.ff);
     }
+    /**
+     * Creates a new SparkMaxPIDController with all tuning values set to zero
+     * @param sparkMax the CANSparkMax this controller will manage
+     * @param controlType the PID control type, velocity or positional
+     */
     public SparkMaxPIDController(CANSparkMax sparkMax, ControlType controlType){
         this(sparkMax,controlType,new PIDTuningParameters());
     }
     /**
-     * Adds the PID controller tuning parameters to Shuffleboard
-     * @param container the tab or layout to display the tuning parameters in
+     * Adds the PID controller tuning parameters to Shuffleboard. As a side effect the Spark Max gains will be updated when 
+     * shuffleboard values are changed by a user
+     * @param container the layout to display the tuning parameters in
+     * @return the layout passed in after tuning parameters have been added
      */
     public ShuffleboardLayout addTuningToShuffleboard(ShuffleboardLayout container){
+        //for each value, create a number entry, then add a listener to update the controller when shuffleboard is changed
         container.add("p",m_tuning.p).getEntry().addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("i",m_tuning.i).getEntry().addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("d",m_tuning.d).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         container.add("ff",m_tuning.ff).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        //return the container to make adding properties more convenient 
         return container;
     }
+    /** Resets the PID controller, clearing the Integral accumulator */
     public void reset(){
         m_controller.setIAccum(0);
         setSetpoint(getSetpoint());
@@ -62,47 +78,81 @@ public class SparkMaxPIDController{
 
 
     //gain setters & getters
-    public void setP(double P){
-        if (m_tuning.p!=P){
-            m_controller.setP(P);
-            m_tuning.p=P;
+    /**
+     * sets the controller's proportional gain
+     * @param newP the new proportional gain
+     */
+    public void setP(double newP){
+        if (m_tuning.p!=newP){
+            m_controller.setP(newP);
+            m_tuning.p=newP;
         }
     }
-    public void setI(double I){
-        if (m_tuning.i!=I){
-            m_controller.setI(I);
-            m_tuning.i=I;
+    /**
+     * sets the controller's integral gain
+     * @param newI the new integral gain
+     */
+    public void setI(double newI){
+        if (m_tuning.i!=newI){
+            m_controller.setI(newI);
+            m_tuning.i=newI;
         }
         
     }
-    public void setD(double D){
-        if(m_tuning.d!=D){
-            m_controller.setD(D);
-            m_tuning.d=D;
+    /**
+     * sets the controller's derivative gain
+     * @param newD the new derivative gain
+     */
+    public void setD(double newD){
+        if(m_tuning.d!=newD){
+            m_controller.setD(newD);
+            m_tuning.d=newD;
         }
     }
-    public void setFF(double FF){
-        if(m_tuning.ff!=FF){
-            m_controller.setFF(FF);
-            m_tuning.ff=FF;
+    /**
+     * sets the controller's Feed Forward gain
+     * @param newFF the new feed forward gain
+     */
+    public void setFF(double newFF){
+        if(m_tuning.ff!=newFF){
+            m_controller.setFF(newFF);
+            m_tuning.ff=newFF;
         }
     }
+    /**
+     * @return the controller's current proportional gain
+     */
     public double getP(){
         return m_tuning.p;
     }
+     /**
+     * @return the controller's current integral gain
+     */
     public double getI(){
         return m_tuning.i;
     }
+     /**
+     * @return the controller's current derivative gain
+     */
     public double getD(){
         return m_tuning.d;
     }
+     /**
+     * @return the controller's current feed forward gain
+     */
     public double getFF(){
         return m_tuning.ff;
     }
-
+     /**
+     * @return the controller's current setpoint gain
+     */
     public double getSetpoint(){
         return m_setpoint;
     }
+    /**
+     * Sets the controller's setpoint
+     * @param newSetpoint the new setpoint in the set control type and the encoder's units
+     */
     public void setSetpoint(double newSetpoint){
         m_setpoint=newSetpoint;
         m_controller.setReference(m_setpoint, m_controlType);

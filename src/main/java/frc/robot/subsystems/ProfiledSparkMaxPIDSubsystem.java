@@ -14,26 +14,38 @@ import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SetpointVelocityLimiter;
-
+/** Parent class for a subsystem based around a single profiled PID loop on a Spark Max motor */
 public class ProfiledSparkMaxPIDSubsystem extends SparkMaxPIDSubsystem {
   SetpointVelocityLimiter m_limiter;
   /**
-   * Creates a new ProfiledSparkMaxPIDSubsystem.
+   * Creates a new ProfiledSparkMaxPIDSubsystem. Call in the constructor of a child class
+   * @param name the name of the subsystem for use in Shuffleboard
+   * @param mainMotor the Spark Max to control with a PID loop
+   * @param controlType the control type the subsystem uses, must be {@link com.revrobotics.ControlType kPosition or kVelocity}
+   * @param tuning the initial tuning for the subsystem's PID Controller
+   * @param conversionFactor the conversion factor from rotations or rotations per minute dependiong on control type
+   * @param min the minimum setpoint in converted units
+   * @param max the maximum setpoint in converted units
+   * @param maxVelocity the maximum rate of change for the setpoint
+   * @param switchPolarity the polarity of attached limit switches
    */
   public ProfiledSparkMaxPIDSubsystem(String name, CANSparkMax mainMotor, ControlType controlType, PIDTuningParameters tuning, double conversionFactor, double min, double max, double maxVelocity, LimitSwitchPolarity switchPolarity) {
+    //runs SparkMaxPIDController constructor
     super(name,mainMotor,controlType,tuning,conversionFactor,min,max,switchPolarity);
+    //creates the velocity limiter for use in periodic()
     m_limiter = new SetpointVelocityLimiter(maxVelocity);
   }
 
   @Override
   void setSetpointInternal(double newSetpoint) {
     newSetpoint = MathUtil.clamp(newSetpoint, m_setpointMin, m_setpointMax);
+    //sets the target setpoint to the limiter, the setpoint is sent to the motor controller in periodic()
     m_limiter.setTarget(newSetpoint);
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // periodically update the motor controller setpoint to the limited value
     m_mainController.setSetpoint(m_limiter.get());
   }
 
