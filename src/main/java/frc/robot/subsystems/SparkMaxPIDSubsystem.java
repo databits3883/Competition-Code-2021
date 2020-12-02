@@ -83,9 +83,9 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     //putting information in shuffleboard
     //create the layout for containing everything in the subsystem
     ShuffleboardLayout container = Shuffleboard.getTab(name).getLayout(name,BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0).withProperties(Map.of("Label position","TOP"));
-    ShuffleboardLayout tuningLayout = container.getLayout("tuning","Grid Layout");
+    ShuffleboardLayout tuningLayout = container.getLayout("tuning","Grid Layout").withSize(2, 2).withProperties(SparkMaxPIDController.tuningDisplayMap);
     //puts tuning on shuffleboard, as a side effect this automatically updates tuning when shuffleboard changes
-    m_mainController.addTuningToShuffleboard(tuningLayout).withSize(2, 2).withProperties(SparkMaxPIDController.tuningDisplayMap);
+    m_mainController.addTuningToShuffleboard(tuningLayout);
     //add a graph with the setpoint and the current value
     container.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
       .withWidget(BuiltInWidgets.kGraph);
