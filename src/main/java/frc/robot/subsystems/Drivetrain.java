@@ -68,9 +68,9 @@ public class Drivetrain extends SubsystemBase {
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);
 
-    ShuffleboardLayout container = Shuffleboard.getTab("Velocity Drive").getLayout("Velocity Drive",BuiltInLayouts.kList).withProperties(Map.of("Label position","TOP")).withSize(2, 5);
-    m_rightController.addTuningToShuffleboard(container.getLayout("right tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap).withSize(2, 2);
-    m_leftController.addTuningToShuffleboard(container.getLayout("left tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap).withSize(2, 2);
+    ShuffleboardLayout container = Shuffleboard.getTab("Velocity Drive").getLayout("Velocity Drive",BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0).withProperties(Map.of("Label position","TOP"));
+    m_rightController.addTuningToShuffleboard(container.getLayout("right tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap);
+    m_leftController.addTuningToShuffleboard(container.getLayout("left tuning", "Grid Layout")).withProperties(SparkMaxPIDController.tuningDisplayMap);
 
     container.addNumber("left pv", leftEncoder::getVelocity);
     container.addNumber("right pv", rightEncoder::getVelocity);
