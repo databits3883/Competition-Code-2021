@@ -72,10 +72,13 @@ public class Drivetrain extends SubsystemBase {
     m_rightController.addTuningToShuffleboard(container.getLayout("right tuning", "Grid Layout").withProperties(SparkMaxPIDController.tuningDisplayMap));
     m_leftController.addTuningToShuffleboard(container.getLayout("left tuning", "Grid Layout").withProperties(SparkMaxPIDController.tuningDisplayMap));
 
-    container.addNumber("left pv", leftEncoder::getVelocity);
-    container.addNumber("right pv", rightEncoder::getVelocity);
-
-    container.addNumber("left output", leftLeader::get);
+    ShuffleboardLayout processLayout = container.getLayout("process variables", BuiltInLayouts.kGrid).withProperties(Map.of("numberOfColumns",2,"numberOfRows",1,"labelPosition","LEFT"));
+    processLayout.addNumber("left", leftEncoder::getVelocity);
+    processLayout.addNumber("right", rightEncoder::getVelocity);
+    
+    ShuffleboardLayout outputLayout = container.getLayout("output",BuiltInLayouts.kGrid).withProperties(Map.of("numberOfColumns",2,"numberOfRows",1,"labelPosition","LEFT"));
+    outputLayout.addNumber("left", leftLeader::get);
+    outputLayout.addNumber("right", rightLeader::get);
 
     container.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_rightController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
     container.addDoubleArray("left setpoint vs pv", ()-> (new double[] {leftEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
