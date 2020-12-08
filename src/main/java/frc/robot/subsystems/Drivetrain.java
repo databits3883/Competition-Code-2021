@@ -7,23 +7,19 @@
 
 package frc.robot.subsystems;
 
-import java.util.Map;
-
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
+import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
 
 public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
@@ -68,20 +64,24 @@ public class Drivetrain extends SubsystemBase {
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);
 
-    ShuffleboardLayout container = Shuffleboard.getTab("Velocity Drive").getLayout("Velocity Drive",BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0).withProperties(Map.of("Label position","TOP"));
-    m_rightController.addTuningToShuffleboard(container.getLayout("right tuning", "Grid Layout").withProperties(SparkMaxPIDController.tuningDisplayMap));
-    m_leftController.addTuningToShuffleboard(container.getLayout("left tuning", "Grid Layout").withProperties(SparkMaxPIDController.tuningDisplayMap));
+    NetworkTable pidTable = NetworkTableInstance.getDefault().getTable("SparkMaxPID").getSubTable("VelocityDrive");
+    m_rightController.addTuningToNetworkTable(pidTable.getSubTable("rightTuning"));
+    m_leftController.addTuningToNetworkTable(pidTable.getSubTable("leftTuning"));
 
-    ShuffleboardLayout processLayout = container.getLayout("process variables", BuiltInLayouts.kGrid).withProperties(Map.of("numberOfColumns",2,"numberOfRows",1,"labelPosition","LEFT"));
-    processLayout.addNumber("left", leftEncoder::getVelocity);
-    processLayout.addNumber("right", rightEncoder::getVelocity);
-    
-    ShuffleboardLayout outputLayout = container.getLayout("output",BuiltInLayouts.kGrid).withProperties(Map.of("numberOfColumns",2,"numberOfRows",1,"labelPosition","LEFT"));
-    outputLayout.addNumber("left", leftLeader::get);
-    outputLayout.addNumber("right", rightLeader::get);
 
-    container.addDoubleArray("right setpoint vs pv", ()-> (new double[] {rightEncoder.getVelocity(), m_rightController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
-    container.addDoubleArray("left setpoint vs pv", ()-> (new double[] {leftEncoder.getVelocity(), m_leftController.getSetpoint()})).withWidget(BuiltInWidgets.kGraph);
+    NetworkTablesUpdaterRegistry registry = NetworkTablesUpdaterRegistry.getInstance();
+
+    NetworkTable processTable = pidTable.getSubTable("processVariables");
+    registry.addUpdate(processTable.getEntry("left"), leftEncoder::getVelocity);
+    registry.addUpdate(processTable.getEntry("right"), rightEncoder::getVelocity);
+
+    NetworkTable outputTable = pidTable.getSubTable("output");
+    registry.addUpdate(outputTable.getEntry("left"), leftLeader::get);
+    registry.addUpdate(outputTable.getEntry("right"), rightLeader::get);
+
+    NetworkTable setpointTable = pidTable.getSubTable("setpoints");
+    registry.addUpdate(setpointTable.getEntry("left"),m_leftController::getSetpoint);
+    registry.addUpdate(setpointTable.getEntry("right"), m_rightController::getSetpoint);
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){

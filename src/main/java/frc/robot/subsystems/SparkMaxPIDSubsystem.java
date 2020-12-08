@@ -10,24 +10,21 @@ package frc.robot.subsystems;
 import com.revrobotics.ControlType;
 import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 
-import java.util.Map;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
+import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
 
 /** Parent class for for subsystems based around a single Spark Max PID loop. */
 public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
@@ -80,21 +77,19 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     m_setpointMin = min;
     m_setpointMax = max;
 
-    //putting information in shuffleboard
-    //create the layout for containing everything in the subsystem
-    ShuffleboardLayout container = Shuffleboard.getTab(name).getLayout(name,BuiltInLayouts.kList).withSize(2, 5).withPosition(0, 0).withProperties(Map.of("Label position","TOP"));
-    ShuffleboardLayout tuningLayout = container.getLayout("tuning","Grid Layout").withSize(2, 2).withProperties(SparkMaxPIDController.tuningDisplayMap);
-    //puts tuning on shuffleboard, as a side effect this automatically updates tuning when shuffleboard changes
-    m_mainController.addTuningToShuffleboard(tuningLayout);
-    //add a graph with the setpoint and the current value
-    container.addDoubleArray("Process Variable vs Setpoint", ()->(new double[] {m_processVariable.getAsDouble(),m_mainController.getSetpoint()}))
-      .withWidget(BuiltInWidgets.kGraph);
-    //adds a slider for setting the setpoint on shuffleboard
-    m_setpointEntry = container.add("setpoint", m_mainController.getSetpoint())
-      .withWidget(BuiltInWidgets.kNumberSlider)
-      .withProperties(Map.of("Min",m_setpointMin,"Max",m_setpointMax))
-      .getEntry();
-    m_setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+    //putting information in networkTables
+    //create new table for this subsystem
+    NetworkTable systemTable = NetworkTableInstance.getDefault().getTable("SparkMaxPID").getSubTable(name);
+    //put tuning in the table, changes from external sources will automatically update the controller
+    m_mainController.addTuningToNetworkTable(systemTable.getSubTable("tuning"));
+    //add entry for setpoint, external changes will update the controller
+    NetworkTableEntry setpointEntry = systemTable.getEntry("setpoint");
+    setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+    //add the setpoint and process variable to the table, meant to be graphed together
+    NetworkTablesUpdaterRegistry registry = NetworkTablesUpdaterRegistry.getInstance();
+    registry.addUpdate(setpointEntry, m_mainController::getSetpoint);
+    registry.addUpdate(systemTable.getEntry("processVariable"), m_processVariable::getAsDouble);
+  
   }
   //sets the setpoint without publishing the value to shuffleboard
   void setSetpointInternal(double newSetpoint){

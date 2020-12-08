@@ -14,6 +14,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 
 import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 /**
@@ -63,12 +65,29 @@ public class SparkMaxPIDController{
      */
     public ShuffleboardLayout addTuningToShuffleboard(ShuffleboardLayout container){
         //for each value, create a number entry, then add a listener to update the controller when shuffleboard is changed
-        container.add("p",m_tuning.p).getEntry().addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
-        container.add("i",m_tuning.i).getEntry().addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
-        container.add("d",m_tuning.d).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
-        container.add("ff",m_tuning.ff).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("p",m_tuning.p).withPosition(0, 0).getEntry().addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("i",m_tuning.i).withPosition(1,0).getEntry().addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("d",m_tuning.d).withPosition(0, 1).getEntry().addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+        container.add("ff",m_tuning.ff).withPosition(1, 1).getEntry().addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
         //return the container to make adding properties more convenient 
         return container;
+    }
+    public void addTuningToNetworkTable(NetworkTable container){
+        NetworkTableEntry pEntry = container.getEntry("p");
+        pEntry.setDouble(m_tuning.p);
+        pEntry.addListener(notification->setP(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+
+        NetworkTableEntry iEntry = container.getEntry("i");
+        iEntry.setDouble(m_tuning.i);
+        iEntry.addListener(notification->setI(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+
+        NetworkTableEntry dEntry = container.getEntry("d");
+        dEntry.setDouble(m_tuning.d);
+        dEntry.addListener(notification->setD(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+
+        NetworkTableEntry ffEntry = container.getEntry("ff");
+        ffEntry.setDouble(m_tuning.ff);
+        ffEntry.addListener(notification->setFF(notification.value.getDouble()), EntryListenerFlags.kUpdate);
     }
     /** Resets the PID controller, clearing the Integral accumulator */
     public void reset(){
