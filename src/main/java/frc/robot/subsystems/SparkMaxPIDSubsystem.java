@@ -83,11 +83,11 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     //put tuning in the table, changes from external sources will automatically update the controller
     m_mainController.addTuningToNetworkTable(systemTable.getSubTable("tuning"));
     //add entry for setpoint, external changes will update the controller
-    NetworkTableEntry setpointEntry = systemTable.getEntry("setpoint");
-    setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+    m_setpointEntry = systemTable.getEntry("setpoint");
+    m_setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
     //add the setpoint and process variable to the table, meant to be graphed together
     NetworkTablesUpdaterRegistry registry = NetworkTablesUpdaterRegistry.getInstance();
-    registry.addUpdate(setpointEntry, m_mainController::getSetpoint);
+    registry.addUpdate(m_setpointEntry, m_mainController::getSetpoint);
     registry.addUpdate(systemTable.getEntry("processVariable"), m_processVariable::getAsDouble);
   
   }
