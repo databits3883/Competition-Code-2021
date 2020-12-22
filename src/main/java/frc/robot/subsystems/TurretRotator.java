@@ -28,7 +28,7 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
    * Creates a new TurretRotator.
    */
   public TurretRotator() {
-    super("TurretRotator",
+    super("Turret Rotator",
      new CANSparkMax(Constants.turretRotationChannel, MotorType.kBrushless), 
      ControlType.kPosition,
       new PIDTuningParameters(0.04, 0, 0),

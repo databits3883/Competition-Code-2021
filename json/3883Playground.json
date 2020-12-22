@@ -332,31 +332,29 @@
         "hgap": 16.0,
         "vgap": 16.0,
         "tiles": {
-          "2,0": {
+          "0,0": {
             "size": [
               2,
               5
             ],
             "content": {
               "_type": "Subsystem Layout",
-              "_title": "Subsystem Layout",
+              "_title": "Turret Hood",
               "Layout/Label position": "TOP",
               "_children": [
                 {
                   "_type": "Graph",
                   "_source0": "network_table:///SparkMaxPID/Turret Hood/processVariable",
-                  "_source1": "network_table:///SparkMaxPID/Turret Hood/setpoint",
+                  "_source1": "network_table:///SparkMaxPID/Turret Hood/setpointActual",
                   "_title": "Hood setpoint vs process",
                   "Graph/Visible time": 30.0,
-                  "Y-axis/Automatic bounds": true,
-                  "Y-axis/Upper bound": 1.0,
-                  "Y-axis/Lower bound": -1.0,
-                  "Visible data/SparkMaxPID/Turret Hood/processVariable": true,
-                  "Visible data/SparkMaxPID/Turret Hood/setpoint": true
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 43.8,
+                  "Y-axis/Lower bound": 17.6
                 },
                 {
                   "_type": "Number Slider",
-                  "_source0": "network_table:///SparkMaxPID/Turret Hood/setpoint",
+                  "_source0": "network_table:///SparkMaxPID/Turret Hood/setpointTarget",
                   "_title": "Hood setpoint",
                   "Slider Settings/Min": 17.6,
                   "Slider Settings/Max": 43.8,
@@ -393,15 +391,244 @@
                 }
               ]
             }
+          },
+          "2,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Turret Rotator",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/processVariable",
+                  "_source1": "network_table:///SparkMaxPID/Turret Rotator/setpointActual",
+                  "_title": "Rotator setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 278.0,
+                  "Y-axis/Lower bound": 0.0
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/setpointTarget",
+                  "_title": "Rotator setpoint",
+                  "Slider Settings/Min": 0.0,
+                  "Slider Settings/Max": 278.0,
+                  "Slider Settings/Block increment": 0.2
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Rotator tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Turret Launcher",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/processVariable",
+                  "_source1": "network_table:///SparkMaxPID/Turret Launcher/setpointActual",
+                  "_title": "Launcher setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 0.0,
+                  "Y-axis/Lower bound": -200.0
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/setpointTarget",
+                  "_title": "Launcher setpoint",
+                  "Slider Settings/Min": -200.0,
+                  "Slider Settings/Max": 0.0,
+                  "Slider Settings/Block increment": 0.2
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Launcher tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "6,0": {
+            "size": [
+              5,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Drivetrain",
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "TOP",
+              "_children": {
+                "0,0": {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/left",
+                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_title": "Left setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 20.0,
+                  "Y-axis/Lower bound": -20.0
+                },
+                "1,0":{
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/right",
+                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
+                  "_title": "Right setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 20.0,
+                  "Y-axis/Lower bound": -20.0
+                },
+                "0,1": {
+                  "_type": "Number Slider",
+                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_title": "Left Setpoint",
+                  "Slider Settings/Min": -20,
+                  "Slider Settings/Max": 20,
+                  "Slider Settings/Block increment": 0.0625
+                },
+                "1,1": {
+                  "_type": "Number Slider",
+                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
+                  "_title": "Right Setpoint",
+                  "Slider Settings/Min": -20,
+                  "Slider Settings/Max": 20,
+                  "Slider Settings/Block increment": 0.0625
+                },
+                "0,2": {
+                  "_type": "Grid Layout",
+                  "_title": "Left Tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                },
+                "1,2": {
+                  "_type": "Grid Layout",
+                  "_title": "Right Tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
     }
   ],
   "windowGeometry": {
-    "x": 342.0,
-    "y": 0.0,
-    "width": 1552.0,
-    "height": 1030.0
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
   }
 }

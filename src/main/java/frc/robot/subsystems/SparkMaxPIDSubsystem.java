@@ -37,7 +37,7 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
   double m_setpointMin;
   double m_setpointMax;
 
-  NetworkTableEntry m_setpointEntry;
+  NetworkTableEntry m_setpointActualEntry, m_setpointTargetEntry;
   DoubleSupplier m_processVariable;
 
   double m_tolerance;
@@ -83,11 +83,12 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
     //put tuning in the table, changes from external sources will automatically update the controller
     m_mainController.addTuningToNetworkTable(systemTable.getSubTable("tuning"));
     //add entry for setpoint, external changes will update the controller
-    m_setpointEntry = systemTable.getEntry("setpoint");
-    m_setpointEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
+    m_setpointTargetEntry = systemTable.getEntry("setpointTarget");
+    m_setpointActualEntry = systemTable.getEntry("setpointActual");
+    m_setpointTargetEntry.addListener(notification ->setSetpointInternal(notification.value.getDouble()), EntryListenerFlags.kUpdate);
     //add the setpoint and process variable to the table, meant to be graphed together
     NetworkTablesUpdaterRegistry registry = NetworkTablesUpdaterRegistry.getInstance();
-    registry.addUpdate(m_setpointEntry, m_mainController::getSetpoint);
+    registry.addUpdate(m_setpointActualEntry, m_mainController::getSetpoint);
     registry.addUpdate(systemTable.getEntry("processVariable"), m_processVariable::getAsDouble);
   
   }
@@ -101,7 +102,7 @@ public abstract class SparkMaxPIDSubsystem extends SubsystemBase {
    */
   public void setSetpoint(double newSetpoint){
     setSetpointInternal(newSetpoint);
-    m_setpointEntry.setDouble(newSetpoint);
+    m_setpointTargetEntry.setDouble(newSetpoint);
   }
   /**
    * sets the setpoint to the current measured process variable
