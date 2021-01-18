@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
@@ -163,8 +164,17 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void TankDrive(double leftValue, double rightValue){
+    double tippingOffset = getTippingOffset();
+    leftValue=MathUtil.clamp(leftValue+tippingOffset, -1, 1);
+    rightValue=MathUtil.clamp(rightValue+tippingOffset, -1, 1);
+
     m_rightController.setSetpoint(rightValue*Constants.maxDriveSpeed);
     m_leftController.setSetpoint(leftValue*Constants.maxDriveSpeed);
+  }
+
+   double getTippingOffset(){
+    double tip = Variables.getInstance().getGyroPitch(); //positive pitch is nose-up: negative offset to fix
+    return 0.0;
   }
 
   public void EmergencyStop(){

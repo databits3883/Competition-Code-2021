@@ -43,12 +43,16 @@ public class Variables {
         Shuffleboard.getTab("Variables").addNumber("Power cells", instance::getContainedPowerCells);
         Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
         Shuffleboard.getTab("Variables").addBoolean("shooter at speed", instance::getShooterAtSpeed);
+        Shuffleboard.getTab("Variables").addNumber("pitch", instance::getGyroPitch);
     }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );
     public double getGyroAngle(){
         return (navx.getAngle());
         
+    }
+    public double getGyroPitch(){
+        return navx.getPitch();
     }
 
     public final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
