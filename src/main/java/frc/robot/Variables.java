@@ -8,9 +8,16 @@
 package frc.robot;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.revrobotics.CANEncoder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import frc.robot.subsystems.TurretCameraAim;
 
 
 /**
@@ -18,6 +25,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
  */
 public class Variables {
     private static Variables instance;
+    
  
     public static Variables getInstance(){
         if(instance == null){
@@ -40,7 +48,27 @@ public class Variables {
     AHRS navx = new AHRS(I2C.Port.kMXP );
     public double getGyroAngle(){
         return (navx.getAngle());
+        
     }
+
+    public final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
+    public final CANSparkMax rightFollower = new CANSparkMax(Constants.rightFollowerChannel, MotorType.kBrushless);
+    public final CANSparkMax leftLeader = new CANSparkMax(Constants.leftLeaderChannel, MotorType.kBrushless);
+    public final CANSparkMax leftFollower= new CANSparkMax(Constants.leftFollowerChannel, MotorType.kBrushless);
+    
+
+    private final CANEncoder leftEncoder = new CANEncoder(leftLeader);
+    private final CANEncoder rightEncoder = new CANEncoder(rightLeader);
+    public double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
+    public double positionalConversionOdom = 1.0/3.28;  // One meter is 3.28 Feet This will convert feet to meters when multiplied. 
+
+    public double GetLeftDistanceMeters(){
+       return leftEncoder.getPosition()*positionalConversion;
+    }
+
+    public double GetRightDistanceMeters(){
+        return rightEncoder.getPosition()*positionalConversion;
+     }
 
     boolean m_isShooterEnabled;
     public boolean getShooterEnabled(){
@@ -69,8 +97,28 @@ public class Variables {
         return containedPowerCells;
     }
 
+    
+    public double DistanceFromPowerPortMeters(double angle){
+        
+        double d;
+        double robotAndReflectorHeightDifference = Constants.powerPortTopReflectorAltitude - Constants.cameraHeight;
+        
+        d = robotAndReflectorHeightDifference/Math.cos(angle);
+        return d;
+
+    }
+
+    
+
+
+
+    
+
     PowerDistributionPanel m_powerDistributionPanel= new PowerDistributionPanel();;
     public double getPDPCurrent(int channel){
         return m_powerDistributionPanel.getCurrent(channel);
     }
+    
+
+
 }
