@@ -1,0 +1,634 @@
+{
+  "tabPane": [
+    {
+      "title": "SmartDashboard",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "SmartDashboard/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_PipelineName",
+              "_title": "limelight_PipelineName"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_Interface",
+              "_title": "limelight_Interface"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/limelight_Stream",
+              "_title": "limelight_Stream"
+            }
+          },
+          "3,0": {
+            "size": [
+              7,
+              5
+            ],
+            "content": {
+              "_type": "Camera Stream",
+              "_source0": "camera_server://limelight",
+              "_title": "limelight",
+              "Crosshair/Show crosshair": true,
+              "Crosshair/Crosshair color": "#FFFFFFFF",
+              "Controls/Show controls": true,
+              "Controls/Rotation": "NONE",
+              "compression": -1.0,
+              "fps": -1,
+              "imageWidth": -1,
+              "imageHeight": -1
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "LiveWindow",
+      "autoPopulate": true,
+      "autoPopulatePrefix": "LiveWindow/",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Ungrouped",
+              "_title": "Ungrouped",
+              "Layout/Label position": "BOTTOM",
+              "_children": [
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[1]",
+                  "_title": "PIDController[1]"
+                },
+                {
+                  "_type": "Differential Drivebase",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DifferentialDrive[1]",
+                  "_title": "DifferentialDrive[1]",
+                  "Wheels/Number of wheels": 4,
+                  "Wheels/Wheel diameter": 80.0,
+                  "Visuals/Show velocity vectors": true
+                },
+                {
+                  "_type": "Encoder",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Encoder[0]",
+                  "_title": "Encoder[0]"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[19]/Value",
+                  "_title": "LiveWindow/Ungrouped/DigitalInput[19]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/VictorSP[1]",
+                  "_title": "LiveWindow/Ungrouped/VictorSP[1]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/VictorSP[2]",
+                  "_title": "LiveWindow/Ungrouped/VictorSP[2]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[17]/Value",
+                  "_title": "LiveWindow/Ungrouped/DigitalInput[17]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/VictorSP[0]",
+                  "_title": "LiveWindow/Ungrouped/VictorSP[0]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[18]/Value",
+                  "_title": "LiveWindow/Ungrouped/DigitalInput[18]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[5]/Value",
+                  "_title": "DigitalInput[5]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Servo[5]/Value",
+                  "_title": "Servo[5]/Value"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[9]/Value",
+                  "_title": "DigitalInput[9]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[8]/Value",
+                  "_title": "DigitalInput[8]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[3]/Value",
+                  "_title": "DigitalInput[3]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "Boolean Box",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/DigitalInput[4]/Value",
+                  "_title": "DigitalInput[4]/Value",
+                  "Colors/Color when true": "#7CFC00FF",
+                  "Colors/Color when false": "#8B0000FF"
+                },
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PIDController[2]",
+                  "_title": "PIDController[2]"
+                },
+                {
+                  "_type": "Gyro",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/navX-Sensor",
+                  "_title": "navX-Sensor",
+                  "Visuals/Major tick spacing": 45.0,
+                  "Visuals/Starting angle": 180.0,
+                  "Visuals/Show tick mark ring": true,
+                  "Visuals/Counter clockwise": false
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Servo[9]/Value",
+                  "_title": "Servo[9]/Value"
+                },
+                {
+                  "_type": "Relay Widget",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Relay[0]",
+                  "_title": "Relay[0]"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Servo[8]/Value",
+                  "_title": "Servo[8]/Value"
+                },
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/turn pid",
+                  "_title": "turn pid"
+                },
+                {
+                  "_type": "PDP",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/PowerDistributionPanel[0]",
+                  "_title": "PowerDistributionPanel[0]",
+                  "Visuals/Show voltage and current values": true
+                },
+                {
+                  "_type": "PID Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/speed pid",
+                  "_title": "speed pid"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/VictorSP[4]",
+                  "_title": "VictorSP[4]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Victor[2]",
+                  "_title": "Victor[2]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Speed Controller",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Victor[1]",
+                  "_title": "Victor[1]",
+                  "Visuals/Orientation": "HORIZONTAL"
+                },
+                {
+                  "_type": "Text View",
+                  "_source0": "network_table:///LiveWindow/Ungrouped/Servo[7]/Value",
+                  "_title": "Servo[7]/Value"
+                }
+              ]
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/DriveTrain",
+              "_title": "DriveTrain",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/ExampleSubsystem",
+              "_title": "ExampleSubsystem",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "6,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Intake",
+              "_title": "Intake",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "8,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/Drivetrain",
+              "_title": "Drivetrain",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          },
+          "10,0": {
+            "size": [
+              2,
+              4
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_source0": "network_table:///LiveWindow/BottomStagingBelt",
+              "_title": "BottomStagingBelt",
+              "Layout/Label position": "BOTTOM",
+              "_children": []
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Tab 13",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Turret Hood",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/Turret Hood/processVariable",
+                  "_source1": "network_table:///SparkMaxPID/Turret Hood/setpointActual",
+                  "_title": "Hood setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 43.8,
+                  "Y-axis/Lower bound": 17.6
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SparkMaxPID/Turret Hood/setpointTarget",
+                  "_title": "Hood setpoint",
+                  "Slider Settings/Min": 17.6,
+                  "Slider Settings/Max": 43.8,
+                  "Slider Settings/Block increment": 0.2
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Hood tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Hood/tuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Hood/tuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Hood/tuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Hood/tuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "2,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Turret Rotator",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/processVariable",
+                  "_source1": "network_table:///SparkMaxPID/Turret Rotator/setpointActual",
+                  "_title": "Rotator setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 278.0,
+                  "Y-axis/Lower bound": 0.0
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/setpointTarget",
+                  "_title": "Rotator setpoint",
+                  "Slider Settings/Min": 0.0,
+                  "Slider Settings/Max": 278.0,
+                  "Slider Settings/Block increment": 0.2
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Rotator tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Rotator/tuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "4,0": {
+            "size": [
+              2,
+              5
+            ],
+            "content": {
+              "_type": "Subsystem Layout",
+              "_title": "Turret Launcher",
+              "Layout/Label position": "TOP",
+              "_children": [
+                {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/processVariable",
+                  "_source1": "network_table:///SparkMaxPID/Turret Launcher/setpointActual",
+                  "_title": "Launcher setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 0.0,
+                  "Y-axis/Lower bound": -200.0
+                },
+                {
+                  "_type": "Number Slider",
+                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/setpointTarget",
+                  "_title": "Launcher setpoint",
+                  "Slider Settings/Min": -200.0,
+                  "Slider Settings/Max": 0.0,
+                  "Slider Settings/Block increment": 0.2
+                },
+                {
+                  "_type": "Grid Layout",
+                  "_title": "Launcher tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/Turret Launcher/tuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "6,0": {
+            "size": [
+              5,
+              5
+            ],
+            "content": {
+              "_type": "Grid Layout",
+              "_title": "Drivetrain",
+              "Layout/Number of columns": 2,
+              "Layout/Number of rows": 3,
+              "Layout/Label position": "TOP",
+              "_children": {
+                "0,0": {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/left",
+                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_title": "Left setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 20.0,
+                  "Y-axis/Lower bound": -20.0
+                },
+                "1,0":{
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/right",
+                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
+                  "_title": "Right setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 20.0,
+                  "Y-axis/Lower bound": -20.0
+                },
+                "0,1": {
+                  "_type": "Number Slider",
+                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_title": "Left Setpoint",
+                  "Slider Settings/Min": -20,
+                  "Slider Settings/Max": 20,
+                  "Slider Settings/Block increment": 0.0625
+                },
+                "1,1": {
+                  "_type": "Number Slider",
+                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
+                  "_title": "Right Setpoint",
+                  "Slider Settings/Min": -20,
+                  "Slider Settings/Max": 20,
+                  "Slider Settings/Block increment": 0.0625
+                },
+                "0,2": {
+                  "_type": "Grid Layout",
+                  "_title": "Left Tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/leftTuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                },
+                "1,2": {
+                  "_type": "Grid Layout",
+                  "_title": "Right Tuning",
+                  "Layout/Number of columns": 2,
+                  "Layout/Number of rows": 2,
+                  "Layout/Label position": "LEFT",
+                  "_children": {
+                    "0,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/d",
+                      "_title": "D"
+                    },
+                    "0,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/p",
+                      "_title": "P"
+                    },
+                    "1,0": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/i",
+                      "_title": "I"
+                    },
+                    "1,1": {
+                      "_type": "Text View",
+                      "_source0": "network_table:///SparkMaxPID/VelocityDrive/rightTuning/ff",
+                      "_title": "FF"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "windowGeometry": {
+    "x": -8.0,
+    "y": -8.0,
+    "width": 1936.0,
+    "height": 1056.0
+  }
+}
