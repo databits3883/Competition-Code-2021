@@ -163,6 +163,7 @@ public class Drivetrain extends SubsystemBase {
     //if (slow_print < 0) slow_print = 0;
   }
 
+
   public void TankDrive(double leftValue, double rightValue){
     double tippingOffset = getTippingOffset();
     leftValue=MathUtil.clamp(leftValue+tippingOffset, -1, 1);
@@ -174,7 +175,13 @@ public class Drivetrain extends SubsystemBase {
 
    double getTippingOffset(){
     double tip = Variables.getInstance().getGyroPitch(); //positive pitch is nose-up: negative offset to fix
-    return 0.0;
+    double tipMagnitude = Math.abs(tip);
+    if(tipMagnitude<=5){
+      return 0;
+    } 
+    else{
+      return -1*Math.copySign(0.1*10*Math.pow((tipMagnitude-5)/10.0, 2), tip);
+    }
   }
 
   public void EmergencyStop(){

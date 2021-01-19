@@ -91,7 +91,8 @@ public class RobotContainer {
   private final double joystickDeadband=(Math.pow(.07,3));
   private final Command manualArcadeDrive = new RunCommand(()->{
     double x = Math.pow(driverJoystick.getX(),3);
-    double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    double y = -Math.pow(driverJoystick.getY(),3);
     if( Math.abs(x)<joystickDeadband){
       x=0;
       }

@@ -44,6 +44,8 @@ public class Variables {
         Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
         Shuffleboard.getTab("Variables").addBoolean("shooter at speed", instance::getShooterAtSpeed);
         Shuffleboard.getTab("Variables").addNumber("pitch", instance::getGyroPitch);
+
+        Shuffleboard.getTab("Variables").addBoolean("isAntiTipping", ()->{return instance.getGyroPitch() >= 5;});
     }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );
