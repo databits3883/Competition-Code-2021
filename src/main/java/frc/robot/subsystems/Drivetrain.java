@@ -62,6 +62,12 @@ public class Drivetrain extends SubsystemBase {
 
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
+  NetworkTableEntry telemetryEntry = NetworkTableInstance.getDefault().getTable("telemetry").getEntry("telemetry array");
+  public double[] telemetry = new double[7];
+
+
+
+  
   
   /**
    * Creates a new Drivetrain.
@@ -115,6 +121,10 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
+    
+    //telemetry[1] = Variables.getInstance().G
+    telemetry[4] = xSpeed;
+
 
     //frontLeft.setInverted(true);
     double leftMotorOutput;
@@ -142,6 +152,7 @@ public class Drivetrain extends SubsystemBase {
         rightMotorOutput = xSpeed - zRotation;
       }
     } 
+
     TankDrive(leftMotorOutput, rightMotorOutput);
     // v = GetSpeedInMetersPerCentisecond(lastPosition);
     // lastPosition = GetEncodersTotal();
@@ -162,6 +173,7 @@ public class Drivetrain extends SubsystemBase {
     //++slow_print;
     //if (slow_print < 0) slow_print = 0;
   }
+  
 
 
   public void TankDrive(double leftValue, double rightValue){
@@ -207,6 +219,11 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
+    telemetryEntry.setDefaultDoubleArray(telemetry);
+    
+    telemetry[0] = GetSpeedInMetersPerCentisecond(lastPosition);
+    telemetry[1] = 7;
+    
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();
@@ -223,4 +240,6 @@ public class Drivetrain extends SubsystemBase {
   public void resetRightEncoder(){
     rightEncoder.setPosition(0);
   }
+  
+
 }
