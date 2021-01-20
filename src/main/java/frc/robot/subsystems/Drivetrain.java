@@ -48,6 +48,7 @@ public class Drivetrain extends SubsystemBase {
 
   private double v;
   private double lastPosition;
+  private double lastPitch = 0;
   private double currentAngle;
   private Pose2d robotPosition;
   private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
@@ -154,7 +155,7 @@ public class Drivetrain extends SubsystemBase {
     } 
 
     TankDrive(leftMotorOutput, rightMotorOutput);
-    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // v = GetSpeedInMetersPerSecond(lastPosition);
     // lastPosition = GetEncodersTotal();
 
     // currentAngle = Variables.getInstance().getGyroAngle();
@@ -201,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void PrintLocation(){
-    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // v = GetSpeedInMetersPerSecond(lastPosition);
     // lastPosition = GetEncodersTotal();
 
     // currentAngle = Variables.getInstance().getGyroAngle();
@@ -217,13 +218,28 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
-    telemetryEntry.setDefaultDoubleArray(telemetry);
+    //telemetryEntry.setDefaultDoubleArray(telemetry);
     
-    telemetry[0] = GetSpeedInMetersPerCentisecond(lastPosition);
-    telemetry[1] = 7;
+    telemetryEntry.setDoubleArray(telemetry);
     
+    telemetry[0] = GetSpeedInMetersPerSecond(lastPosition);
+    telemetry[1] = Variables.getInstance().GetYAccel();
+    telemetry[2] = Variables.getInstance().getGyroPitch();
+    telemetry[3] = GetPitchRate(Variables.getInstance().getGyroPitch(), lastPitch);
+    lastPitch = Variables.getInstance().getGyroPitch();
+    lastPosition = GetEncodersTotal();
+    
+    
+  }
+  public double GetPitchRate(double pitch, double lastPitch){
+      return (pitch - lastPitch) * 500;
+
+  }
+  public double Test(){
+    return 3;
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();
@@ -234,8 +250,8 @@ public class Drivetrain extends SubsystemBase {
   public double GetEncodersTotal(){
     return ((getRightEncoder()+GetLeftEncoder())/2);
   }
-  public double GetSpeedInMetersPerCentisecond(double lastPosition){
-    return GetEncodersTotal() - lastPosition;
+  public double GetSpeedInMetersPerSecond(double lastPosition){
+    return (GetEncodersTotal() - lastPosition)*500;
   }
   public void resetRightEncoder(){
     rightEncoder.setPosition(0);
