@@ -122,8 +122,7 @@ public class Odometry extends SubsystemBase {
   
     
     
-    robotPosition =  robotOdometry.getPoseMeters();
-    robotTranslation = robotPosition.getTranslation();
+    
     
     
 

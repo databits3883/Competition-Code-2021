@@ -48,8 +48,12 @@ public class Drivetrain extends SubsystemBase {
   private double v;
   private double lastPosition;
   private double currentAngle;
+  private double[] robotCoordinates = new double[2];
 
-  
+  double resetableEncoderLeft;
+  double resetableEncoderRight;
+  double lastDistanceLeft;
+  double lastDistanceRight;
 
   private Pose2d robotPosition;
   private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
@@ -65,6 +69,7 @@ public class Drivetrain extends SubsystemBase {
 
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
+  NetworkTableInstance robotCoordinatesInstance;
   
   /**
    * Creates a new Drivetrain.
@@ -158,6 +163,12 @@ public class Drivetrain extends SubsystemBase {
   public void EmergencyStop(){
     TankDrive(0, 0);
   }
+  public void DistanceReset(){
+    resetableEncoderLeft = 0;
+    resetableEncoderRight = 0;
+  }
+
+  
 
   
 
@@ -165,21 +176,27 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
-    if(m_odometry.tv.isValid() && !m_odometry.wasValid){
+    /*if(m_odometry.tv.getBoolean(false) && !m_odometry.wasValid){
       m_odometry.updateFromReflectors();
       m_odometry.wasValid = true;
     }
-    robotOdometry.update(robotRotation, m_odometry.resetableEncoderLeft, m_odometry.resetableEncoderRight);
+    */
+    robotPosition =  robotOdometry.getPoseMeters();
+    robotTranslation = robotPosition.getTranslation();
+    robotOdometry.update(robotRotation, resetableEncoderLeft, resetableEncoderRight);
     currentAngle = Variables.getInstance().getGyroAngle();
     robotRotation = Rotation2d.fromDegrees(currentAngle);
 
     System.out.println("x Translation" + robotTranslation.getX());
     System.out.println("y Translation" + robotTranslation.getY());
 
-    m_odometry.lastDistanceLeft = m_drivetrain.GetLeftEncoder();
-    m_odometry.lastDistanceRight = m_drivetrain.getRightEncoder();
+    lastDistanceLeft = m_drivetrain.GetLeftEncoder();
+    lastDistanceRight = m_drivetrain.getRightEncoder();
+    robotCoordinates[0] = robotTranslation.getX();
+    robotCoordinates[1] = robotTranslation.getY();
 
     lastPosition = GetEncodersTotal();
+    robotCoordinatesInstance.getEntry("Robot Coordinates").getDoubleArray(robotCoordinates);
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();
