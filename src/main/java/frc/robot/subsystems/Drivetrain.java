@@ -33,6 +33,7 @@ import frc.robot.Constants;
 import frc.robot.Variables;
 import frc.robot.util.SetpointAccelerationLimiter;
 
+
 public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
   private final CANSparkMax rightFollower = new CANSparkMax(Constants.rightFollowerChannel, MotorType.kBrushless);
@@ -69,7 +70,8 @@ public class Drivetrain extends SubsystemBase {
 
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
-  NetworkTableInstance robotCoordinatesInstance;
+  NetworkTableEntry robotCoordinatesEntry = NetworkTableInstance.getDefault().getTable("Robot Coordinates").getEntry("Coordinates Array");
+  public double[] coordinates = new double[2];
   
   /**
    * Creates a new Drivetrain.
@@ -181,22 +183,28 @@ public class Drivetrain extends SubsystemBase {
       m_odometry.wasValid = true;
     }
     */
-    robotPosition =  robotOdometry.getPoseMeters();
-    robotTranslation = robotPosition.getTranslation();
-    robotOdometry.update(robotRotation, resetableEncoderLeft, resetableEncoderRight);
-    currentAngle = Variables.getInstance().getGyroAngle();
     robotRotation = Rotation2d.fromDegrees(currentAngle);
+    
 
-    System.out.println("x Translation" + robotTranslation.getX());
-    System.out.println("y Translation" + robotTranslation.getY());
+    //robotPosition =  robotOdometry.getPoseMeters();
+    //robotTranslation = robotPosition.getTranslation();
+    robotPosition = robotOdometry.update(robotRotation, resetableEncoderLeft, resetableEncoderRight);
+    currentAngle = Variables.getInstance().getGyroAngle();
+    
+    //System.out.println("x Translation" + robotTranslation.getX());
+    //System.out.println("y Translation" + robotTranslation.getY());
+    resetableEncoderLeft = resetableEncoderLeft + lastDistanceLeft;
+    resetableEncoderRight = resetableEncoderRight + lastDistanceRight;
 
-    lastDistanceLeft = m_drivetrain.GetLeftEncoder();
-    lastDistanceRight = m_drivetrain.getRightEncoder();
-    robotCoordinates[0] = robotTranslation.getX();
-    robotCoordinates[1] = robotTranslation.getY();
+    lastDistanceLeft = GetLeftEncoder();
+    lastDistanceRight = getRightEncoder();
+    robotCoordinates[0] = robotPosition.getTranslation().getX();
+    robotCoordinates[1] = robotPosition.getTranslation().getY();
+    robotCoordinatesEntry.setDoubleArray(robotCoordinates);
+    
 
     lastPosition = GetEncodersTotal();
-    robotCoordinatesInstance.getEntry("Robot Coordinates").getDoubleArray(robotCoordinates);
+    //robotCoordinatesInstance.
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();

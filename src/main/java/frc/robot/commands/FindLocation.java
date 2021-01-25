@@ -35,6 +35,7 @@ public class FindLocation extends CommandBase {
   double resetableEncoderRight;
   double lastDistanceLeft;
   double lastDistanceRight;
+  
   Pose2d robotPosition;
   double deltaDistanceLeft;
   double deltaDistanceRight;
