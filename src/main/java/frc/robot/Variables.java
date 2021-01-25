@@ -50,6 +50,9 @@ public class Variables {
         return (navx.getAngle());
         
     }
+    public void resetNavx(){
+        navx.reset();
+    }
 
     public final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
     public final CANSparkMax rightFollower = new CANSparkMax(Constants.rightFollowerChannel, MotorType.kBrushless);

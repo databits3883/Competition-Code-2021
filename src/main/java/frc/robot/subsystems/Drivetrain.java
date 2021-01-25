@@ -55,8 +55,12 @@ public class Drivetrain extends SubsystemBase {
   double resetableEncoderRight;
   double lastDistanceLeft;
   double lastDistanceRight;
+  double deltaLeft;
+  double deltaRight;
 
   private Pose2d robotPosition;
+  private Pose2d zeroedPose= new Pose2d();
+  private Rotation2d zeroedRot = new Rotation2d(0);
   private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
   private Rotation2d robotRotation;
   private Translation2d robotTranslation;
@@ -71,7 +75,14 @@ public class Drivetrain extends SubsystemBase {
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
   NetworkTableEntry robotCoordinatesEntry = NetworkTableInstance.getDefault().getTable("Robot Coordinates").getEntry("Coordinates Array");
-  public double[] coordinates = new double[2];
+  NetworkTableEntry leftAndRightEncodersResetable = NetworkTableInstance.getDefault().getTable("Resetable Encoders").getEntry("Left and Right");
+  public double[] resetableEncoderVals = new double[2];
+  public void ResetOdometry(){
+    robotOdometry.resetPosition(zeroedPose, zeroedRot);
+    Variables.getInstance().resetNavx();
+    resetableEncoderRight = 0;
+    resetableEncoderLeft = 0;
+  }
   
   /**
    * Creates a new Drivetrain.
@@ -155,6 +166,7 @@ public class Drivetrain extends SubsystemBase {
     } 
     TankDrive(leftMotorOutput, rightMotorOutput);
     
+    
   }
 
   public void TankDrive(double leftValue, double rightValue){
@@ -178,11 +190,11 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
-    /*if(m_odometry.tv.getBoolean(false) && !m_odometry.wasValid){
-      m_odometry.updateFromReflectors();
-      m_odometry.wasValid = true;
-    }
-    */
+    //if(m_odometry.tv.getBoolean(false) && !m_odometry.wasValid){
+    //  m_odometry.updateFromReflectors();
+     // m_odometry.wasValid = true;
+    //}
+    
     robotRotation = Rotation2d.fromDegrees(currentAngle);
     
 
@@ -193,14 +205,22 @@ public class Drivetrain extends SubsystemBase {
     
     //System.out.println("x Translation" + robotTranslation.getX());
     //System.out.println("y Translation" + robotTranslation.getY());
-    resetableEncoderLeft = resetableEncoderLeft + lastDistanceLeft;
-    resetableEncoderRight = resetableEncoderRight + lastDistanceRight;
+    resetableEncoderLeft = resetableEncoderLeft + deltaLeft;
+    resetableEncoderRight = resetableEncoderRight + deltaRight;
+
+    deltaLeft = GetLeftEncoder() - lastDistanceLeft;
+    deltaRight = getRightEncoder() - lastDistanceRight;
 
     lastDistanceLeft = GetLeftEncoder();
     lastDistanceRight = getRightEncoder();
     robotCoordinates[0] = robotPosition.getTranslation().getX();
     robotCoordinates[1] = robotPosition.getTranslation().getY();
     robotCoordinatesEntry.setDoubleArray(robotCoordinates);
+    leftAndRightEncodersResetable.setDoubleArray(resetableEncoderVals);
+    //System.out.println("Resetable Left"+ resetableEncoderLeft);
+    //System.out.println("Resetable Right"+resetableEncoderRight);
+    resetableEncoderVals[0] = resetableEncoderLeft;
+    resetableEncoderVals[1] = resetableEncoderRight;
     
 
     lastPosition = GetEncodersTotal();

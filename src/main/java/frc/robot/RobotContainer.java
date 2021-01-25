@@ -66,6 +66,8 @@ public class RobotContainer {
   private final JoystickButton driverbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton driverbutton7 = new JoystickButton(driverJoystick, 7);
 
+  
+
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
   private final JoystickButton driverButton10 = new JoystickButton(driverJoystick, 10);
@@ -79,6 +81,7 @@ public class RobotContainer {
   private final SupplierButton aButton = new SupplierButton( ()->gunnerController.getAButton()); 
   private final SupplierButton backButton = new SupplierButton( ()->gunnerController.getBackButton());
   private final SupplierButton startButton = new SupplierButton( ()->gunnerController.getStartButton());
+  
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
@@ -111,6 +114,8 @@ public class RobotContainer {
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
+  private final Command gyroReset = new InstantCommand(()->Variables.getInstance().resetNavx());
+  private final Command odometryReset = new InstantCommand(()->m_drivetrain.ResetOdometry());
 
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
@@ -227,6 +232,8 @@ public class RobotContainer {
     xButton.toggleWhenPressed(m_stagingToTop);
 
     startButton.toggleWhenActive(m_acquireTarget);
+    //backButton.whenPressed(gyroReset);
+    backButton.whenPressed(odometryReset);
 
     driverButton9.whileHeld(m_turnto90);
 
