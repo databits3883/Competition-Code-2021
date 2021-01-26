@@ -58,8 +58,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }
@@ -629,6 +629,33 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Config",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///config/Drive Dampening",
+              "_title": "config/Drive Dampening",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 20.0,
+              "Slider Settings/Block increment": 1.0
             }
           }
         }
