@@ -20,6 +20,7 @@ import frc.robot.Constants;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
 import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
+import frc.robot.util.Odometry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
