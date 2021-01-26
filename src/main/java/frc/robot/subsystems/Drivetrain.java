@@ -16,6 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.robot.Constants;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
@@ -47,6 +48,7 @@ public class Drivetrain extends SubsystemBase {
 
   private double v;
   private double lastPosition;
+  private double lastPitch = 0;
   private double currentAngle;
   private Pose2d robotPosition;
   private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
@@ -61,6 +63,12 @@ public class Drivetrain extends SubsystemBase {
 
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
+  NetworkTableEntry telemetryEntry = NetworkTableInstance.getDefault().getTable("telemetry").getEntry("telemetry array");
+  public double[] telemetry = new double[7];
+
+
+
+  
   
   /**
    * Creates a new Drivetrain.
@@ -114,6 +122,10 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void ArcadeDrive(double zRotation, double xSpeed){
+    
+    //telemetry[1] = Variables.getInstance().G
+    telemetry[4] = xSpeed;
+
 
     //frontLeft.setInverted(true);
     double leftMotorOutput;
@@ -141,8 +153,9 @@ public class Drivetrain extends SubsystemBase {
         rightMotorOutput = xSpeed - zRotation;
       }
     } 
+
     TankDrive(leftMotorOutput, rightMotorOutput);
-    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // v = GetSpeedInMetersPerSecond(lastPosition);
     // lastPosition = GetEncodersTotal();
 
     // currentAngle = Variables.getInstance().getGyroAngle();
@@ -161,10 +174,27 @@ public class Drivetrain extends SubsystemBase {
     //++slow_print;
     //if (slow_print < 0) slow_print = 0;
   }
+  
+
 
   public void TankDrive(double leftValue, double rightValue){
+    double tippingOffset = getTippingOffset();
+    leftValue=MathUtil.clamp(leftValue+tippingOffset, -1, 1);
+    rightValue=MathUtil.clamp(rightValue+tippingOffset, -1, 1);
+
     m_rightController.setSetpoint(rightValue*Constants.maxDriveSpeed);
     m_leftController.setSetpoint(leftValue*Constants.maxDriveSpeed);
+  }
+
+   double getTippingOffset(){
+    double tip = Variables.getInstance().getGyroPitch(); //positive pitch is nose-up: negative offset to fix
+    double tipMagnitude = Math.abs(tip);
+    if(tipMagnitude<=5){
+      return 0;
+    } 
+    else{
+      return -1*Math.copySign(0.1*10*Math.pow((tipMagnitude-5)/10.0, 2), tip);
+    }
   }
 
   public void EmergencyStop(){
@@ -172,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   public void PrintLocation(){
-    // v = GetSpeedInMetersPerCentisecond(lastPosition);
+    // v = GetSpeedInMetersPerSecond(lastPosition);
     // lastPosition = GetEncodersTotal();
 
     // currentAngle = Variables.getInstance().getGyroAngle();
@@ -188,8 +218,28 @@ public class Drivetrain extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
+    //telemetryEntry.setDefaultDoubleArray(telemetry);
+    
+    telemetryEntry.setDoubleArray(telemetry);
+    
+    telemetry[0] = GetSpeedInMetersPerSecond(lastPosition);
+    telemetry[1] = Variables.getInstance().GetYAccel();
+    telemetry[2] = Variables.getInstance().getGyroPitch();
+    telemetry[3] = GetPitchRate(Variables.getInstance().getGyroPitch(), lastPitch);
+    lastPitch = Variables.getInstance().getGyroPitch();
+    lastPosition = GetEncodersTotal();
+    
+    
+  }
+  public double GetPitchRate(double pitch, double lastPitch){
+      return (pitch - lastPitch) * 500;
+
+  }
+  public double Test(){
+    return 3;
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();
@@ -200,10 +250,12 @@ public class Drivetrain extends SubsystemBase {
   public double GetEncodersTotal(){
     return ((getRightEncoder()+GetLeftEncoder())/2);
   }
-  public double GetSpeedInMetersPerCentisecond(double lastPosition){
-    return GetEncodersTotal() - lastPosition;
+  public double GetSpeedInMetersPerSecond(double lastPosition){
+    return (GetEncodersTotal() - lastPosition)*500;
   }
   public void resetRightEncoder(){
     rightEncoder.setPosition(0);
   }
+  
+
 }

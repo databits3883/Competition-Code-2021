@@ -16,6 +16,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import frc.robot.subsystems.TurretCameraAim;
 
@@ -43,12 +44,30 @@ public class Variables {
         Shuffleboard.getTab("Variables").addNumber("Power cells", instance::getContainedPowerCells);
         Shuffleboard.getTab("Variables").add(instance.m_powerDistributionPanel);
         Shuffleboard.getTab("Variables").addBoolean("shooter at speed", instance::getShooterAtSpeed);
+        Shuffleboard.getTab("Variables").addNumber("pitch", instance::getGyroPitch);
+        Shuffleboard.getTab("Variables").addNumber("left acceleration", instance::GetXAccel);
+        Shuffleboard.getTab("Variables").addNumber("forward acceleration", instance::GetYAccel);
+        Shuffleboard.getTab("Variables").addNumber("upwards acceleration", instance::GetZAccel);
+
+        Shuffleboard.getTab("Variables").addBoolean("isAntiTipping", ()->{return instance.getGyroPitch() >= 5;});
     }
     
     AHRS navx = new AHRS(I2C.Port.kMXP );
     public double getGyroAngle(){
         return (navx.getAngle());
         
+    }
+    public double getGyroPitch(){
+        return navx.getPitch();
+    }
+    public double GetXAccel(){
+        return navx.getVelocityX();
+    }
+    public double GetYAccel(){
+        return navx.getVelocityY();
+    }
+    public double GetZAccel(){
+        return navx.getVelocityZ();
     }
 
     public final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
