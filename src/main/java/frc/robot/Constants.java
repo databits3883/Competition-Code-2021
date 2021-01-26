@@ -58,11 +58,14 @@ public final class Constants {
     public static final I2C.Port colorSensorPort = Port.kOnboard;
 
     //physical
-    //distances in feet, time in seconds
+    //distances in meters, time in seconds
+    public static final double feetToMeters = 0.3048;
+
     public static final double maxTurretAngle = 278;
-    public static final double maxDriveSpeed = 20;
-    public static final double wheelDiameter = 7.0/12.0;
+    public static final double maxDriveSpeed = 5.1; //meters
+    public static final double wheelDiameter = 4.0/12.0 *feetToMeters; //4 inch wheels converted to meters
     public static final double driveTrainGearingRatio = 8.45;
+
     public static final double minimumHoodAngle = 17.6;
     public static final double maximumHoodAngle = 26.2+minimumHoodAngle;
     public static final double lowerStagingSpeed = -0.75;

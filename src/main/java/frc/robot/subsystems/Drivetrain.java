@@ -102,8 +102,8 @@ public class Drivetrain extends SubsystemBase {
     leftLeader.setIdleMode(IdleMode.kBrake);
 
 
-    double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
-    double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
+    double velocityConversion = (Constants.wheelDiameter*Math.PI)*(1.0/Constants.driveTrainGearingRatio)*(1.0/60.0);
+    double positionalConversion = (Constants.wheelDiameter*Math.PI)*(1.0/Constants.driveTrainGearingRatio);
     leftEncoder.setVelocityConversionFactor(velocityConversion);
     rightEncoder.setVelocityConversionFactor(velocityConversion);
     leftEncoder.setPositionConversionFactor(positionalConversion);
@@ -111,8 +111,8 @@ public class Drivetrain extends SubsystemBase {
     leftEncoder.setPosition(0.0);
     rightEncoder.setPosition(0.0);
 
-    PIDTuningParameters rightTuning = new PIDTuningParameters(0.08, 0, 0,0.053);
-    PIDTuningParameters leftTuning = new PIDTuningParameters(0.08, 0, 0,0.053);
+    PIDTuningParameters rightTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
+    PIDTuningParameters leftTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
 
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);
