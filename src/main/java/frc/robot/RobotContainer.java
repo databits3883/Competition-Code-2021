@@ -92,7 +92,7 @@ public class RobotContainer {
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
   
-  private final double joystickDeadband=(Math.pow(.07,3));
+  private final double joystickDeadband=0.07;
   public double driveDampening = 8;
   public double CurveStick(double joyVal){
     if(driveDampening!=0){
@@ -103,11 +103,8 @@ public class RobotContainer {
   
 
   private final Command manualArcadeDrive = new RunCommand(()->{
-    //double x = Math.pow(driverJoystick.getX(),5);
-    double x = CurveStick(driverJoystick.getX());
-    //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
-    //double y = -Math.pow(driverJoystick.getY(),5);
-    double y = -CurveStick(driverJoystick.getY());
+    double x = driverJoystick.getX();
+    double y = driverJoystick.getY();
     if( Math.abs(x)<joystickDeadband){
       x=0;
       }
@@ -120,6 +117,12 @@ public class RobotContainer {
       else{
        y-=Math.copySign(joystickDeadband, y);
       }
+    //double x = Math.pow(driverJoystick.getX(),5);
+    x = CurveStick(x);
+    //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    //double y = -Math.pow(driverJoystick.getY(),5);
+    y = -CurveStick(y);
+    
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
 
