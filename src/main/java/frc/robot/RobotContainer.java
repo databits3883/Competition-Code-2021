@@ -104,7 +104,7 @@ public class RobotContainer {
 
   private final Command manualArcadeDrive = new RunCommand(()->{
     double x = driverJoystick.getX();
-    double y = driverJoystick.getY();
+    double y = -driverJoystick.getY();
     if( Math.abs(x)<joystickDeadband){
       x=0;
       }
@@ -121,7 +121,7 @@ public class RobotContainer {
     x = CurveStick(x);
     //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
     //double y = -Math.pow(driverJoystick.getY(),5);
-    y = -CurveStick(y);
+    y = CurveStick(y);
     
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
