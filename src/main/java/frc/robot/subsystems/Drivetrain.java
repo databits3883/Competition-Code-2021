@@ -110,6 +110,7 @@ public class Drivetrain extends SubsystemBase {
     rightEncoder.setPositionConversionFactor(positionalConversion);
     leftEncoder.setPosition(0.0);
     rightEncoder.setPosition(0.0);
+    //robotPosition = new Pose2d(0,0,new Rotation2d(0));
 
     PIDTuningParameters rightTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
     PIDTuningParameters leftTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
@@ -175,6 +176,11 @@ public class Drivetrain extends SubsystemBase {
     m_leftController.setSetpoint(leftValue*Constants.maxDriveSpeed);
   }
 
+  public void absoluteTankDriveMeters(double leftVelocity, double rightVelocity){
+    m_rightController.setSetpoint(rightVelocity);
+    m_leftController.setSetpoint(leftVelocity);
+  }
+
   public void EmergencyStop(){
     TankDrive(0, 0);
   }
@@ -196,7 +202,7 @@ public class Drivetrain extends SubsystemBase {
      // m_odometry.wasValid = true;
     //}
     
-    robotRotation = Rotation2d.fromDegrees(currentAngle);
+    robotRotation = Rotation2d.fromDegrees(-1.0*currentAngle);
     
 
     //robotPosition =  robotOdometry.getPoseMeters();
@@ -241,6 +247,10 @@ public class Drivetrain extends SubsystemBase {
   }
   public void resetRightEncoder(){
     rightEncoder.setPosition(0);
+  }
+
+  public Pose2d getRobotPose(){
+    return robotPosition;
   }
 
   

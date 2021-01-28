@@ -22,10 +22,12 @@ import frc.robot.util.Odometry;
 
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -238,7 +240,13 @@ public class RobotContainer {
 
     driverButton9.whileHeld(m_turnto90);
 
-    
+    //REMOVE IN COMPETITION CODE
+    yButton.whenPressed(new InstantCommand(){
+      @Override
+      public void initialize(){
+        CommandScheduler.getInstance().schedule(new TestTrajectory(m_drivetrain));
+      }
+    });
 
   }
 
