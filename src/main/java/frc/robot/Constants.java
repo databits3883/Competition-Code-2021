@@ -92,7 +92,7 @@ public final class Constants {
     public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
-    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(4.5, 0.45).addConstraint(kinematicsConstraint);
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45).addConstraint(kinematicsConstraint);
 
 
     public static final double maxTurretVelocity = 120; //degrees per second
