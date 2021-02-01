@@ -58,8 +58,8 @@
               "Controls/Rotation": "NONE",
               "compression": -1.0,
               "fps": -1,
-              "imageWidth": -1,
-              "imageHeight": -1
+              "imageWidth": 0,
+              "imageHeight": 0
             }
           }
         }
@@ -344,13 +344,15 @@
               "_children": [
                 {
                   "_type": "Graph",
-                  "_source0": "network_table:///SparkMaxPID/Turret Hood/processVariable",
-                  "_source1": "network_table:///SparkMaxPID/Turret Hood/setpointActual",
+                  "_source0": "network_table:///SparkMaxPID/Turret Hood/setpointActual",
+                  "_source1": "network_table:///SparkMaxPID/Turret Hood/processVariable",
                   "_title": "Hood setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
                   "Y-axis/Upper bound": 43.8,
-                  "Y-axis/Lower bound": 17.6
+                  "Y-axis/Lower bound": 17.6,
+                  "Visible data/SparkMaxPID/Turret Hood/processVariable": true,
+                  "Visible data/SparkMaxPID/Turret Hood/setpointActual": true
                 },
                 {
                   "_type": "Number Slider",
@@ -404,13 +406,15 @@
               "_children": [
                 {
                   "_type": "Graph",
-                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/processVariable",
-                  "_source1": "network_table:///SparkMaxPID/Turret Rotator/setpointActual",
+                  "_source0": "network_table:///SparkMaxPID/Turret Rotator/setpointActual",
+                  "_source1": "network_table:///SparkMaxPID/Turret Rotator/processVariable",
                   "_title": "Rotator setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
                   "Y-axis/Upper bound": 278.0,
-                  "Y-axis/Lower bound": 0.0
+                  "Y-axis/Lower bound": 0.0,
+                  "Visible data/SparkMaxPID/Turret Rotator/processVariable": true,
+                  "Visible data/SparkMaxPID/Turret Rotator/setpointActual": true
                 },
                 {
                   "_type": "Number Slider",
@@ -464,13 +468,15 @@
               "_children": [
                 {
                   "_type": "Graph",
-                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/processVariable",
-                  "_source1": "network_table:///SparkMaxPID/Turret Launcher/setpointActual",
+                  "_source0": "network_table:///SparkMaxPID/Turret Launcher/setpointActual",
+                  "_source1": "network_table:///SparkMaxPID/Turret Launcher/processVariable",
                   "_title": "Launcher setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
                   "Y-axis/Upper bound": 0.0,
-                  "Y-axis/Lower bound": -200.0
+                  "Y-axis/Lower bound": -200.0,
+                  "Visible data/SparkMaxPID/Turret Launcher/processVariable": true,
+                  "Visible data/SparkMaxPID/Turret Launcher/setpointActual": true
                 },
                 {
                   "_type": "Number Slider",
@@ -532,9 +538,11 @@
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
                   "Y-axis/Upper bound": 20.0,
-                  "Y-axis/Lower bound": -20.0
+                  "Y-axis/Lower bound": -20.0,
+                  "Visible data/SparkMaxPID/VelocityDrive/processVariables/left": true,
+                  "Visible data/SparkMaxPID/VelocityDrive/setpoints/left": true
                 },
-                "1,0":{
+                "1,0": {
                   "_type": "Graph",
                   "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/right",
                   "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
@@ -542,22 +550,24 @@
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
                   "Y-axis/Upper bound": 20.0,
-                  "Y-axis/Lower bound": -20.0
+                  "Y-axis/Lower bound": -20.0,
+                  "Visible data/SparkMaxPID/VelocityDrive/processVariables/right": true,
+                  "Visible data/SparkMaxPID/VelocityDrive/setpoints/right": true
                 },
                 "0,1": {
                   "_type": "Number Slider",
-                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
                   "_title": "Left Setpoint",
-                  "Slider Settings/Min": -20,
-                  "Slider Settings/Max": 20,
+                  "Slider Settings/Min": -20.0,
+                  "Slider Settings/Max": 20.0,
                   "Slider Settings/Block increment": 0.0625
                 },
                 "1,1": {
                   "_type": "Number Slider",
-                  "_source0":"network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/setpoints/right",
                   "_title": "Right Setpoint",
-                  "Slider Settings/Min": -20,
-                  "Slider Settings/Max": 20,
+                  "Slider Settings/Min": -20.0,
+                  "Slider Settings/Max": 20.0,
                   "Slider Settings/Block increment": 0.0625
                 },
                 "0,2": {
@@ -619,6 +629,33 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    },
+    {
+      "title": "Config",
+      "autoPopulate": false,
+      "autoPopulatePrefix": "",
+      "widgetPane": {
+        "gridSize": 128.0,
+        "showGrid": true,
+        "hgap": 16.0,
+        "vgap": 16.0,
+        "tiles": {
+          "0,0": {
+            "size": [
+              3,
+              1
+            ],
+            "content": {
+              "_type": "Number Slider",
+              "_source0": "network_table:///config/Drive Dampening",
+              "_title": "config/Drive Dampening",
+              "Slider Settings/Min": 0.0,
+              "Slider Settings/Max": 20.0,
+              "Slider Settings/Block increment": 1.0
             }
           }
         }

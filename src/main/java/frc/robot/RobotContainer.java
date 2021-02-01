@@ -8,6 +8,10 @@
 package frc.robot;
 
 
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SlewRateLimiter;
@@ -95,10 +99,19 @@ public class RobotContainer {
   
   private final SlewRateLimiter driverYLimiter = new SlewRateLimiter(0.7);
   
-  private final double joystickDeadband=(Math.pow(.07,3));
+  private final double joystickDeadband=0.07;
+  public double driveDampening = 8;
+  public double CurveStick(double joyVal){
+    if(driveDampening!=0){
+      return (Math.tan(joyVal* Math.atan(driveDampening)))/driveDampening;
+    }
+    return joyVal;
+  }
+  
+
   private final Command manualArcadeDrive = new RunCommand(()->{
-    double x = Math.pow(driverJoystick.getX(),3);
-    double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    double x = driverJoystick.getX();
+    double y = -driverJoystick.getY();
     if( Math.abs(x)<joystickDeadband){
       x=0;
       }
@@ -111,6 +124,12 @@ public class RobotContainer {
       else{
        y-=Math.copySign(joystickDeadband, y);
       }
+    //double x = Math.pow(driverJoystick.getX(),5);
+    x = CurveStick(x);
+    //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
+    //double y = -Math.pow(driverJoystick.getY(),5);
+    y = CurveStick(y);
+    
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
 
@@ -188,6 +207,8 @@ public class RobotContainer {
    * The container for the robot.  Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
+    //Configure NetworkTables config
+    initConfig();
     // Set Default Commands
     setDefaultCommands();
     // Configure the button bindings
@@ -205,6 +226,13 @@ public class RobotContainer {
     m_staging.setDefaultCommand(m_advanceStaging);
 
 
+  }
+  //IN the future these could be set as persistant
+  /** Setup for networkTables config values */
+  void initConfig(){
+    NetworkTableEntry driveDampeningEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive Dampening");
+    driveDampeningEntry.setDouble(driveDampening);
+    driveDampeningEntry.addListener(e->driveDampening=e.value.getDouble(), EntryListenerFlags.kUpdate);
   }
 
   /**

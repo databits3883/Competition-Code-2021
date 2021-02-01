@@ -167,12 +167,9 @@ public class FindLocation extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-    if(tv.isValid() && !wasValid){
-      updateFromReflectors();
-      wasValid = true;
-    }
-    v = m_drivetrain.GetSpeedInMetersPerCentisecond(lastPosition);
+
+    v = m_drivetrain.GetSpeedInMetersPerSecond(lastPosition);
+
     lastPosition = m_drivetrain.GetEncodersTotal();
     lastDistanceLeft = m_drivetrain.GetLeftEncoder();
     lastDistanceRight = m_drivetrain.getRightEncoder();
