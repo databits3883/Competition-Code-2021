@@ -57,6 +57,10 @@ public class Variables {
         return (navx.getAngle());
         
     }
+
+    public void resetNavx(){
+        navx.reset();
+
     public double getGyroPitch(){
         return navx.getPitch();
     }
@@ -68,6 +72,7 @@ public class Variables {
     }
     public double GetZAccel(){
         return navx.getVelocityZ();
+
     }
 
     public final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);

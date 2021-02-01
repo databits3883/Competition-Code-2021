@@ -22,13 +22,16 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.util.Odometry;
 
 import frc.robot.util.SupplierButton;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.ScheduleCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -41,8 +44,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Odometry m_Odometry =new Odometry();
 
-  private final Drivetrain       m_drivetrain =       new Drivetrain();
+  private final Drivetrain       m_drivetrain =       new Drivetrain(m_Odometry);
   private final Intake           m_intake =           new Intake();
   private final Staging          m_staging =          new Staging();
   private final TurretRotator    m_turretRotator =    new TurretRotator();
@@ -69,6 +73,8 @@ public class RobotContainer {
   private final JoystickButton driverbutton6 = new JoystickButton(driverJoystick, 6);
   private final JoystickButton driverbutton7 = new JoystickButton(driverJoystick, 7);
 
+  
+
   private final JoystickButton driverButton8 = new JoystickButton(driverJoystick, 8);
   private final JoystickButton driverButton9 = new JoystickButton(driverJoystick, 9);
   private final JoystickButton driverButton10 = new JoystickButton(driverJoystick, 10);
@@ -82,6 +88,7 @@ public class RobotContainer {
   private final SupplierButton aButton = new SupplierButton( ()->gunnerController.getAButton()); 
   private final SupplierButton backButton = new SupplierButton( ()->gunnerController.getBackButton());
   private final SupplierButton startButton = new SupplierButton( ()->gunnerController.getStartButton());
+  
   private final SupplierButton leftBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kLeft));
   private final SupplierButton rightBumperButton = new SupplierButton( ()->gunnerController.getBumper(Hand.kRight));
   private final SupplierButton rightTriggButton = new SupplierButton(()-> gunnerController.getTriggerAxis(Hand.kRight)>=0.75);
@@ -129,6 +136,8 @@ public class RobotContainer {
   private final Command m_runIntake = new InstantCommand(m_intake::intake, m_intake).alongWith();
 
   private final Command m_turnto90 =new InstantCommand(()->m_turretRotator.setAngle(90),m_turretRotator);
+  private final Command gyroReset = new InstantCommand(()->Variables.getInstance().resetNavx());
+  private final Command odometryReset = new InstantCommand(()->m_drivetrain.ResetOdometry());
 
   private final Command m_stopIntake = new InstantCommand(m_intake::stop, m_intake);
   private final Command m_autoStopIntake = new InstantCommand(m_intake::stop, m_intake);
@@ -254,10 +263,18 @@ public class RobotContainer {
     xButton.toggleWhenPressed(m_stagingToTop);
 
     startButton.toggleWhenActive(m_acquireTarget);
+    //backButton.whenPressed(gyroReset);
+    backButton.whenPressed(odometryReset);
 
     driverButton9.whileHeld(m_turnto90);
 
-    
+    //REMOVE IN COMPETITION CODE
+    yButton.whenPressed(new InstantCommand(){
+      @Override
+      public void initialize(){
+        CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
+      }
+    });
 
   }
 

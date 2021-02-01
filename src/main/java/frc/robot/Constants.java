@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
+import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -58,11 +62,14 @@ public final class Constants {
     public static final I2C.Port colorSensorPort = Port.kOnboard;
 
     //physical
-    //distances in feet, time in seconds
+    //distances in meters, time in seconds
+    public static final double feetToMeters = 0.3048;
+
     public static final double maxTurretAngle = 278;
-    public static final double maxDriveSpeed = 20;
-    public static final double wheelDiameter = 7.0/12.0;
+    public static final double maxDriveSpeed = 5.1; //meters
+    public static final double wheelDiameter = 4.0/12.0 *feetToMeters; //4 inch wheels converted to meters
     public static final double driveTrainGearingRatio = 8.45;
+
     public static final double minimumHoodAngle = 17.6;
     public static final double maximumHoodAngle = 26.2+minimumHoodAngle;
     public static final double lowerStagingSpeed = -0.75;
@@ -81,6 +88,11 @@ public final class Constants {
     public static final double fieldLengthMeters = 15.98295; //meters
     public static final double fieldWidthMeters = 8.21055; //meters
     public static final double powerPortToWallLenght = 2.404364; //meters
+
+    public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
+
+    static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45).addConstraint(kinematicsConstraint);
 
 
     public static final double maxTurretVelocity = 120; //degrees per second

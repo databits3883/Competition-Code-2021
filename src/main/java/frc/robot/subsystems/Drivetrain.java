@@ -21,6 +21,7 @@ import frc.robot.Constants;
 import frc.robot.util.PIDTuningParameters;
 import frc.robot.util.SparkMaxPIDController;
 import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
+import frc.robot.util.Odometry;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -33,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Variables;
 import frc.robot.util.SetpointAccelerationLimiter;
+
 
 public class Drivetrain extends SubsystemBase {
   private final CANSparkMax rightLeader = new CANSparkMax(Constants.rightLeaderChannel, MotorType.kBrushless);
@@ -50,11 +52,23 @@ public class Drivetrain extends SubsystemBase {
   private double lastPosition;
   private double lastPitch = 0;
   private double currentAngle;
+  private double[] robotCoordinates = new double[2];
+
+  double resetableEncoderLeft;
+  double resetableEncoderRight;
+  double lastDistanceLeft;
+  double lastDistanceRight;
+  double deltaLeft;
+  double deltaRight;
+
   private Pose2d robotPosition;
+  private Pose2d zeroedPose= new Pose2d();
+  private Rotation2d zeroedRot = new Rotation2d(0);
   private DifferentialDriveOdometry robotOdometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0.0));
   private Rotation2d robotRotation;
   private Translation2d robotTranslation;
   Drivetrain m_drivetrain;
+  Odometry m_odometry;
 
 
   private double lP, lI, lD, lF, rP, rI, rD, rF, lSP, rSP;
@@ -63,17 +77,23 @@ public class Drivetrain extends SubsystemBase {
 
   private SetpointAccelerationLimiter m_setpointLimiter;
   NetworkTableEntry limitedEntry;
-  NetworkTableEntry telemetryEntry = NetworkTableInstance.getDefault().getTable("telemetry").getEntry("telemetry array");
-  public double[] telemetry = new double[7];
 
+  NetworkTableEntry robotCoordinatesEntry = NetworkTableInstance.getDefault().getTable("Robot Coordinates").getEntry("Coordinates Array");
+  NetworkTableEntry leftAndRightEncodersResetable = NetworkTableInstance.getDefault().getTable("Resetable Encoders").getEntry("Left and Right");
+  public double[] resetableEncoderVals = new double[2];
+  public void ResetOdometry(){
+    robotOdometry.resetPosition(zeroedPose, zeroedRot);
+    Variables.getInstance().resetNavx();
+    resetableEncoderRight = 0;
+    resetableEncoderLeft = 0;
+  }
 
-
-  
   
   /**
    * Creates a new Drivetrain.
    */
-  public Drivetrain() {
+  public Drivetrain(Odometry odometry) {
+    m_odometry = odometry;
     leftLeader.setInverted(false);
     rightLeader.setInverted(true);
 
@@ -86,17 +106,18 @@ public class Drivetrain extends SubsystemBase {
     leftLeader.setIdleMode(IdleMode.kBrake);
 
 
-    double velocityConversion = (7.0/12.0*Math.PI)*(1.0/8.45)*(1.0/60.0);
-    double positionalConversion = (7.0/12.0*Math.PI)*(1.0/8.45);
+    double velocityConversion = (Constants.wheelDiameter*Math.PI)*(1.0/Constants.driveTrainGearingRatio)*(1.0/60.0);
+    double positionalConversion = (Constants.wheelDiameter*Math.PI)*(1.0/Constants.driveTrainGearingRatio);
     leftEncoder.setVelocityConversionFactor(velocityConversion);
     rightEncoder.setVelocityConversionFactor(velocityConversion);
     leftEncoder.setPositionConversionFactor(positionalConversion);
     rightEncoder.setPositionConversionFactor(positionalConversion);
     leftEncoder.setPosition(0.0);
     rightEncoder.setPosition(0.0);
+    //robotPosition = new Pose2d(0,0,new Rotation2d(0));
 
-    PIDTuningParameters rightTuning = new PIDTuningParameters(0.08, 0, 0,0.053);
-    PIDTuningParameters leftTuning = new PIDTuningParameters(0.08, 0, 0,0.053);
+    PIDTuningParameters rightTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
+    PIDTuningParameters leftTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
 
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);
@@ -155,24 +176,7 @@ public class Drivetrain extends SubsystemBase {
     } 
 
     TankDrive(leftMotorOutput, rightMotorOutput);
-    // v = GetSpeedInMetersPerSecond(lastPosition);
-    // lastPosition = GetEncodersTotal();
 
-    // currentAngle = Variables.getInstance().getGyroAngle();
-    // robotRotation = Rotation2d.fromDegrees(currentAngle);
-
-    // //worldVector = worldVector.se
-    // LeftDistanceMeters = GetLeftDistanceMeters();
-    // RightDistanceMeters = GetRightDistanceMeters();
-    // robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
-    // robotPosition =  robotOdometry.getPoseMeters();
-    // robotTranslation = robotPosition.getTranslation();
-    // //if (slow_print > 1000) {
-    //   System.out.printf("X:%8.3f  Y:%8.3f  Angle:%8.3f  Left:%8f  Right:%8f\n", robotTranslation.getX(),robotTranslation.getY(), currentAngle, LeftDistanceMeters, RightDistanceMeters);
-    //   slow_print = 0;
-    //} 
-    //++slow_print;
-    //if (slow_print < 0) slow_print = 0;
   }
   
 
@@ -186,6 +190,11 @@ public class Drivetrain extends SubsystemBase {
     m_leftController.setSetpoint(leftValue*Constants.maxDriveSpeed);
   }
 
+
+  public void absoluteTankDriveMeters(double leftVelocity, double rightVelocity){
+    m_rightController.setSetpoint(rightVelocity);
+    m_leftController.setSetpoint(leftVelocity);
+}
    double getTippingOffset(){
     double tip = Variables.getInstance().getGyroPitch(); //positive pitch is nose-up: negative offset to fix
     double tipMagnitude = Math.abs(tip);
@@ -195,40 +204,66 @@ public class Drivetrain extends SubsystemBase {
     else{
       return -1*Math.copySign(0.1*10*Math.pow((tipMagnitude-5)/10.0, 2), tip);
     }
+
   }
 
   public void EmergencyStop(){
     TankDrive(0, 0);
   }
-
-  public void PrintLocation(){
-    // v = GetSpeedInMetersPerSecond(lastPosition);
-    // lastPosition = GetEncodersTotal();
-
-    // currentAngle = Variables.getInstance().getGyroAngle();
-    // robotRotation = Rotation2d.fromDegrees(currentAngle);
-
-    // //worldVector = worldVector.se
-    // robotOdometry.update(robotRotation, GetLeftDistanceMeters(), GetRightDistanceMeters());
-    // robotPosition =  robotOdometry.getPoseMeters();
-    // robotTranslation = robotPosition.getTranslation();
-    // System.out.println("x Translation" + robotTranslation.getX());
-    // System.out.println("y Translation" + robotTranslation.getY());
+  public void DistanceReset(){
+    resetableEncoderLeft = 0;
+    resetableEncoderRight = 0;
   }
+
+
+
+  
 
   @Override
   public void periodic() {
     
     //System.out.println(leftController.getIAccum());
     // This method will be called once per scheduler run
+
+    //if(m_odometry.tv.getBoolean(false) && !m_odometry.wasValid){
+    //  m_odometry.updateFromReflectors();
+     // m_odometry.wasValid = true;
+    //}
+    
+    robotRotation = Rotation2d.fromDegrees(-1.0*currentAngle);
+    
+
+    //robotPosition =  robotOdometry.getPoseMeters();
+    //robotTranslation = robotPosition.getTranslation();
+    robotPosition = robotOdometry.update(robotRotation, resetableEncoderLeft, resetableEncoderRight);
+    currentAngle = Variables.getInstance().getGyroAngle();
+    
+    //System.out.println("x Translation" + robotTranslation.getX());
+    //System.out.println("y Translation" + robotTranslation.getY());
+    resetableEncoderLeft = resetableEncoderLeft + deltaLeft;
+    resetableEncoderRight = resetableEncoderRight + deltaRight;
+
+    deltaLeft = GetLeftEncoder() - lastDistanceLeft;
+    deltaRight = getRightEncoder() - lastDistanceRight;
+
+    lastDistanceLeft = GetLeftEncoder();
+    lastDistanceRight = getRightEncoder();
+    robotCoordinates[0] = robotPosition.getTranslation().getX();
+    robotCoordinates[1] = robotPosition.getTranslation().getY();
+    robotCoordinatesEntry.setDoubleArray(robotCoordinates);
+    leftAndRightEncodersResetable.setDoubleArray(resetableEncoderVals);
+    //System.out.println("Resetable Left"+ resetableEncoderLeft);
+    //System.out.println("Resetable Right"+resetableEncoderRight);
+    resetableEncoderVals[0] = resetableEncoderLeft;
+    resetableEncoderVals[1] = resetableEncoderRight;
+    
+
+    lastPosition = GetEncodersTotal();
+    //robotCoordinatesInstance.
+
     //telemetryEntry.setDefaultDoubleArray(telemetry);
     
-    telemetryEntry.setDoubleArray(telemetry);
     
-    telemetry[0] = GetSpeedInMetersPerSecond(lastPosition);
-    telemetry[1] = Variables.getInstance().GetYAccel();
-    telemetry[2] = Variables.getInstance().getGyroPitch();
-    telemetry[3] = GetPitchRate(Variables.getInstance().getGyroPitch(), lastPitch);
     lastPitch = Variables.getInstance().getGyroPitch();
     lastPosition = GetEncodersTotal();
     
@@ -240,6 +275,7 @@ public class Drivetrain extends SubsystemBase {
   }
   public double Test(){
     return 3;
+
   }
   public double getRightEncoder() {
     return rightEncoder.getPosition();
@@ -256,6 +292,13 @@ public class Drivetrain extends SubsystemBase {
   public void resetRightEncoder(){
     rightEncoder.setPosition(0);
   }
+
+
+  public Pose2d getRobotPose(){
+    return robotPosition;
+  }
+
   
 
 }
+

@@ -5,29 +5,20 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.util;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.Variables;
-import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.TurretCameraAim;
 
-
-
-
-
-public class FindLocation extends CommandBase {
+public class Odometry  {
   double v;
   double lastPosition;
   double currentAngle;
@@ -35,7 +26,6 @@ public class FindLocation extends CommandBase {
   double resetableEncoderRight;
   double lastDistanceLeft;
   double lastDistanceRight;
-  
   Pose2d robotPosition;
   double deltaDistanceLeft;
   double deltaDistanceRight;
@@ -46,24 +36,10 @@ public class FindLocation extends CommandBase {
   TurretCameraAim m_limeLightServo;
   boolean wasValid = false;
   NetworkTableEntry tv;
-  Drivetrain m_drivetrain;
-  
-  public FindLocation(Drivetrain drivetrain, TurretCameraAim limelightServo) {
-    m_drivetrain = drivetrain;
-    m_limeLightServo = limelightServo;
-    
-    // Use addRequirements() here to declare subsystem dependencies.
-
-    
-  }
 
   public void DistanceReset(){
     resetableEncoderLeft = 0;
     resetableEncoderRight = 0;
-  }
-
-  public void UpdateDistance(double deltaDistanceLeft, double deltaDistanceRight){
-
   }
 
   public void updateFromReflectors(){
@@ -133,67 +109,25 @@ public class FindLocation extends CommandBase {
 
 
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    lastDistanceLeft = 0;
-    lastDistanceRight = 0;
-    
-    lastPosition = 0;
-    //robotRotation.fromDegrees(0);
-    SendableChooser<Translation2d>  startPositionChooser = new SendableChooser<Translation2d>();
-    startPositionChooser.setDefaultOption("Position One", Constants.startPositionOne);
-    tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv");
-
-
+  
+  /**
+   * Creates a new Odometry.
+   */
+  public Odometry() {
     
     
-    robotTranslation = startPositionChooser.getSelected();
     
     
-   
-
+  
     
-
-
-    
-    startPositionChooser.close();
-
+  
     
     
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-
-    v = m_drivetrain.GetSpeedInMetersPerSecond(lastPosition);
-
-    lastPosition = m_drivetrain.GetEncodersTotal();
-    lastDistanceLeft = m_drivetrain.GetLeftEncoder();
-    lastDistanceRight = m_drivetrain.getRightEncoder();
-
-    currentAngle = Variables.getInstance().getGyroAngle();
-    robotRotation = Rotation2d.fromDegrees(currentAngle);
-
-    //worldVector = worldVector.se
-    robotOdometry.update(robotRotation, resetableEncoderLeft, resetableEncoderRight);
-    robotPosition =  robotOdometry.getPoseMeters();
-    robotTranslation = robotPosition.getTranslation();
-    System.out.println("x Translation" + robotTranslation.getX());
-    System.out.println("y Translation" + robotTranslation.getY());
+    
+    
+    
 
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  }
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+  
 }
