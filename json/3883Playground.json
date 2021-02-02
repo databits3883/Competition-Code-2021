@@ -520,8 +520,8 @@
           },
           "6,0": {
             "size": [
-              5,
-              5
+              7,
+              6
             ],
             "content": {
               "_type": "Grid Layout",
@@ -537,8 +537,8 @@
                   "_title": "Left setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
-                  "Y-axis/Upper bound": 20.0,
-                  "Y-axis/Lower bound": -20.0,
+                  "Y-axis/Upper bound": 6.0,
+                  "Y-axis/Lower bound": -6.0,
                   "Visible data/SparkMaxPID/VelocityDrive/processVariables/left": true,
                   "Visible data/SparkMaxPID/VelocityDrive/setpoints/left": true
                 },
@@ -549,8 +549,8 @@
                   "_title": "Right setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
-                  "Y-axis/Upper bound": 20.0,
-                  "Y-axis/Lower bound": -20.0,
+                  "Y-axis/Upper bound": 6.0,
+                  "Y-axis/Lower bound": -6.0,
                   "Visible data/SparkMaxPID/VelocityDrive/processVariables/right": true,
                   "Visible data/SparkMaxPID/VelocityDrive/setpoints/right": true
                 },

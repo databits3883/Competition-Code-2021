@@ -145,7 +145,6 @@ public class Drivetrain extends SubsystemBase {
   public void ArcadeDrive(double zRotation, double xSpeed){
     
     //telemetry[1] = Variables.getInstance().G
-    telemetry[4] = xSpeed;
 
 
     //frontLeft.setInverted(true);

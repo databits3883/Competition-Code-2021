@@ -60,6 +60,7 @@ public class Variables {
 
     public void resetNavx(){
         navx.reset();
+    }
 
     public double getGyroPitch(){
         return navx.getPitch();
