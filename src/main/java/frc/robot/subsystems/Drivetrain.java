@@ -195,6 +195,9 @@ public class Drivetrain extends SubsystemBase {
     m_leftController.setSetpoint(leftVelocity);
 }
    double getTippingOffset(){
+    //TEMPORARY REMOVE ANTI_TIP
+    return 0;
+    /*
     double tip = Variables.getInstance().getGyroPitch(); //positive pitch is nose-up: negative offset to fix
     double tipMagnitude = Math.abs(tip);
     if(tipMagnitude<=5){
@@ -203,7 +206,7 @@ public class Drivetrain extends SubsystemBase {
     else{
       return -1*Math.copySign(0.1*10*Math.pow((tipMagnitude-5)/10.0, 2), tip);
     }
-
+    */
   }
 
   public void EmergencyStop(){
