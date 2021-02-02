@@ -116,8 +116,8 @@ public class Drivetrain extends SubsystemBase {
     rightEncoder.setPosition(0.0);
     //robotPosition = new Pose2d(0,0,new Rotation2d(0));
 
-    PIDTuningParameters rightTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
-    PIDTuningParameters leftTuning = new PIDTuningParameters(0.24, 0, 0,0.159);
+    PIDTuningParameters rightTuning = new PIDTuningParameters(0.7, 0, 0,0.3);
+    PIDTuningParameters leftTuning = new PIDTuningParameters(0.7, 0, 0,0.3);
 
     m_rightController = new SparkMaxPIDController(rightLeader, ControlType.kVelocity, rightTuning);
     m_leftController = new SparkMaxPIDController(leftLeader, ControlType.kVelocity, leftTuning);

@@ -530,18 +530,6 @@
               "Layout/Number of rows": 3,
               "Layout/Label position": "TOP",
               "_children": {
-                "0,0": {
-                  "_type": "Graph",
-                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/left",
-                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
-                  "_title": "Left setpoint vs process",
-                  "Graph/Visible time": 30.0,
-                  "Y-axis/Automatic bounds": false,
-                  "Y-axis/Upper bound": 6.0,
-                  "Y-axis/Lower bound": -6.0,
-                  "Visible data/SparkMaxPID/VelocityDrive/processVariables/left": true,
-                  "Visible data/SparkMaxPID/VelocityDrive/setpoints/left": true
-                },
                 "1,0": {
                   "_type": "Graph",
                   "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/right",
@@ -549,8 +537,8 @@
                   "_title": "Right setpoint vs process",
                   "Graph/Visible time": 30.0,
                   "Y-axis/Automatic bounds": false,
-                  "Y-axis/Upper bound": 6.0,
-                  "Y-axis/Lower bound": -6.0,
+                  "Y-axis/Upper bound": 3.0,
+                  "Y-axis/Lower bound": -3.0,
                   "Visible data/SparkMaxPID/VelocityDrive/processVariables/right": true,
                   "Visible data/SparkMaxPID/VelocityDrive/setpoints/right": true
                 },
@@ -627,6 +615,18 @@
                       "_title": "FF"
                     }
                   }
+                },
+                "0,0": {
+                  "_type": "Graph",
+                  "_source0": "network_table:///SparkMaxPID/VelocityDrive/processVariables/left",
+                  "_source1": "network_table:///SparkMaxPID/VelocityDrive/setpoints/left",
+                  "_title": "Left setpoint vs process",
+                  "Graph/Visible time": 30.0,
+                  "Y-axis/Automatic bounds": false,
+                  "Y-axis/Upper bound": 3.0,
+                  "Y-axis/Lower bound": -3.0,
+                  "Visible data/SparkMaxPID/VelocityDrive/processVariables/left": true,
+                  "Visible data/SparkMaxPID/VelocityDrive/setpoints/left": true
                 }
               }
             }

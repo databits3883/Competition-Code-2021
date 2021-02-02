@@ -66,7 +66,7 @@ public final class Constants {
     public static final double feetToMeters = 0.3048;
 
     public static final double maxTurretAngle = 278;
-    public static final double maxDriveSpeed = 5; //meters
+    public static final double maxDriveSpeed = 3; //meters
     public static final double wheelDiameter = 4.0/12.0 *feetToMeters; //4 inch wheels converted to meters
     public static final double driveTrainGearingRatio = 8.45;
 
