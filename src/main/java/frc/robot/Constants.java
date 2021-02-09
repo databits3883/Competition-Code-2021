@@ -7,12 +7,15 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.drive.Vector2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveKinematicsConstraint;
 import edu.wpi.first.wpilibj.trajectory.constraint.TrajectoryConstraint;
 
@@ -92,7 +95,8 @@ public final class Constants {
     public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
-    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45).addConstraint(kinematicsConstraint);
+    static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(2.25);
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
 
 
     public static final double maxTurretVelocity = 120; //degrees per second

@@ -79,6 +79,7 @@ public class Drivetrain extends SubsystemBase {
   NetworkTableEntry limitedEntry;
 
   NetworkTableEntry robotCoordinatesEntry = NetworkTableInstance.getDefault().getTable("Robot Coordinates").getEntry("Coordinates Array");
+  NetworkTableEntry robotRotationEntry = NetworkTableInstance.getDefault().getTable("Robot Coordinates").getEntry("RotationDegrees");
   NetworkTableEntry leftAndRightEncodersResetable = NetworkTableInstance.getDefault().getTable("Resetable Encoders").getEntry("Left and Right");
   public double[] resetableEncoderVals = new double[2];
   public void ResetOdometry(){
@@ -253,6 +254,7 @@ public class Drivetrain extends SubsystemBase {
     robotCoordinates[0] = robotPosition.getTranslation().getX();
     robotCoordinates[1] = robotPosition.getTranslation().getY();
     robotCoordinatesEntry.setDoubleArray(robotCoordinates);
+    robotRotationEntry.setDouble(robotPosition.getRotation().getDegrees());
     leftAndRightEncodersResetable.setDoubleArray(resetableEncoderVals);
     //System.out.println("Resetable Left"+ resetableEncoderLeft);
     //System.out.println("Resetable Right"+resetableEncoderRight);
