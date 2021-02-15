@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -18,6 +17,9 @@ import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
@@ -276,6 +278,15 @@ public class RobotContainer {
       @Override
       public void initialize(){
         CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
+      }
+    });
+
+    bButton.whenPressed(new InstantCommand(){
+      @Override
+      public void initialize(){
+        Pose2d position = m_drivetrain.getRobotPose();
+        Translation2d transform = position.getTranslation();
+        System.out.println(String.format("Logged || x: %.3f || y: %.3f || rotation: %.1f", transform.getX(),transform.getY(), position.getRotation().getDegrees()));
       }
     });
 

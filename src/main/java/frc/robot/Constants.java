@@ -95,8 +95,8 @@ public final class Constants {
     public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
-    static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(2.25);
-    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
+    static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(3.5);
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2.5, 1.0 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
 
 
     public static final double maxTurretVelocity = 120; //degrees per second
