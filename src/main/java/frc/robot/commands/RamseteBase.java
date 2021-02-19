@@ -21,6 +21,6 @@ public class RamseteBase extends RamseteCommand {
    */
   public RamseteBase(Drivetrain drivetrain, Trajectory trajectory) {
     // Use addRequirements() here to declare subsystem dependencies.
-    super(trajectory, drivetrain::getRobotPose, new RamseteController(2.2, 0.7), Constants.robotKinematics, drivetrain::absoluteTankDriveMeters, drivetrain);
+    super(trajectory, drivetrain::getRobotPose, new RamseteController(2.0, 0.7), Constants.robotKinematics, drivetrain::absoluteTankDriveMeters, drivetrain);
   }
 }
