@@ -277,7 +277,7 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
+        CommandScheduler.getInstance().schedule(new Bounce(m_drivetrain));
       }
     });
 
