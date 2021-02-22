@@ -36,9 +36,9 @@ public class BarrelRace extends RamseteBase {
          new Pose2d(5.475, 3.384, Rotation2d.fromDegrees(-125.0)),
          new Pose2d(5.710, 1.446, Rotation2d.fromDegrees(-48.5)),
         //  //third circle 
-        new Pose2d(6.697, 0.575, Rotation2d.fromDegrees(-11.4)),
-        new Pose2d(8.192, 0.890, Rotation2d.fromDegrees(59.0)),
-        new Pose2d(8.019, 2.000, Rotation2d.fromDegrees(158.1)),
+        new Pose2d(6.697, 0.875, Rotation2d.fromDegrees(-11.4)),
+        new Pose2d(8.002, 1.190, Rotation2d.fromDegrees(59.0)),
+        new Pose2d(7.819, 2.000, Rotation2d.fromDegrees(158.1)),
          new Pose2d(6.270, 2.030, Rotation2d.fromDegrees(-178.8)),
         //to the end
         new Pose2d(4.073, 2.196, Rotation2d.fromDegrees(173.8)),
