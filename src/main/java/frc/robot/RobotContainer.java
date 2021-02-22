@@ -103,13 +103,15 @@ public class RobotContainer {
   
   private final double joystickDeadband=0.07;
   private final double joyStickDeadbandCompliment = 1-joystickDeadband;
-  public double driveDampening = 8;
-  public double CurveStick(double joyVal){
-    if(driveDampening!=0){
-      return (Math.tan(joyVal* Math.atan(driveDampening)))/driveDampening;
+  public double driveDampeningX = 8;
+  public double driveDampeningY = 8;
+  public double CurveStick(double joyVal, double dampening){
+    if(dampening!=0){
+      return (Math.tan(joyVal* Math.atan(dampening)))/dampening;
     }
     return joyVal;
   }
+
   
 
   private final Command manualArcadeDrive = new RunCommand(()->{
@@ -130,10 +132,10 @@ public class RobotContainer {
        y/=joyStickDeadbandCompliment;
       }
     //double x = Math.pow(driverJoystick.getX(),5);
-    x = CurveStick(x);
+    x = CurveStick(x, driveDampeningX);
     //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
     //double y = -Math.pow(driverJoystick.getY(),5);
-    y = CurveStick(y);
+    y = CurveStick(y, driveDampeningY);
     
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
@@ -235,9 +237,14 @@ public class RobotContainer {
   //IN the future these could be set as persistant
   /** Setup for networkTables config values */
   void initConfig(){
-    NetworkTableEntry driveDampeningEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive Dampening");
-    driveDampeningEntry.setDouble(driveDampening);
-    driveDampeningEntry.addListener(e->driveDampening=e.value.getDouble(), EntryListenerFlags.kUpdate);
+    NetworkTableEntry driveDampeningXEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive X Dampening");
+    driveDampeningXEntry.setDouble(driveDampeningX);
+    driveDampeningXEntry.addListener(e->driveDampeningX=e.value.getDouble(), EntryListenerFlags.kUpdate);
+
+    NetworkTableEntry driveDampeningYEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive Y Dampening");
+    driveDampeningYEntry.setDouble(driveDampeningY);
+    driveDampeningYEntry.addListener(e->driveDampeningY=e.value.getDouble(), EntryListenerFlags.kUpdate);
+    
   }
 
   /**
@@ -277,7 +284,7 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new Bounce(m_drivetrain));
+        CommandScheduler.getInstance().schedule(new BarrelRace(m_drivetrain));
       }
     });
 
