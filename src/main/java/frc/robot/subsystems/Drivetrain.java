@@ -89,6 +89,13 @@ public class Drivetrain extends SubsystemBase {
     resetableEncoderLeft = 0;
   }
 
+  public void setPose(double x, double y, double rotation){
+    robotOdometry.resetPosition(new Pose2d(x,y,Rotation2d.fromDegrees(rotation)), Rotation2d.fromDegrees(0));
+    Variables.getInstance().resetNavx();
+    resetableEncoderLeft = 0;
+    resetableEncoderRight = 0;
+  }
+
   
   /**
    * Creates a new Drivetrain.
