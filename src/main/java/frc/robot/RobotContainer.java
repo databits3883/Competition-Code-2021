@@ -186,7 +186,10 @@ public class RobotContainer {
   private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
   private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
   private final Command m_manualLaunch = new ManualLaunch(m_staging).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
-  private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
+  private final Command m_turnServo = new RunCommand(()->{
+    double command = gunnerController.getY(Hand.kLeft);
+    if(Math.abs(command )<= 0.1) command =0;
+    m_limelightServo.deltaPosition(command/50.0*180.0);}, m_limelightServo);
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
   private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_staging);
@@ -284,7 +287,7 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new BarrelRace(m_drivetrain));
+        CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
       }
     });
 
