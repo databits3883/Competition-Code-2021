@@ -31,11 +31,11 @@ public class Slalom extends RamseteBase {
          new Pose2d(4.485, 3.289, Rotation2d.fromDegrees(-0.9)),
          new Pose2d(6.445, 1.972, Rotation2d.fromDegrees(-54.0)),
           // //around the circle
-          new Pose2d(8.054,0.900, Rotation2d.fromDegrees(33.5)),
-          new Pose2d(8.003,2.231, Rotation2d.fromDegrees(166.9)),
+          new Pose2d(7.854,0.900, Rotation2d.fromDegrees(33.5)),
+          new Pose2d(7.803,2.231, Rotation2d.fromDegrees(166.9)),
           new Pose2d(6.705,1.341, Rotation2d.fromDegrees(-126.8)),
           //to end
-          new Pose2d(5.181, 0.434, Rotation2d.fromDegrees(-178.4)),
+          new Pose2d(5.181, 0.634, Rotation2d.fromDegrees(-178.4)),
           new Pose2d(2.553, 1.074, Rotation2d.fromDegrees(143.5)),
           new Pose2d(1.719, 2.207, Rotation2d.fromDegrees(126.4))
           //  new Pose2d(6.891, 1.060, Rotation2d.fromDegrees(-58.5)),
