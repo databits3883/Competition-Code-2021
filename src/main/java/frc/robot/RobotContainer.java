@@ -27,6 +27,7 @@ import frc.robot.subsystems.*;
 import frc.robot.util.Odometry;
 
 import frc.robot.util.SupplierButton;
+import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -205,12 +206,22 @@ public class RobotContainer {
     new InstantCommand(m_hood::setCurrentPosition,m_hood),
     new PrintCommand("init teleop")
   );
+  
+
+  
+
+  //private final ResetOdometry m_resetOdometry = new ResetOdometry(m_D, startX, startY, startAngle)
+
+  private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0));
+  private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0));
+  private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0));
 
   private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
   private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
   SendableChooser<Command> chooser = new SendableChooser<Command>();
+  
   
   
   /**
@@ -240,13 +251,20 @@ public class RobotContainer {
   //IN the future these could be set as persistant
   /** Setup for networkTables config values */
   void initConfig(){
-    NetworkTableEntry driveDampeningXEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive X Dampening");
+    NetworkTable configTable = NetworkTableInstance.getDefault().getTable("config");
+    NetworkTableEntry driveDampeningXEntry = configTable.getEntry("Drive X Dampening");
     driveDampeningXEntry.setDouble(driveDampeningX);
     driveDampeningXEntry.addListener(e->driveDampeningX=e.value.getDouble(), EntryListenerFlags.kUpdate);
 
-    NetworkTableEntry driveDampeningYEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive Y Dampening");
+    NetworkTableEntry driveDampeningYEntry = configTable.getEntry("Drive Y Dampening");
     driveDampeningYEntry.setDouble(driveDampeningY);
     driveDampeningYEntry.addListener(e->driveDampeningY=e.value.getDouble(), EntryListenerFlags.kUpdate);
+
+    NetworkTableEntry joystickX = configTable.getEntry("joystickX");
+    NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickX, driverJoystick::getX);
+
+    NetworkTableEntry joystickY = configTable.getEntry("joystickY");
+    NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
     
   }
 
