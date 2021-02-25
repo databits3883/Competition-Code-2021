@@ -92,6 +92,14 @@ public final class Constants {
     public static final double fieldWidthMeters = 8.21055; //meters
     public static final double powerPortToWallLenght = 2.404364; //meters
 
+    public static final double edgeStartX = 1.003;
+    public static final double edgeStartY = 1.003;
+    public static final double edgeStartAngle = 0;
+
+    public static final double centerStartX = 2.286;
+    public static final double centerStartY = 1.003;
+    public static final double centerStartAngle = 0;
+
     public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
