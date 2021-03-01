@@ -212,9 +212,9 @@ public class RobotContainer {
 
   //private final ResetOdometry m_resetOdometry = new ResetOdometry(m_D, startX, startY, startAngle)
 
-  private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0));
-  private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0));
-  private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0));
+  private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0), new Slalom(m_drivetrain));
+  private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new Bounce(m_drivetrain));
+  private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new BarrelRace(m_drivetrain));
 
   private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
@@ -260,11 +260,11 @@ public class RobotContainer {
     driveDampeningYEntry.setDouble(driveDampeningY);
     driveDampeningYEntry.addListener(e->driveDampeningY=e.value.getDouble(), EntryListenerFlags.kUpdate);
 
-    NetworkTableEntry joystickX = configTable.getEntry("joystickX");
-    NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickX, driverJoystick::getX);
+    // NetworkTableEntry joystickX = configTable.getEntry("joystickX");
+    // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickX, driverJoystick::getX);
 
-    NetworkTableEntry joystickY = configTable.getEntry("joystickY");
-    NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
+    // NetworkTableEntry joystickY = configTable.getEntry("joystickY");
+    // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
     
   }
 
@@ -322,6 +322,9 @@ public class RobotContainer {
 
   void addAutonomous(){
     chooser.setDefaultOption("no autonomous", new PrintCommand("no autonomous selected"));
+    chooser.addOption("Slalom", m_slalom);
+    chooser.addOption("Barrel Racing", m_barrel);
+    chooser.addOption("Bounce", m_bounce);
     Shuffleboard.getTab("Game screen").add(chooser);
   }
 

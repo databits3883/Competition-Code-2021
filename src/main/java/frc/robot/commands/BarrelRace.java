@@ -25,7 +25,7 @@ public class BarrelRace extends RamseteBase {
     super(drivetrain,
       TrajectoryGenerator.generateTrajectory(
         List.of(
-          drivetrain.getRobotPose(),
+          new Pose2d(Constants.centerStartX, Constants.centerStartY, Rotation2d.fromDegrees(0)),
           //first circle
           new Pose2d(4.179, 2.069, Rotation2d.fromDegrees(-43.9)),
           new Pose2d(4.057, 0.727, Rotation2d.fromDegrees(-165.4)),

@@ -44,7 +44,7 @@ public class Bounce extends SequentialCommandGroup {
     );
     */
     super(new RamseteBase(drivetrain, TrajectoryGenerator.generateTrajectory(
-      List.of(drivetrain.getRobotPose(),
+      List.of(new Pose2d(Constants.centerStartX,Constants.centerStartY, Rotation2d.fromDegrees(0)),
     new Pose2d(2.224, 3.502, Rotation2d.fromDegrees(95.7))),
        Constants.trajectoryConfig)),
        

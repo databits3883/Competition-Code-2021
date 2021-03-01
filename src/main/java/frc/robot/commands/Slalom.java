@@ -25,7 +25,7 @@ public class Slalom extends RamseteBase {
     super(drivetrain,
       TrajectoryGenerator.generateTrajectory(
         List.of(
-          drivetrain.getRobotPose(),
+          new Pose2d(Constants.edgeStartX, Constants.edgeStartY,Rotation2d.fromDegrees(0)),
           //to the circle
          new Pose2d(2.365, 1.621, Rotation2d.fromDegrees(60.9)),
          new Pose2d(4.485, 3.289, Rotation2d.fromDegrees(-0.9)),
