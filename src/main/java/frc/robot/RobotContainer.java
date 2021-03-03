@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
+import frc.robot.commands.GalacticSearch.SearchWithObjective;
 import frc.robot.subsystems.*;
 import frc.robot.util.Odometry;
 
@@ -154,6 +155,8 @@ public class RobotContainer {
 
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_staging::ReverseStaging,m_staging));
   private final Command m_stopBelt = new InstantCommand(m_staging::StopStaging, m_staging);
+
+  private final SearchWithObjective m_searchWithObjective = new SearchWithObjective(m_drivetrain, m_Odometry, 'x', 5, 5);
   
   private final StagingToTop m_stagingToTop = new StagingToTop(m_staging);
 
@@ -277,7 +280,8 @@ public class RobotContainer {
   private void configureButtonBindings() {
     driverbutton2.whileHeld(m_lowerHook);
     driverbutton3.whileHeld(m_raiseHook);
-    driverButton4.whileHeld(m_teleopBallFollowing);
+    //driverButton4.whileHeld(m_teleopBallFollowing);
+    driverButton4.whileHeld(m_searchWithObjective);
     driverButton5.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);
