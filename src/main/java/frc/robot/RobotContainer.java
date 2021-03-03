@@ -156,7 +156,7 @@ public class RobotContainer {
   private final Command m_runOutake = new InstantCommand(m_intake::Outake, m_intake).alongWith(new InstantCommand(m_staging::ReverseStaging,m_staging));
   private final Command m_stopBelt = new InstantCommand(m_staging::StopStaging, m_staging);
 
-  private final SearchWithObjective m_searchWithObjective = new SearchWithObjective(m_drivetrain, m_Odometry, 'x', 5, 5);
+  private final SearchWithObjective m_searchWithObjective = new SearchWithObjective(m_drivetrain, 'y', 0, 3);
   
   private final StagingToTop m_stagingToTop = new StagingToTop(m_staging);
 
@@ -218,6 +218,8 @@ public class RobotContainer {
   private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0), new Slalom(m_drivetrain));
   private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new Bounce(m_drivetrain));
   private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new BarrelRace(m_drivetrain));
+
+  //private final SequentialCommandGroup m_GalacticSearch = new SequentialCommandGroup(m_extendIntake, m_runIntake, m_searchWithObjective);
 
   private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
@@ -281,7 +283,7 @@ public class RobotContainer {
     driverbutton2.whileHeld(m_lowerHook);
     driverbutton3.whileHeld(m_raiseHook);
     //driverButton4.whileHeld(m_teleopBallFollowing);
-    driverButton4.whileHeld(m_searchWithObjective);
+    //driverButton4.whenPressed(m_GalacticSearch);
     driverButton5.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
     driverTrigger.whenReleased(m_stopIntake);

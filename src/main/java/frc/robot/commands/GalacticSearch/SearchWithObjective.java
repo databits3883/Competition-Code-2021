@@ -7,7 +7,9 @@ package frc.robot.commands.GalacticSearch;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Variables;
+import frc.robot.commands.BallFollowing;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.util.Odometry;
 
@@ -27,12 +29,12 @@ public class SearchWithObjective extends CommandBase {
   NetworkTableEntry tv;
   NetworkTableEntry Pipeline;
   
-  public SearchWithObjective(/*endpoint*/Drivetrain drivetrain,Odometry odometry, Character endpointAxis, double targetX, double targetY ) {
+  public SearchWithObjective(/*endpoint*/Drivetrain drivetrain, Character endpointAxis, double targetX, double targetY ) {
     // Use addRequirements() here to declare subsystem dependencies.
 
     //endpointAxis: y for y, x for x, b for both
     m_drivetrain = drivetrain;
-    m_odometry = odometry;
+    
     m_endpointAxis = endpointAxis;
     m_targetX = targetX;
     m_targetY = targetY;
@@ -52,18 +54,18 @@ public class SearchWithObjective extends CommandBase {
   @Override
   public void execute() {
     if(tv.getBoolean(false)){
-      pointToAngle(getAngleToTarget(m_targetX, m_targetY), .1, 180);
+      pointToAngle(getAngleToTarget(m_targetX, m_targetY), .2, 240);
 
     }
     else{
-      chaseBall(.1);
+      chaseBall(.2);
 
     }
   }
   
   public double getAngleToTarget(Double targetX, double targetY){
-    double robotX = m_drivetrain.getRobotPose().getX();
-    double robotY = m_drivetrain.getRobotPose().getY();
+    double robotX = m_drivetrain.getRobotPose().getTranslation().getX();
+    double robotY = m_drivetrain.getRobotPose().getTranslation().getY();
 
     double offX = targetX - robotX;
     double offY = targetY - robotY;
@@ -104,7 +106,11 @@ public class SearchWithObjective extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    if(tv.getBoolean(false)){
+      CommandScheduler.getInstance().schedule(new BallFollowing().andThen(new SearchWithObjective(m_drivetrain, m_endpointAxis,m_targetX, m_targetY)));
+    }
+  }
 
   // Returns true when the command should end.
   @Override
@@ -113,13 +119,13 @@ public class SearchWithObjective extends CommandBase {
       //return true}
     //if not{
       switch(m_endpointAxis){
-        case 'x': if(m_drivetrain.getRobotPose().getX()> m_targetX){
+        case 'x': if(m_drivetrain.getRobotPose().getTranslation().getX()> m_targetX){
           return true;
         }
-        case 'y': if(m_drivetrain.getRobotPose().getY()>m_targetY){
+        case 'y': if(m_drivetrain.getRobotPose().getTranslation().getY()>m_targetY){
           return false;
         }
-        case 'b': if(m_drivetrain.getRobotPose().getX()>m_targetX && m_drivetrain.getRobotPose().getY() > m_targetY){
+        case 'b': if(m_drivetrain.getRobotPose().getTranslation().getX()>m_targetX && m_drivetrain.getRobotPose().getTranslation().getY() > m_targetY){
           return true;
         }
         default: return false;

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Variables;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.TurretCameraAim;
@@ -31,6 +32,8 @@ public abstract class BallFollowing extends CommandBase {
   PIDController turnpid = new PIDController(0.01,0,0);
   
   PIDController speedpid = new PIDController(0.01,0,0);
+
+  double gyroAngle;
   
   /**
    * Creates a new BallFollowing.
@@ -93,8 +96,10 @@ public abstract class BallFollowing extends CommandBase {
     else {
       noTargetDrive();
     }
+    
 
     //verticalAim();
+    gyroAngle = Variables.getInstance().getGyroAngle();
   }
 
    boolean shouldTurn(){
@@ -107,6 +112,8 @@ public abstract class BallFollowing extends CommandBase {
    abstract void noTargetDrive();
 
 
+   
+  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
