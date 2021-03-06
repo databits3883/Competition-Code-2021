@@ -49,10 +49,10 @@ public abstract class BallFollowing extends CommandBase {
     addRequirements(m_limelightservo);
     m_intake = intake;
     addRequirements(m_intake);
-    SendableRegistry.setName(turnpid, "turn pid");
-    SendableRegistry.setName(speedpid, "speed pid");
-    Shuffleboard.getTab("BallFollowing").add(turnpid);
-    Shuffleboard.getTab("BallFollowing").add(speedpid);
+    // SendableRegistry.setName(turnpid, "turn pid");
+    // SendableRegistry.setName(speedpid, "speed pid");
+    // Shuffleboard.getTab("BallFollowing").add(turnpid);
+    // Shuffleboard.getTab("BallFollowing").add(speedpid);
 
     // Use addRequirements() here to declare subsystem dependencies.
   }
