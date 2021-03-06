@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -18,6 +17,9 @@ import edu.wpi.first.wpilibj.SlewRateLimiter;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.drive.Vector2d;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Transform2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import frc.robot.commands.*;
@@ -25,6 +27,7 @@ import frc.robot.subsystems.*;
 import frc.robot.util.Odometry;
 
 import frc.robot.util.SupplierButton;
+import frc.robot.util.NetworkTablesUpdater.NetworkTablesUpdaterRegistry;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -101,13 +104,15 @@ public class RobotContainer {
   
   private final double joystickDeadband=0.07;
   private final double joyStickDeadbandCompliment = 1-joystickDeadband;
-  public double driveDampening = 8;
-  public double CurveStick(double joyVal){
-    if(driveDampening!=0){
-      return (Math.tan(joyVal* Math.atan(driveDampening)))/driveDampening;
+  public double driveDampeningX = 8;
+  public double driveDampeningY = 8;
+  public double CurveStick(double joyVal, double dampening){
+    if(dampening!=0){
+      return (Math.tan(joyVal* Math.atan(dampening)))/dampening;
     }
     return joyVal;
   }
+
   
 
   private final Command manualArcadeDrive = new RunCommand(()->{
@@ -128,10 +133,10 @@ public class RobotContainer {
        y/=joyStickDeadbandCompliment;
       }
     //double x = Math.pow(driverJoystick.getX(),5);
-    x = CurveStick(x);
+    x = CurveStick(x, driveDampeningX);
     //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
     //double y = -Math.pow(driverJoystick.getY(),5);
-    y = CurveStick(y);
+    y = CurveStick(y, driveDampeningY);
     
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
@@ -182,7 +187,10 @@ public class RobotContainer {
   private final Command m_extendIntake = new ExtendIntake(m_intake).withTimeout(5);;
   private final Command m_retractedIntake = new RetractIntake(m_intake).withTimeout(5);;
   private final Command m_manualLaunch = new ManualLaunch(m_staging).withInterrupt(()-> !Variables.getInstance().getShooterEnabled());
-  private final Command m_turnServo = new RunCommand(()->m_limelightServo.deltaPosition(gunnerController.getY(Hand.kLeft)/50.0*180.0), m_limelightServo);
+  private final Command m_turnServo = new RunCommand(()->{
+    double command = gunnerController.getY(Hand.kLeft);
+    if(Math.abs(command )<= 0.1) command =0;
+    m_limelightServo.deltaPosition(command/50.0*180.0);}, m_limelightServo);
 
   private final AcquireTarget m_acquireTarget = new AcquireTarget(m_limelightServo, m_turretRotator, m_hood,m_launcher);
   private final ShootThreePowerCells m_shootThreePowerCells = new ShootThreePowerCells(m_staging);
@@ -198,12 +206,22 @@ public class RobotContainer {
     new InstantCommand(m_hood::setCurrentPosition,m_hood),
     new PrintCommand("init teleop")
   );
+  
+
+  
+
+  //private final ResetOdometry m_resetOdometry = new ResetOdometry(m_D, startX, startY, startAngle)
+
+  private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0), new Slalom(m_drivetrain));
+  private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new Bounce(m_drivetrain));
+  private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new BarrelRace(m_drivetrain));
 
   private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
   private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
   SendableChooser<Command> chooser = new SendableChooser<Command>();
+  
   
   
   /**
@@ -233,9 +251,21 @@ public class RobotContainer {
   //IN the future these could be set as persistant
   /** Setup for networkTables config values */
   void initConfig(){
-    NetworkTableEntry driveDampeningEntry = NetworkTableInstance.getDefault().getTable("config").getEntry("Drive Dampening");
-    driveDampeningEntry.setDouble(driveDampening);
-    driveDampeningEntry.addListener(e->driveDampening=e.value.getDouble(), EntryListenerFlags.kUpdate);
+    NetworkTable configTable = NetworkTableInstance.getDefault().getTable("config");
+    NetworkTableEntry driveDampeningXEntry = configTable.getEntry("Drive X Dampening");
+    driveDampeningXEntry.setDouble(driveDampeningX);
+    driveDampeningXEntry.addListener(e->driveDampeningX=e.value.getDouble(), EntryListenerFlags.kUpdate);
+
+    NetworkTableEntry driveDampeningYEntry = configTable.getEntry("Drive Y Dampening");
+    driveDampeningYEntry.setDouble(driveDampeningY);
+    driveDampeningYEntry.addListener(e->driveDampeningY=e.value.getDouble(), EntryListenerFlags.kUpdate);
+
+    // NetworkTableEntry joystickX = configTable.getEntry("joystickX");
+    // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickX, driverJoystick::getX);
+
+    // NetworkTableEntry joystickY = configTable.getEntry("joystickY");
+    // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
+    
   }
 
   /**
@@ -279,10 +309,22 @@ public class RobotContainer {
       }
     });
 
+    bButton.whenPressed(new InstantCommand(){
+      @Override
+      public void initialize(){
+        Pose2d position = m_drivetrain.getRobotPose();
+        Translation2d transform = position.getTranslation();
+        System.out.println(String.format("Logged || x: %.3f || y: %.3f || rotation: %.1f", transform.getX(),transform.getY(), position.getRotation().getDegrees()));
+      }
+    });
+
   }
 
   void addAutonomous(){
     chooser.setDefaultOption("no autonomous", new PrintCommand("no autonomous selected"));
+    chooser.addOption("Slalom", m_slalom);
+    chooser.addOption("Barrel Racing", m_barrel);
+    chooser.addOption("Bounce", m_bounce);
     Shuffleboard.getTab("Game screen").add(chooser);
   }
 

@@ -92,11 +92,21 @@ public final class Constants {
     public static final double fieldWidthMeters = 8.21055; //meters
     public static final double powerPortToWallLenght = 2.404364; //meters
 
+    public static final double edgeStartY = 0.751;
+    public static final double edgeStartX = 1.003;
+    public static final double edgeStartAngle = 0;
+
+    public static final double centerStartY = 2.286;
+    public static final double centerStartX = 1.003;
+    public static final double centerStartAngle = 0;
+
     public static final DifferentialDriveKinematics robotKinematics = new DifferentialDriveKinematics(0.55);
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
-    static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(2.25);
-    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.5, 0.45 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
+    static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(1.9);//old 3.5 tested w slolom and barrel
+    public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
+    public static final TrajectoryConfig trajectoryConfigReverse = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint)).setReversed(true);
+    
 
 
     public static final double maxTurretVelocity = 120; //degrees per second
