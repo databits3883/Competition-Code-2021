@@ -27,7 +27,7 @@ public class AutonomousBallChase extends BallFollowing {
     @Override
     void noTargetDrive() {
         // TODO Auto-generated method stub
-        m_drivetrain.ArcadeDrive(0, 0);
+        m_drivetrain.ArcadeDrive(-0.1, 0);
     }
     
 }

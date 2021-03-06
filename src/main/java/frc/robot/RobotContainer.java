@@ -305,7 +305,7 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
+        CommandScheduler.getInstance().schedule(new AutonomousBallChase(m_drivetrain, m_turretRotator, m_limelightServo, m_intake));
       }
     });
 
