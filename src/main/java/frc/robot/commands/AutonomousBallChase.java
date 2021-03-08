@@ -21,7 +21,7 @@ public class AutonomousBallChase extends BallFollowing {
     @Override
     double calculatespeed() {
         // TODO Auto-generated method stub
-        return 0.1;
+        return 0.25;
     }
 
     @Override
