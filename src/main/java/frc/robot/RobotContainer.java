@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import java.util.function.DoubleUnaryOperator;
+
 import edu.wpi.first.networktables.EntryListenerFlags;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -112,31 +114,30 @@ public class RobotContainer {
     }
     return joyVal;
   }
-
-  
+  double DriveDeadband(double value){
+    if (Math.abs(value)<= joystickDeadband){
+      return 0;
+    }else{
+      value -= Math.copySign(joystickDeadband, value);
+      value /= joyStickDeadbandCompliment;
+      return value;
+    }
+  }
+  DoubleUnaryOperator driveRounding = DoubleUnaryOperator.identity();
+  SendableChooser<DoubleUnaryOperator> driveRoundingChooser = new SendableChooser<DoubleUnaryOperator>();
 
   private final Command manualArcadeDrive = new RunCommand(()->{
     double x = driverJoystick.getX();
     double y = -driverJoystick.getY();
-    if( Math.abs(x)<joystickDeadband){
-      x=0;
-      }
-      else {
-        x-=Math.copySign(joystickDeadband, x);
-        x/=joyStickDeadbandCompliment;
-      }
-    if( Math.abs(y)<joystickDeadband){
-       y=0;
-      }
-      else{
-       y-=Math.copySign(joystickDeadband, y);
-       y/=joyStickDeadbandCompliment;
-      }
+    x = DriveDeadband(x);
+    y = DriveDeadband(y);
     //double x = Math.pow(driverJoystick.getX(),5);
     x = CurveStick(x, driveDampeningX);
     //double y = driverYLimiter.calculate(-Math.pow(driverJoystick.getY(),3));
     //double y = -Math.pow(driverJoystick.getY(),5);
     y = CurveStick(y, driveDampeningY);
+    y = driveRoundingChooser.getSelected().applyAsDouble(y);
+    
     
   m_drivetrain.ArcadeDrive(x, y);
   },m_drivetrain );
@@ -221,7 +222,7 @@ public class RobotContainer {
   private final ManualIntakeMove m_manualLowerIntake = new ManualIntakeMove(-1, m_intake);
  
   SendableChooser<Command> chooser = new SendableChooser<Command>();
-  
+ 
   
   
   /**
@@ -265,7 +266,12 @@ public class RobotContainer {
 
     // NetworkTableEntry joystickY = configTable.getEntry("joystickY");
     // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
-    
+
+    driveRoundingChooser.addOption("No Rounding", DoubleUnaryOperator.identity());
+    driveRoundingChooser.addOption("Circuit", (v)->{
+      return v*(driverJoystick.getZ()-1)/-2;
+    });
+    Shuffleboard.getTab("Game screen").add(driveRoundingChooser);
   }
 
   /**
@@ -305,9 +311,10 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new Slalom(m_drivetrain));
+        CommandScheduler.getInstance().schedule(new AutonomousBallChase(m_drivetrain, m_turretRotator, m_limelightServo, m_intake).perpetually());
       }
     });
+    yButton.whenReleased(new InstantCommand(() -> m_drivetrain.getCurrentCommand().cancel()));
 
     bButton.whenPressed(new InstantCommand(){
       @Override
