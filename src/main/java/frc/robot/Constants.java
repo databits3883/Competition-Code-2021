@@ -106,6 +106,8 @@ public final class Constants {
     static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(1.9);//old 3.5 tested w slolom and barrel
     public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
     public static final TrajectoryConfig trajectoryConfigReverse = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint)).setReversed(true);
+
+    public static final TrajectoryConfig slowTrajectorConfig = new TrajectoryConfig(0.8, 1.8).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
     
 
 
@@ -128,6 +130,11 @@ public final class Constants {
     public static final double redThreshold = 0.3;
     public static final double greenThreshold = 0.55;
     public static final double blueThreshold = 0.255;
+
+
+	public static final double txBlueSearchThreshold = 23;
+	public static final double tySearchThreshold = 0;
+	public static final double txRedSearchThreshold = 0;
 
     
     }

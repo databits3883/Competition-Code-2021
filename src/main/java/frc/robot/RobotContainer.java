@@ -302,12 +302,7 @@ public class RobotContainer {
     driverButton9.whileHeld(m_turnto90);
 
     //REMOVE IN COMPETITION CODE
-    yButton.whenPressed(new InstantCommand(){
-      @Override
-      public void initialize(){
-        CommandScheduler.getInstance().schedule(new AutonomousBallChase(m_drivetrain, m_turretRotator, m_limelightServo, m_intake));
-      }
-    });
+    yButton.whenPressed(new GalacticSearch(m_drivetrain, m_turretRotator, m_limelightServo, m_intake));
 
     bButton.whenPressed(new InstantCommand(){
       @Override
