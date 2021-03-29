@@ -104,10 +104,12 @@ public final class Constants {
 
     static final DifferentialDriveKinematicsConstraint kinematicsConstraint = new DifferentialDriveKinematicsConstraint(robotKinematics, 4.5);
     static final CentripetalAccelerationConstraint centripetalConstraint = new CentripetalAccelerationConstraint(1.9);//old 3.5 tested w slolom and barrel
+    static final CentripetalAccelerationConstraint centripetalConstraintSlow = new CentripetalAccelerationConstraint(1);//old 3.5 tested w slolom and barrel
+
     public static final TrajectoryConfig trajectoryConfig = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
     public static final TrajectoryConfig trajectoryConfigReverse = new TrajectoryConfig(2.5, 1.8 ).addConstraints(List.of(kinematicsConstraint,centripetalConstraint)).setReversed(true);
 
-    public static final TrajectoryConfig slowTrajectorConfig = new TrajectoryConfig(0.8, 1.8).addConstraints(List.of(kinematicsConstraint,centripetalConstraint));
+    public static final TrajectoryConfig slowTrajectorConfig = new TrajectoryConfig(1.0, 1.8).addConstraints(List.of(kinematicsConstraint,centripetalConstraintSlow));
     
 
 

@@ -215,6 +215,7 @@ public class RobotContainer {
   private final SequentialCommandGroup m_slalom = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.edgeStartX, Constants.edgeStartY, 0), new Slalom(m_drivetrain));
   private final SequentialCommandGroup m_bounce = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new Bounce(m_drivetrain));
   private final SequentialCommandGroup m_barrel = new SequentialCommandGroup(new ResetOdometry(m_drivetrain, Constants.centerStartX, Constants.centerStartY, 0), new BarrelRace(m_drivetrain));
+  private final Command m_galacticSearch = new GalacticSearch(m_drivetrain, m_turretRotator, m_limelightServo, m_intake);
 
   private final Command m_emergencyStopDrivetrain = new RunCommand(()->m_drivetrain.EmergencyStop(), m_drivetrain);
   private final ManualIntakeMove m_manualRaiseIntake = new ManualIntakeMove(1, m_intake);
@@ -320,6 +321,7 @@ public class RobotContainer {
     chooser.addOption("Slalom", m_slalom);
     chooser.addOption("Barrel Racing", m_barrel);
     chooser.addOption("Bounce", m_bounce);
+    chooser.addOption("Galactic Search", m_galacticSearch);
     Shuffleboard.getTab("Game screen").add(chooser);
   }
 

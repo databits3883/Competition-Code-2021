@@ -45,7 +45,7 @@ public class GalacticSearch extends SequentialCommandGroup {
           new InstantCommand(intake::intake,intake)
         ),
         new InstantCommand(()-> drivetrain.setPose(1.100, 2.727, 0),drivetrain),
-        new InstantCommand(()-> limelightservo.setPosition(139)),
+        new InstantCommand(()-> limelightservo.setPosition(139), limelightservo),
         new SetTurretAngle(Constants.maxTurretAngle, turretRotator)
       ),
       //determine and run path
@@ -92,14 +92,14 @@ public class GalacticSearch extends SequentialCommandGroup {
       new Pose2d(1.100,2.727, Rotation2d.fromDegrees(0)),
       new Pose2d(1.961,2.747,Rotation2d.fromDegrees(35)),
       new Pose2d(3.656,1.698,Rotation2d.fromDegrees(-56.4)),
-      new Pose2d(4.767,2.566,Rotation2d.fromDegrees(78.8)),
+      new Pose2d(4.667,2.366,Rotation2d.fromDegrees(58.8)),
       new Pose2d(8.815,3.614,Rotation2d.fromDegrees(-15.8))
     )),
     kblueA(List.of(
       new Pose2d(1.100,2.727, Rotation2d.fromDegrees(0)),
       new Pose2d(4.332,0.965,Rotation2d.fromDegrees(-39.9)),
       new Pose2d(5.288,2.536,Rotation2d.fromDegrees(108.1)),
-      new Pose2d(6.491,2.808,Rotation2d.fromDegrees(-67.9)),
+      new Pose2d(6.491,2.808,Rotation2d.fromDegrees(-57.9)),
       new Pose2d(8.904,1.547,Rotation2d.fromDegrees(9.8))
     )), 
     kblueB(List.of(
