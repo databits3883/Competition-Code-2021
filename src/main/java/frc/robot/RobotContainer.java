@@ -268,9 +268,10 @@ public class RobotContainer {
     // NetworkTablesUpdaterRegistry.getInstance().addUpdate( joystickY, driverJoystick::getY);
 
     driveRoundingChooser.addOption("No Rounding", DoubleUnaryOperator.identity());
-    driveRoundingChooser.addOption("Circuit", (v)->{
+    driveRoundingChooser.setDefaultOption("Z as throttle", (v)->{
       return v*(driverJoystick.getZ()-1)/-2;
     });
+
     Shuffleboard.getTab("Game screen").add(driveRoundingChooser);
   }
 
