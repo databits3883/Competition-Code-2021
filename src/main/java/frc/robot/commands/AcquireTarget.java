@@ -66,7 +66,7 @@ public class AcquireTarget extends CommandBase {
     hoodAim(angle);
     launcherPrime(angle);
 
-    System.out.println("angle: "+m_LimelightServo.getAngleToTarget());
+    //System.out.println("angle: "+m_LimelightServo.getAngleToTarget());
     if(filterLengthEntry.getDouble(filterLength)!=filterLength){
       filterLength = filterLengthEntry.getDouble(filterLength);
       limeLightFilter = LinearFilter.movingAverage((int)filterLength);
@@ -95,11 +95,12 @@ public class AcquireTarget extends CommandBase {
   }
   void hoodAim(double angle){
     m_hood.setAngle(
-      angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
+      //angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
+      38.8 - 1.17*angle + 0.0785*angle*angle -(1.94E-3)*angle*angle*angle
     );
   }
   void launcherPrime(double angle){
-    m_launcher.setSpeed(MathUtil.clamp((73.8-2.78*angle+0.201*angle*angle-(5.96e-3)*angle*angle*angle)*-1,-100,0));
+    m_launcher.setSpeed(MathUtil.clamp((-84.4+3.61*angle-0.217*angle*angle+(4.37E-3)*angle*angle*angle),-100,0));
   }
 
   boolean horizontalOnTarget = true;
