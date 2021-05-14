@@ -96,11 +96,13 @@ public class AcquireTarget extends CommandBase {
   void hoodAim(double angle){
     m_hood.setAngle(
       //angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
-      38.8 - 1.17*angle + 0.0785*angle*angle -(1.94E-3)*angle*angle*angle
-    );
+      //38.8 - 1.17*angle + 0.0785*angle*angle -(1.94E-3)*angle*angle*angle
+      (7.85E-3)*angle*angle - 0.764 * angle + 40.7
+      );
   }
   void launcherPrime(double angle){
-    m_launcher.setSpeed(MathUtil.clamp((-84.4+3.61*angle-0.217*angle*angle+(4.37E-3)*angle*angle*angle),-100,0));
+    //m_launcher.setSpeed(MathUtil.clamp((-84.4+3.61*angle-0.217*angle*angle+(4.37E-3)*angle*angle*angle),-100,0));
+    m_launcher.setSpeed(MathUtil.clamp((-0.0609*angle*angle + 2.28 * angle - 82.1),-100,0));
   }
 
   boolean horizontalOnTarget = true;
@@ -111,9 +113,9 @@ public class AcquireTarget extends CommandBase {
       verticalOnTarget = true;
       System.out.println("ended");
       horizontalOnTarget = true;
-     if (interrupted){
+     /*if (interrupted){
       m_launcher.setSpeed(0);
-     }
+     }*/
      NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setDouble(3);
     
   }
