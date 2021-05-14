@@ -275,6 +275,7 @@ public class RobotContainer {
     Shuffleboard.getTab("Game screen").add(driveRoundingChooser);
   }
 
+  String csvLog = "Angle to Target, launcher speed, hood angle\n";
   /**
    * Use this method to define your button->command mappings.  Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -283,7 +284,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     driverbutton2.whileHeld(m_lowerHook);
-    driverbutton3.whileHeld(m_raiseHook);
+    driverbutton3.whileHeld(m_manualLaunch);
     driverButton4.whileHeld(m_teleopBallFollowing);
     driverButton5.whileHeld(m_emergencyStopDrivetrain, false);
     driverTrigger.whenPressed(m_runIntake);
@@ -312,7 +313,7 @@ public class RobotContainer {
     yButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        CommandScheduler.getInstance().schedule(new AutonomousBallChase(m_drivetrain, m_turretRotator, m_limelightServo, m_intake).perpetually());
+        System.out.print(csvLog);
       }
     });
     yButton.whenReleased(new InstantCommand(() -> m_drivetrain.getCurrentCommand().cancel()));
@@ -320,9 +321,9 @@ public class RobotContainer {
     bButton.whenPressed(new InstantCommand(){
       @Override
       public void initialize(){
-        Pose2d position = m_drivetrain.getRobotPose();
-        Translation2d transform = position.getTranslation();
-        System.out.println(String.format("Logged || x: %.3f || y: %.3f || rotation: %.1f", transform.getX(),transform.getY(), position.getRotation().getDegrees()));
+        String log = m_limelightServo.getAngleToTarget()+", "+m_launcher.getSpeed()+", "+m_hood.getAngle()+"\n";
+        csvLog+= log;
+        System.out.println("shooting record logged");
       }
     });
 

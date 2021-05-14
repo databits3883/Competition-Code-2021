@@ -52,6 +52,10 @@ public class TurretLauncher extends ProfiledSparkMaxPIDSubsystem{
   public boolean atSpeed(){
     return onTarget();
   }
+
+  public double getSpeed(){
+    return m_mainController.getSetpoint();
+  }
   
   
   boolean lastTrigger = false;

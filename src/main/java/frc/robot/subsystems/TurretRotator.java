@@ -35,7 +35,7 @@ public class TurretRotator extends ProfiledSparkMaxPIDSubsystem {
        conversionFactor,
       0, Constants.maxTurretAngle,
       Constants.maxTurretVelocity,LimitSwitchPolarity.kNormallyOpen);
-    setTolerance(1.5);
+    setTolerance(0.75);
     setCurrentPosition();
   }
   
