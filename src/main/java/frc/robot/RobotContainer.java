@@ -273,6 +273,7 @@ public class RobotContainer {
     });
 
     Shuffleboard.getTab("Game screen").add(driveRoundingChooser);
+    Shuffleboard.getTab("Game screen").addNumber("Z Throttle", driverJoystick::getZ);
   }
 
   String csvLog = "Angle to Target, launcher speed, hood angle\n";
