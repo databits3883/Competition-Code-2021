@@ -37,6 +37,10 @@ public class TurretHood extends ProfiledSparkMaxPIDSubsystem {
     return onTarget();
   }
 
+  public double getAngle(){
+    return m_mainController.getSetpoint();
+  }
+
   @Override
   public void periodic() {
     checkLimitSwitches();
