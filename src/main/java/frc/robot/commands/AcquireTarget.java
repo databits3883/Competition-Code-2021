@@ -97,12 +97,12 @@ public class AcquireTarget extends CommandBase {
     m_hood.setAngle(
       //angle>=4.577?25.777:36.5-1.69*angle-0.143*angle*angle
       //38.8 - 1.17*angle + 0.0785*angle*angle -(1.94E-3)*angle*angle*angle
-      (7.85E-3)*angle*angle - 0.764 * angle + 40.7
+      -0.0147*angle*angle-0.737*angle+37.5
       );
   }
   void launcherPrime(double angle){
     //m_launcher.setSpeed(MathUtil.clamp((-84.4+3.61*angle-0.217*angle*angle+(4.37E-3)*angle*angle*angle),-100,0));
-    m_launcher.setSpeed(MathUtil.clamp((-0.0609*angle*angle + 2.28 * angle - 82.1),-100,0));
+    m_launcher.setSpeed(MathUtil.clamp((0.0421*angle*angle + 1.4 * angle - 86.6),-100,0));
   }
 
   boolean horizontalOnTarget = true;
